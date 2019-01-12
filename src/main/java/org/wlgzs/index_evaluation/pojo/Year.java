@@ -6,7 +6,7 @@ package org.wlgzs.index_evaluation.pojo;
  * @create 2019-01-12 15:24
  * @Describe 年份实体类
  */
-public class year {
+public class Year {
     /**
      * 年份id
      */
