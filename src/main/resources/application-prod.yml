@@ -1,0 +1,114 @@
+server:
+  port: 10013
+#logging
+logging:
+  #配置日志文件路径
+#  path: D:\java\CodeTwo\recruit\log
+#  level:
+#    xatu.zsl: debug #不同目录下的日志可配置不同级别
+#    org.springfromework.web: info
+#    org.hibernate: error
+  #采用相对路径方式将日志文件输出到【log\recruit.log】
+  file: log\recruit.log
+
+spring:
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: utf-8
+    servlet:
+      content-type: text/html
+    cache: false
+
+  datasource:
+    name: mysql
+    type: com.alibaba.druid.pool.DruidDataSource
+      #druid相关配置
+    druid:
+      #监控统计拦截的filters
+      filters: stat
+      driver-class-name: com.mysql.jdbc.Driver
+      #基本属性
+      url: jdbc:mysql://127.0.0.1:3306/recruit?useUnicode=true&characterEncoding=utf-8
+      username: root
+      password: root
+      #配置初始化大小/最小/最大
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      #获取连接等待超时时间
+      max-wait: 60000
+      #间隔多久进行一次检测，检测需要关闭的空闲连接
+      time-between-eviction-runs-millis: 60000
+      #一个连接在池中最小生存的时间
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      #打开PSCache，并指定每个连接上PSCache的大小。oracle设为true，mysql设为false。分库分表较多推荐设置为false
+      pool-prepared-statements: false
+      max-pool-prepared-statement-per-connection-size: 20
+      filter:
+        wall:
+          enabled: true
+          config:
+            alter-table-allow: false
+            truncate-allow: false
+            drop-table-allow: false
+            #是否允许非以上基本语句的其他语句，缺省关闭，通过这个选项就能够屏蔽DDL
+            none-base-statement-allow: false
+            #检查UPDATE语句是否无where条件，这是有风险的，但不是SQL注入类型的风险
+            update-where-none-check: true
+            #SELECT ... INTO OUTFILE 是否允许，这个是mysql注入攻击的常见手段，缺省是禁止的
+            select-into-outfile-allow: false
+            #是否允许调用Connection.getMetadata方法，这个方法调用会暴露数据库的表信息
+            metadata-allow: true
+            #对被认为是攻击的SQL进行LOG.error输出
+          log-violation: true
+          #对被认为是攻击的SQL抛出SQLExcepton
+          throw-exception: true
+          #db-type: mysql
+
+  http:
+    encoding:
+      charset: utf-8
+      enabled: true
+#mybatis
+mybatis:
+  type-aliases-package: org.wlgzs.recruit.domain
+  configuration:
+    map-underscore-to-camel-case: true
+
+#mybatis plus配置
+mybatis-plus:
+   #由于本例中采用注解方式编写sql，故而此处可不配置
+   #mapper-locations: classpath:/mapper/*Mapper.xml
+  #实体扫描，多个package用逗号或者分号分隔
+  typeAliasesPackage: org.wlgzs.recruit.domain
+  #枚举扫描配置（本示例未使用到）
+  #typeEnumsPackage: com.szss.admin.model.domain
+  global-config:
+    #主键类型  0:"数据库ID自增", 1:"用户输入ID",2:"全局唯一ID (数字类型唯一ID)", 3:"UUID";
+    id-type: 0
+    #字段策略 0:"忽略判断",1:"非 NULL 判断"),2:"非空判断"
+    field-strategy: 2
+    #驼峰下划线转换
+    db-column-underline: true
+    #刷新mapper 调试神器(由于本例中采用注解方式编写sql，故而不需要刷新mapper.xml文件)
+    #refresh-mapper: true
+    #数据库大写下划线转换
+    capital-mode: true
+    #序列接口实现类配置,在新的mybatis-plus-boot-starter中不推荐此方式进行配置,推荐自定义bean注入
+    key-generator: com.baomidou.mybatisplus.incrementer.H2KeyGenerator
+    #逻辑删除配置（下面3个配置）
+    logic-delete-value: 1
+    logic-not-delete-value: 0
+    #自定义SQL注入器
+    sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
+    # SQL 解析缓存，开启后多租户 @SqlParser 注解生效
+    #sql-parser-cache: true
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: false
