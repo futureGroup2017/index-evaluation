@@ -21,7 +21,6 @@ spring:
       driver-class-name: com.mysql.jdbc.Driver
       #基本属性
       url: jdbc:mysql://182.254.229.92:3306/index_evaluation?useUnicode=true&characterEncoding=utf-8
-#      url: jdbc:mysql://127.0.0.1:3306/recruit?useUnicode=true&characterEncoding=utf-8
       username: root
       password: lovewlgzs
       #配置初始化大小/最小/最大
