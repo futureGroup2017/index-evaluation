@@ -7,7 +7,7 @@ import org.springframework.boot.web.servlet.support.SpringBootServletInitializer
  * @author zsh
  * @company wlgzs
  * @create 2019-01-12 12:01
- * @Describe
+ * @Describe 序列化
  */
 public class ServletInitializer extends SpringBootServletInitializer {
 
