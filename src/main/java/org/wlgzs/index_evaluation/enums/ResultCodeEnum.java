@@ -1,4 +1,4 @@
-package org.wlgzs.index_evaluation.util.result;
+package org.wlgzs.index_evaluation.enums;
 
 import lombok.Getter;
 import lombok.Setter;

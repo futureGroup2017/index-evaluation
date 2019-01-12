@@ -3,7 +3,6 @@ package org.wlgzs.index_evaluation.service;
 import com.baomidou.mybatisplus.plugins.Page;
 import org.springframework.transaction.annotation.Transactional;
 import org.wlgzs.index_evaluation.pojo.Year;
-import org.wlgzs.index_evaluation.util.result.Result;
 
 /**
  * @author zsh
