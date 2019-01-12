@@ -16,7 +16,7 @@ import javax.sql.DataSource;
  */
 @EnableTransactionManagement
 @Configuration
-@MapperScan("org.wlgzs.recruit.dao*")
+@MapperScan("org.wlgzs.index_evaluation.dao")
 public class MybatisPlusConfig {
     /***
      * plus 的性能优化
