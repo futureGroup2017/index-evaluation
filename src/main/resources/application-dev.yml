@@ -71,7 +71,7 @@ mybatis-plus:
    #由于本例中采用注解方式编写sql，故而此处可不配置
    #mapper-locations: classpath:/mapper/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
-  typeAliasesPackage: org.wlgzs.recruit.domain
+  typeAliasesPackage: org.wlgzs.index_evaluation.pojo
   #枚举扫描配置（本示例未使用到）
   #typeEnumsPackage: com.szss.admin.model.domain
   global-config:
