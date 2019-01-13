@@ -1,5 +1,14 @@
 package org.wlgzs.index_evaluation.util;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.*;
+import org.wlgzs.index_evaluation.pojo.ExcelBean;
+
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.InputStream;
@@ -14,20 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFCellStyle;
-import org.apache.poi.xssf.usermodel.XSSFFont;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.wlgzs.index_evaluation.pojo.ExcelBean;
 
 public class ExcelUtil {
     private final static String excel2003L =".xls";    //2003- 版本的excel
@@ -71,7 +66,7 @@ public class ExcelUtil {
     /**
      * 描述：根据文件后缀，自适应上传文件的版本
      */
-    private static  Workbook getWorkbook(InputStream inStr, String fileName) throws Exception{
+    public static  Workbook getWorkbook(InputStream inStr,String fileName) throws Exception{
         Workbook wb = null;
         String fileType = fileName.substring(fileName.lastIndexOf("."));
         if(excel2003L.equals(fileType)){
@@ -86,7 +81,7 @@ public class ExcelUtil {
     /**
      * 描述：对表格中数值进行格式化
      */
-    private static  Object getCellValue(Cell cell){
+    public static  Object getCellValue(Cell cell){
         Object value = null;
         DecimalFormat df = new DecimalFormat("0");  //格式化字符类型的数字
         SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");  //日期格式化
@@ -138,7 +133,7 @@ public class ExcelUtil {
     }
     private static XSSFCellStyle fontStyle;
     private static XSSFCellStyle fontStyle2;
-    private static void createFont(XSSFWorkbook workbook) {
+    public static void createFont(XSSFWorkbook workbook) {
         // 表头
         fontStyle = workbook.createCellStyle();
         XSSFFont font1 = workbook.createFont();
@@ -169,7 +164,7 @@ public class ExcelUtil {
      * @param sheet 工作簿
      * @param map 每行每个单元格对应的列头信息
      */
-    private static final void createTableHeader(XSSFSheet sheet, Map<Integer, List<ExcelBean>> map) {
+    public static final void createTableHeader(XSSFSheet sheet, Map<Integer, List<ExcelBean>> map) {
         int startIndex=0;//cell起始位置
         int endIndex=0;//cell终止位置
         for (Map.Entry<Integer, List<ExcelBean>> entry : map.entrySet()) {
@@ -206,7 +201,7 @@ public class ExcelUtil {
             }
         }
     }
-    private static void createTableRows(XSSFSheet sheet, Map<Integer, List<ExcelBean>> map, List objs, Class clazz)
+    public static void createTableRows(XSSFSheet sheet, Map<Integer, List<ExcelBean>> map, List objs, Class clazz)
             throws IllegalArgumentException, IllegalAccessException, InvocationTargetException, IntrospectionException,
             ClassNotFoundException, ParseException {
         int rowindex = map.size();
