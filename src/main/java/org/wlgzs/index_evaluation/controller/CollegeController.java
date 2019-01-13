@@ -6,18 +6,14 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.College;
 import org.wlgzs.index_evaluation.service.CollegeService;
-import org.wlgzs.index_evaluation.util.ExcelUtil;
 
 import javax.annotation.Resource;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * <p>
@@ -36,8 +32,9 @@ public class CollegeController {
     private CollegeService collegeService;
 
     /**
-    * 新增
-    */
+     * 新增学院
+     * @param college
+     */
     @PostMapping
     public Result save(College college){
         if(college == null) {
@@ -48,8 +45,9 @@ public class CollegeController {
     }
 
     /**
-    * 通过id删除
-    */
+     * 通过id删除
+     * @param collegeId
+     */
     @DeleteMapping("/{collegeId}")
     public Result delete(@PathVariable("collegeId") int collegeId){
         if(collegeId==0) {
@@ -60,8 +58,9 @@ public class CollegeController {
     }
 
     /**
-    * 修改
-    */
+     * 修改学院
+     * @param college
+     */
     @PutMapping
     public Result updateById(College college){
         if(college == null) {
@@ -72,8 +71,9 @@ public class CollegeController {
     }
 
     /**
-    * 通过id查询
-    */
+     * 通过id查询学院
+     * @param collegeId
+     */
     @RequestMapping("/id")
     public Result selectById(int collegeId){
         if(collegeId==0) {
@@ -83,11 +83,14 @@ public class CollegeController {
     }
 
     /**
-    * 分页查询
-    */
+     * 分页查询
+     * @param model
+     * @param pageNum
+     * @param pageSize
+     */
     @GetMapping("/page")
     public ModelAndView findAllPage(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                                        @RequestParam(name = "pageSize", defaultValue = "10") int pageSize){
+                                    @RequestParam(name = "pageSize", defaultValue = "10") int pageSize){
         Page<College> page = new Page<>(pageNum,pageSize);
         QueryWrapper<College> wrapper = new QueryWrapper<>();
         IPage<College> pageList = collegeService.page(page,wrapper);
@@ -99,42 +102,14 @@ public class CollegeController {
         return new ModelAndView("test");
     }
 
-    @RequestMapping("/to")
-    public ModelAndView to(){
-        return new ModelAndView("test");
-    }
     /**
      * 批量导入学院
-     * @param in
-     * @param file
+     * @param request
+     * @throws Exception
      */
-    @RequestMapping("/upload")
-    public Result upload(InputStream in, @RequestParam("file") MultipartFile file){
-        if(file.getOriginalFilename()==null){
-            Result result = new Result(ResultCodeEnum.UNSAVE);
-            result.setMsg("上传失败");
-            return result;
-        }
-        List<List<Object>> lists;
-        try {
-            lists = ExcelUtil.getBankListByExcel(in,file.getOriginalFilename());
-            List<College> colleges = new ArrayList<College>();
-            //遍历listob数据，把数据放到List中
-            for (List<Object> ob : lists) {
-                College college = new College();
-                //通过遍历实现把每一列封装成一个model中，再把所有的model用List集合装载
-                college.setCollegeName(String.valueOf(ob.get(0)));
-                colleges.add(college);
-            }
-            //批量插入
-            for (College college1 : colleges) {
-                collegeService.save(college1);
-            }
-            return new Result(ResultCodeEnum.SAVE,colleges);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return new Result(ResultCodeEnum.UNSAVE);
+    @RequestMapping("/saveCollege")
+    public Result saveCollege(HttpServletRequest request) throws Exception{
+        return collegeService.saveCollege(request);
     }
 
 }
