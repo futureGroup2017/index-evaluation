@@ -1,6 +1,6 @@
 package org.wlgzs.index_evaluation.controller;
 
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -61,7 +61,7 @@ public class YearController {
     public ModelAndView selectAll(@RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                   @RequestParam(name = "pageSize", defaultValue = "10") int pageSize){
         ModelAndView modelAndView = new ModelAndView();
-        Page<Year> pageInfo = yearService.findAllYear(pageNum, pageSize);
+        IPage<Year> pageInfo = yearService.findAllYear(pageNum, pageSize);
         modelAndView.addObject("Number", pageInfo.getCurrent());  //当前页数
         modelAndView.addObject("TotalPages", pageInfo.getPages());      //总页数
         modelAndView.addObject("years", pageInfo.getRecords());    //年份集合
