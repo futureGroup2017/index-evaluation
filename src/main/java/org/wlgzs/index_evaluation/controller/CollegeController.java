@@ -1,18 +1,23 @@
 package org.wlgzs.index_evaluation.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import org.wlgzs.index_evaluation.service.CollegeService;
-import org.wlgzs.index_evaluation.pojo.College;
 import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
+import org.wlgzs.index_evaluation.pojo.College;
+import org.wlgzs.index_evaluation.service.CollegeService;
+import org.wlgzs.index_evaluation.util.ExcelUtil;
 
 import javax.annotation.Resource;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * <p>
@@ -92,6 +97,44 @@ public class CollegeController {
         model.addAttribute("msg","查询成功");
         log.info("查询成功:"+pageList.getRecords());
         return new ModelAndView("test");
+    }
+
+    @RequestMapping("/to")
+    public ModelAndView to(){
+        return new ModelAndView("test");
+    }
+    /**
+     * 批量导入学院
+     * @param in
+     * @param file
+     */
+    @RequestMapping("/upload")
+    public Result upload(InputStream in, @RequestParam("file") MultipartFile file){
+        if(file.getOriginalFilename()==null){
+            Result result = new Result(ResultCodeEnum.UNSAVE);
+            result.setMsg("上传失败");
+            return result;
+        }
+        List<List<Object>> lists;
+        try {
+            lists = ExcelUtil.getBankListByExcel(in,file.getOriginalFilename());
+            List<College> colleges = new ArrayList<College>();
+            //遍历listob数据，把数据放到List中
+            for (List<Object> ob : lists) {
+                College college = new College();
+                //通过遍历实现把每一列封装成一个model中，再把所有的model用List集合装载
+                college.setCollegeName(String.valueOf(ob.get(0)));
+                colleges.add(college);
+            }
+            //批量插入
+            for (College college1 : colleges) {
+                collegeService.save(college1);
+            }
+            return new Result(ResultCodeEnum.SAVE,colleges);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new Result(ResultCodeEnum.UNSAVE);
     }
 
 }

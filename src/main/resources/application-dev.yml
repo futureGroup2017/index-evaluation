@@ -10,7 +10,9 @@ spring:
     servlet:
       content-type: text/html
     cache: false
-
+  servlet:
+    multipart:
+      max-file-size: 5MB
   datasource:
     name: mysql
     type: com.alibaba.druid.pool.DruidDataSource
