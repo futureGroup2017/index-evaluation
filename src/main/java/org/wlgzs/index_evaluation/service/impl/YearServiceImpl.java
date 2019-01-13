@@ -1,9 +1,9 @@
 package org.wlgzs.index_evaluation.service.impl;
 
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
-import com.baomidou.mybatisplus.mapper.Wrapper;
-import com.baomidou.mybatisplus.plugins.Page;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 import org.wlgzs.index_evaluation.dao.YearDao;
 import org.wlgzs.index_evaluation.pojo.Year;
@@ -16,39 +16,36 @@ import org.wlgzs.index_evaluation.service.YearService;
  * @Describe
  */
 @Service
-public class YearServiceImpl implements YearService {
-
-    @Autowired
-    private YearDao yearDao;
+public class YearServiceImpl extends ServiceImpl<YearDao,Year> implements YearService {
 
     @Override
-    public Page<Year> findAllYear(int pageNum, int pageSize) {
+    public IPage<Year> findAllYear(int pageNum, int pageSize) {
         Page<Year> page = new Page<>(pageNum,pageSize);
-        Wrapper<Year> yearEntityWrapper = new EntityWrapper<>();
-        page.setRecords(yearDao.selectPage(page,yearEntityWrapper));
-        return page;
+        QueryWrapper<Year> yearEntityWrapper = new QueryWrapper<>();
+        return baseMapper.selectPage(page,yearEntityWrapper);
     }
 
     @Override
     public Year findByName(Integer name) {
         Year year = new Year();
-        year.setYearName(name);
-        year = yearDao.selectOne(year);
+        QueryWrapper<Year> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("yearName",name);
+        year = baseMapper.selectOne(queryWrapper);
         return year;
     }
 
     @Override
     public Integer add(Year year) {
-        return yearDao.insert(year);
+        return baseMapper.insert(year);
     }
 
     @Override
     public Integer delete(Integer id) {
-        return yearDao.deleteById(id);
+        return baseMapper.deleteById(id);
     }
 
     @Override
     public Integer update(Year year) {
-        return yearDao.updateById(year);
+        return baseMapper.updateById(year);
     }
 }

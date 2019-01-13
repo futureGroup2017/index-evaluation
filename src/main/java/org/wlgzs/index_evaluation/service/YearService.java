@@ -1,6 +1,8 @@
 package org.wlgzs.index_evaluation.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 import org.wlgzs.index_evaluation.pojo.Year;
 
@@ -10,11 +12,11 @@ import org.wlgzs.index_evaluation.pojo.Year;
  * @create 2019-01-12 15:45
  * @Describe
  */
-public interface YearService {
+public interface YearService extends IService<Year> {
 
     //查询所有年份
     @Transactional
-    Page<Year> findAllYear(int pageNum, int pageSize);
+    IPage<Year> findAllYear(int pageNum, int pageSize);
 
     //通过年份名称查询
     @Transactional
