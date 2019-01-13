@@ -21,8 +21,7 @@ public class MybatisPlusConfig {
      */
     @Bean
     public PerformanceInterceptor performanceInterceptor() {
-        PerformanceInterceptor performanceInterceptor=new PerformanceInterceptor();
-        return performanceInterceptor;
+        return new PerformanceInterceptor();
     }
     /**
      * Description : mybatis-plus分页插件

@@ -68,8 +68,8 @@ spring:
 
 #mybatis plus配置
 mybatis-plus:
-   #由于本例中采用注解方式编写sql，故而此处可不配置
-   #mapper-locations: classpath:/mapper/*Mapper.xml
+  #由于本例中采用注解方式编写sql，故而此处可不配置
+  #mapper-locations: classpath:/mapper/*Mapper.xml
   #实体扫描，多个package用逗号或者分号分隔
   type-aliases-package: org.wlgzs.index_evaluation
   #枚举扫描配置（本示例未使用到）
@@ -81,7 +81,8 @@ mybatis-plus:
       #字段策略 IGNORED:"忽略判断",NOT_NULL:"非 NULL 判断"),NOT_EMPTY:"非空判断"
       field-strategy: NOT_EMPTY
       #驼峰下划线转换
-      db-column-underline: true
+      table-underline: true
+      #column-underline: true
       #数据库大写下划线转换
       capital-mode: true
       #序列接口实现类配置,在新的mybatis-plus-boot-starter中不推荐此方式进行配置,推荐自定义bean注入
@@ -90,8 +91,8 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
       db-type: mysql
-      #刷新mapper 调试神器(由于本例中采用注解方式编写sql，故而不需要刷新mapper.xml文件)
-    refresh-mapper: true
+    #刷新mapper 调试神器(由于本例中采用注解方式编写sql，故而不需要刷新mapper.xml文件)
+    refresh: true
     #自定义SQL注入器
     #sql-injector: com.baomidou.mybatisplus.mapper.LogicSqlInjector
     # SQL 解析缓存，开启后多租户 @SqlParser 注解生效
