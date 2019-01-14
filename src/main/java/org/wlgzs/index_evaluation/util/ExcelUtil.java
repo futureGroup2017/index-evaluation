@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.log4j.Log4j2;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -29,6 +30,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.wlgzs.index_evaluation.pojo.ExcelBean;
 
+@Log4j2
 public class ExcelUtil {
     private final static String excel2003L =".xls";    //2003- 版本的excel
     private final static String excel2007U =".xlsx";   //2007+ 版本的excel
@@ -98,6 +100,10 @@ public class ExcelUtil {
             case Cell.CELL_TYPE_NUMERIC:
                 if("General".equals(cell.getCellStyle().getDataFormatString())){
                     value = df.format(cell.getNumericCellValue());
+                    if (String.valueOf(cell.getNumericCellValue()).contains(".5")){
+                        DecimalFormat df1 = new DecimalFormat("0.0");  //格式化数字
+                        value = df1.format(cell.getNumericCellValue());
+                    }
                 }else if("m/d/yy".equals(cell.getCellStyle().getDataFormatString())){
                     value = sdf.format(cell.getDateCellValue());
                 }else{
