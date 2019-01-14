@@ -63,7 +63,7 @@ public class TeachersStructureController {
         }
 
         for (TeachersStructure t:teachersStructures){
-            double m1 = 0;
+            double m1;
             if (t.getB21() <= t.getQualified()){
                 m1 = 1;
             }else {
