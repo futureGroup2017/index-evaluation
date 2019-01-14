@@ -13,7 +13,6 @@ import org.wlgzs.index_evaluation.util.ExcelUtil;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +32,7 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
     private CollegeMapper collegeMapper;
 
     @Override
-    public Result saveCollege(HttpServletRequest request) throws IOException {
+    public Result saveCollege(HttpServletRequest request) {
         //获取上传的文件
         MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
         MultipartFile file = multipart.getFile("file");
@@ -42,11 +41,11 @@ public class CollegeServiceImpl extends ServiceImpl<CollegeMapper, College> impl
             result.setMsg("上传失败");
             return result;
         }
-        assert file != null;
-        InputStream in = file.getInputStream();
-        List<List<Object>> listob;
         List<College> colleges = new ArrayList<>();
+        List<List<Object>> listob;
         try {
+            assert file != null;
+            InputStream in = file.getInputStream();
             listob = ExcelUtil.getBankListByExcel(in,file.getOriginalFilename());
             //遍历listob数据，把数据放到List中
             for (List<Object> ob : listob) {

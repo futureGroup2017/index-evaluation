@@ -38,15 +38,15 @@ public class ExcelUtil {
      * Excel导入
      */
     public static  List<List<Object>> getBankListByExcel(InputStream in, String fileName) throws Exception{
-        List<List<Object>> list = null;
+        List<List<Object>> list;
         //创建Excel工作薄
         Workbook work = getWorkbook(in,fileName);
         if(null == work){
             throw new Exception("创建Excel工作薄为空！");
         }
-        Sheet sheet = null;
-        Row row = null;
-        Cell cell = null;
+        Sheet sheet;
+        Row row;
+        Cell cell;
         list = new ArrayList<List<Object>>();
         //遍历Excel中所有的sheet
         for (int i = 0; i < work.getNumberOfSheets(); i++) {
@@ -74,7 +74,7 @@ public class ExcelUtil {
      * 描述：根据文件后缀，自适应上传文件的版本
      */
     public static  Workbook getWorkbook(InputStream inStr,String fileName) throws Exception{
-        Workbook wb = null;
+        Workbook wb;
         String fileType = fileName.substring(fileName.lastIndexOf("."));
         if(excel2003L.equals(fileType)){
             wb = new HSSFWorkbook(inStr);  //2003-
@@ -92,7 +92,7 @@ public class ExcelUtil {
         Object value = null;
         DecimalFormat df = new DecimalFormat("0");  //格式化字符类型的数字
         SimpleDateFormat sdf = new SimpleDateFormat("yyy-MM-dd");  //日期格式化
-        DecimalFormat df2 = new DecimalFormat("0.00");  //格式化数字
+        DecimalFormat df2 = new DecimalFormat("0.0000");  //格式化数字
         switch (cell.getCellType()) {
             case Cell.CELL_TYPE_STRING:
                 value = cell.getRichStringCellValue().getString();
