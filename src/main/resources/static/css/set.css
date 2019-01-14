@@ -1,0 +1,143 @@
+@charset "UTF-8";
+.tables {
+  /* 弹窗内容 */
+  /* 添加动画 */
+  /* 关闭按钮 */ }
+  .tables section .top-title {
+    font-size: 25px;
+    text-align: center;
+    font-weight: 500;
+    color: #444444; }
+  .tables .setform {
+    width: 100%;
+    margin-top: 20px;
+    padding: 20px;
+    border: 1px solid #dad5d5;
+    transition: all 0.5s;
+    background-color: #FDF9F9; }
+    .tables .setform:hover {
+      box-shadow: 0px 0px 3px #0d7b58; }
+    .tables .setform .swith i {
+      width: 40px;
+      font-style: normal;
+      padding: 2px;
+      cursor: pointer; }
+    .tables .setform .swith .on {
+      background-color: #19a97b;
+      color: #fff;
+      border-radius: 5px; }
+    .tables .setform .table {
+      border: 1px solid #999; }
+      .tables .setform .table caption .plus {
+        width: 50px;
+        height: 30px;
+        background-color: #33b2ef;
+        margin-left: 30px;
+        cursor: pointer;
+        float: right;
+        text-align: center;
+        border-radius: 5px;
+        transition: all 0.5s;
+        color: #fff;
+        opacity: 0.8; }
+        .tables .setform .table caption .plus i {
+          line-height: 30px; }
+        .tables .setform .table caption .plus:hover {
+          opacity: 1; }
+        .tables .setform .table caption .plus:hover i {
+          animation: reto 0.5s; }
+      .tables .setform .table th, .tables .setform .table td {
+        text-align: center;
+        display: table-cell;
+        vertical-align: middle; }
+      .tables .setform .table thead {
+        background-color: #F3F3F3; }
+      .tables .setform .table tbody tr td input {
+        color: #fbeded;
+        width: 70px;
+        height: 30px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: all 0.5s; }
+      .tables .setform .table tbody tr td > .modi {
+        background-color: #19a97b; }
+        .tables .setform .table tbody tr td > .modi:hover {
+          color: #fff;
+          background-color: #18b985; }
+      .tables .setform .table tbody tr td > .delete {
+        background-color: red;
+        opacity: 0.7; }
+        .tables .setform .table tbody tr td > .delete:hover {
+          color: #fff;
+          opacity: 1; }
+  .tables .modal {
+    display: none;
+    /* 默认隐藏 */
+    position: fixed;
+    z-index: 1;
+    padding-top: 150px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: black;
+    background-color: rgba(0, 0, 0, 0.4); }
+  .tables .modal-content {
+    position: relative;
+    background-color: #fefefe;
+    margin: auto;
+    padding: 0;
+    border: 1px solid #888;
+    width: 30%;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s; }
+@-webkit-keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0; }
+  to {
+    top: 0;
+    opacity: 1; } }
+@keyframes animatetop {
+  from {
+    top: -300px;
+    opacity: 0; }
+  to {
+    top: 0;
+    opacity: 1; } }
+  .tables .closes {
+    color: white;
+    float: right;
+    font-size: 28px;
+    font-weight: bold; }
+  .tables .closes:hover,
+  .tables .closes:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer; }
+  .tables .modal-header {
+    padding: 2px 16px;
+    background-color: #19a97b;
+    color: white; }
+  .tables .modal-body {
+    padding: 2px 16px; }
+    .tables .modal-body input {
+      margin: 15px 0px; }
+  .tables .modal-footer {
+    padding: 2px 16px;
+    background-color: #19a97b;
+    color: white; }
+    .tables .modal-footer input {
+      background-color: #19a97b; }
+
+@keyframes reto {
+  from {
+    transform: rotate(0deg); }
+  to {
+    transform: rotate(360deg); } }
+
+/*# sourceMappingURL=set.css.map */

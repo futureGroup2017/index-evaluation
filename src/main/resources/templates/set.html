@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>大学生指数评价系统</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="dist/css/txt.wav.css">
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+    <link rel="stylesheet" type="text/css" href="css/result.css">
+
+</head>
+
+<body>
+<header>
+    <h1>
+        <img src="images/top1.png"/>
+        <span class="txtwav bounce">河南科技学院</span>
+    </h1>
+    <ul class="rt_nav">
+        <li>
+            <a href="" target="_blank" class="website_icon">
+                <i class="fa fa-fire"></i>
+                <span>站点首页</span>
+            </a>
+        </li>
+        <li>
+            <a href="login.php" class="quit_icon">
+                <i class="fa fa-send"></i>
+                <span>安全退出</span>
+            </a>
+        </li>
+    </ul>
+</header>
+<!--aside nav-->
+<aside class="aside_nav">
+    <!--<h2><a href="">招新步骤</a></h2>-->
+
+    <ul>
+        <div class="closeche">
+            <i class="fa fa-caret-right"></i>
+        </div>
+        <li>
+            <a href="index.html">欢迎登录</a>
+        </li>
+        <li>
+            <a href="Enrolment.html">就业竞争力指数</a>
+
+        </li>
+        <li>
+            <a href="Being-interviewed.html">生源质量指数</a>
+        </li>
+        <li>
+            <a href="result.html">师资结构指数</a>
+        </li>
+        <li class="active">
+            <a href="set.html">就业状态指数</a>
+            <i class="fa fa-angle-double-right"></i>
+        </li>
+        <li>
+            <a href="perinfor.html">就业率指数</a>
+        </li>
+        <li>
+            <a href="employment.html">用人单位满意度指数</a>
+        </li>
+        <li>
+            <a href="Satisfied.html">就业创业实践指数</a>
+        </li>
+    </ul>
+</aside>
+<section class="wrap ">
+    <div class="tables">
+        <section>
+            <h1 class="top-title">就 业 状 态 指 数</h1>
+        </section>
+        <section>
+            <a href=""><input type="button" id="daoru" value="导入" class="result" /></a>
+            <a href=""><input type="button" value="导出" class="result" /></a>
+            <select class="selects">
+                <option value="" disabled selected hidden>选择删除年份</option>
+                <option class="selects" value ="2019年">2019年</option>
+                <option class="selects" value ="2018年">2018年</option>
+                <option class="selects" value ="2017年">2017年</option>
+                <option class="selects" value="2016年">2016年</option>
+                <option class="selects" value="2015年">2015年</option>
+            </select>
+            <a href=""><input type="button" value="删除" class="result" /></a>
+            <input type="file" id="file" style="display: none">
+            <script>
+                window.onload=function () {
+                    $("#daoru").click(function () {
+                        $("#file").click();
+                    })
+                }
+            </script>
+            <div class="searrch">
+                <form action="">
+                    <input type="text" class="ipt">
+                    <input type="submit" class="submit">
+                </form>
+            </div>
+        </section>
+        <div class="resultform">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>班级</th>
+                    <th>一面</th>
+                    <th>操作</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>班级</th>
+                    <th>一面</th>
+                    <th>操作</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>班级</th>
+                    <th>一面</th>
+                    <th>操作</th>
+                    <th>姓名</th>
+                    <th>性别</th>
+                    <th>班级</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物2</td>
+                </tr>
+                <tr>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物2</td>
+                </tr>
+                <tr>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物2</td>
+                </tr>
+                <tr>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物2</td>
+                </tr>
+                <tr>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物2</td>
+                </tr>
+                <tr>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物联172</td>
+                    <td>75</td>
+                    <td>4654</td>
+                    <td>张三</td>
+                    <td>男</td>
+                    <td>物2</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</section>
+</body>
+<script src="js/jquery-2.1.0.js"></script>
+<script src="dist/js/txt.wav.min.js"></script>
+<script src="js/result.js"></script>
+<script type="text/javascript">
+    $(function() {
+        //确定文档高度
+        var winheight = $(window).height();
+        winheight -= 70;
+        $('.wrap').css('height', winheight);
+        //点击缩回
+        $('.closeche').on('click', function() {
+            if($('.aside_nav').css('left') == '0px') {
+                $('.aside_nav').css('left', '-210px');
+                $('.wrap').css({
+                    'width': '95%',
+                    'margin-left': '40px'
+                });
+            } else {
+                $('.aside_nav').css('left', '0px');
+                $('.wrap').css({
+                    'width': '',
+                    'margin-left': '258px'
+                })
+            }
+
+        })
+
+    });
+</script>
+
+</html>
