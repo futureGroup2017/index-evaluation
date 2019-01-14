@@ -42,6 +42,11 @@ public class TeachersStructureController {
         for (TeachersStructure t:teachersStructures){
             //设置年份
             t.setYear(year);
+            //设置生师比合格值: 艺术学院,服装学院,体育学院11，其余18
+            if (t.getCollegeName().equals("艺术学院") || t.getCollegeName().equals("服装学院") || t.getCollegeName().equals("体育学院"))
+                t.setQualified(11);
+            else
+                t.setQualified(18);
             //计算生师比：学生总数/教师总数
             t.setB21(Double.parseDouble(df3.format(t.getStuNum()/t.getTeaNum())));
             //计算研究生学位教师占专职教师比例：研究生教师数/教师总数
