@@ -1,14 +1,5 @@
 package org.wlgzs.index_evaluation.util;
 
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.*;
-import org.wlgzs.index_evaluation.pojo.ExcelBean;
-
 import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.io.InputStream;
@@ -24,6 +15,22 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import lombok.extern.log4j.Log4j2;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFFont;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.wlgzs.index_evaluation.pojo.ExcelBean;
+
+@Log4j2
 public class ExcelUtil {
     private final static String excel2003L =".xls";    //2003- 版本的excel
     private final static String excel2007U =".xlsx";   //2007+ 版本的excel
@@ -93,6 +100,10 @@ public class ExcelUtil {
             case Cell.CELL_TYPE_NUMERIC:
                 if("General".equals(cell.getCellStyle().getDataFormatString())){
                     value = df.format(cell.getNumericCellValue());
+                    if (String.valueOf(cell.getNumericCellValue()).contains(".5")){
+                        DecimalFormat df1 = new DecimalFormat("0.0");  //格式化数字
+                        value = df1.format(cell.getNumericCellValue());
+                    }
                 }else if("m/d/yy".equals(cell.getCellStyle().getDataFormatString())){
                     value = sdf.format(cell.getDateCellValue());
                 }else{
@@ -119,8 +130,8 @@ public class ExcelUtil {
      * @param map  标题列行数以及cell字体样式
      */
     public static XSSFWorkbook createExcelFile(Class clazz, List objs, Map<Integer, List<ExcelBean>> map, String sheetName) throws
-            IllegalArgumentException,IllegalAccessException,InvocationTargetException,
-            ClassNotFoundException, IntrospectionException, ParseException {
+IllegalArgumentException,IllegalAccessException,InvocationTargetException,
+ClassNotFoundException, IntrospectionException, ParseException {
         // 创建新的Excel工作簿
         XSSFWorkbook workbook = new XSSFWorkbook();
         // 在Excel工作簿中建一工作表，其名为缺省值, 也可以指定Sheet名称
