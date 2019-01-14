@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * @author AlgerFan
  * @date Created in 2019/1/13 17
- * @Description
+ * @Description 就业率指数
  */
 @Service
 @Log4j2
@@ -47,21 +47,20 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
             DecimalFormat decimalFormat = new DecimalFormat(".000");//构造方法的字符格式这里如果小数不足2位,会以0补足.
             listob = ExcelUtil.getBankListByExcel(in,file.getOriginalFilename());
             //遍历listob数据，把数据放到List中
-            for (int i = 1; i < listob.size(); i++) {
+            for (List<Object> objects : listob) {
                 EmploymentRate employmentRate = new EmploymentRate();
                 //通过遍历实现把每一列封装成一个model中，再把所有的model用List集合装载
-                //System.out.println(listob.get(i));
-                employmentRate.setCollege(String.valueOf(listob.get(i).get(0)));
-                employmentRate.setFirstEmploymentRate(String.valueOf(listob.get(i).get(1)));
-                employmentRate.setLastEmploymentRate(String.valueOf(listob.get(i).get(2)));
+                employmentRate.setCollege(String.valueOf(objects.get(0)));
+                employmentRate.setFirstEmploymentRate(String.valueOf(objects.get(1)));
+                employmentRate.setLastEmploymentRate(String.valueOf(objects.get(2)));
                 //初次就业率指数=初次就业率*100*0.2495
-                float firstIndex = (float) ((Float.parseFloat(employmentRate.getFirstEmploymentRate()))*100*0.2495);
+                double firstIndex = ((Double.parseDouble(employmentRate.getFirstEmploymentRate())) * 100 * 0.2495);
                 employmentRate.setFirstIndex(decimalFormat.format(firstIndex));
                 //年终就业率指数=年终就业率*100*0.586
-                float lastIndex = (float) (Float.parseFloat(employmentRate.getLastEmploymentRate())*100*0.586);
+                double lastIndex = (Double.parseDouble(employmentRate.getLastEmploymentRate()) * 100 * 0.586);
                 employmentRate.setLastIndex(decimalFormat.format(lastIndex));
-                //最终就业率指数=（初次就业率指数+年终就业率指数）*0.2495
-                float index = (float) ((Float.parseFloat(employmentRate.getFirstIndex()) + Float.parseFloat(employmentRate.getLastIndex())) * 0.2495);
+                //就业率指数=（初次就业率指数+年终就业率指数）*0.2495
+                double index = ((Double.parseDouble(employmentRate.getFirstIndex()) + Double.parseDouble(employmentRate.getLastIndex())) * 0.2495);
                 employmentRate.setEmploymentRateIndex(decimalFormat.format(index));
                 employmentRate.setYear(year);
                 employmentRateList.add(employmentRate);
