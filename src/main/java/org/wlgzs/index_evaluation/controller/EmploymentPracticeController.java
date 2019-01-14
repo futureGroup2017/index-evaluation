@@ -1,8 +1,16 @@
 package org.wlgzs.index_evaluation.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
+import org.wlgzs.index_evaluation.pojo.EmploymentPractice;
 import org.wlgzs.index_evaluation.service.EmploymentPracticeService;
 
 import javax.annotation.Resource;
@@ -15,13 +23,34 @@ import javax.servlet.http.HttpServletRequest;
  */
 @RestController
 @RequestMapping("/employmentPractice")
+@Log4j2
 public class EmploymentPracticeController {
 
     @Resource
     private EmploymentPracticeService employmentPracticeService;
 
+    /**
+     * 导入就业创业实践数据
+     * @param year
+     * @param request
+     */
     @RequestMapping("/importData")
-    private Result importData(int year, HttpServletRequest request){
+    public Result importData(int year, HttpServletRequest request){
         return employmentPracticeService.importData(year, request);
     }
+
+    @RequestMapping("/findAll")
+    public ModelAndView findAll(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                                @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
+        Page<EmploymentPractice> practicePage = new Page<>(pageNum,pageSize);
+        QueryWrapper<EmploymentPractice> practiceQueryWrapper = new QueryWrapper<>();
+        IPage<EmploymentPractice> page = employmentPracticeService.page(practicePage, practiceQueryWrapper);
+        model.addAttribute("current",page.getCurrent());  //当前页数
+        model.addAttribute("pages",page.getPages());   //总页数
+        model.addAttribute("college",page.getRecords());   //集合
+        model.addAttribute("msg","查询成功");
+        log.info("查询成功:"+page.getRecords());
+        return new ModelAndView("test");
+    }
+
 }

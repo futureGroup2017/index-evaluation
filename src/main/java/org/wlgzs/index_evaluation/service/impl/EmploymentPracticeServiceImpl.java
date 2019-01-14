@@ -35,7 +35,6 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
 
     @Override
     public Result importData(int year, HttpServletRequest request) {
-
         //获取上传的文件
         MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
         MultipartFile file = multipart.getFile("file");
