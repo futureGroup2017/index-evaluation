@@ -23,4 +23,11 @@ public interface TeachersStructureService extends IService<TeachersStructure> {
     //单个添加
     @Transactional
     Integer add(TeachersStructure teachersStructure);
+
+    //更新操作
+    @Transactional
+    Integer update(TeachersStructure teachersStructure);
+
+    //查询所有数据
+    List<TeachersStructure> findAll();
 }
