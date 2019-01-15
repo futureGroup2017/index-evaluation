@@ -16,6 +16,14 @@
             display: inline-block;
         }
     </style>
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        var deleteMessages = [[${msg}]];
+        if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') {
+            alert(deleteMessages);
+        }
+        /*]]>*/
+    </script>
 </head>
 
 <body>
@@ -88,7 +96,7 @@
                 <input type="button" value="导出" class="result" />
             </form>
             <!--用于删除-->
-            <form>
+            <form th:action="@{/ts/delete}" th:method="get">
                 <input type="text" name="year" class="year" style="display: none">
                 <input type="submit" value="删除" class="result"/>
             </form>
