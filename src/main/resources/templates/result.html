@@ -75,15 +75,11 @@
         </section>
         <section style="position: relative">
             <select class="selects" id="select">
-                <option value="" disabled selected hidden>请选择年份</option>
+                <option value="" disabled selected>请选择年份</option>
                 <option class="selects" th:each="year:${allYear}" th:text="${year.getYearName()}"></option>
             </select>
             <input type="button" id="daoru" value="导入" class="result" />
             <!--用于导出数据-->
-            <!--<form th:action="@{/ts/export}" th:method="get">-->
-                <!--<input id="export-year" class="year" type="text" name="year" style="display: none">-->
-                <!--<input type="button" id="export" value="导出" class="result" />-->
-            <!--</form>-->
             <a id="export" href="#"><input type="button" id="export-bot" value="导出" class="result" /></a>
             <!--用于删除-->
             <form th:action="@{/ts/delete}" th:method="get">
@@ -94,14 +90,14 @@
             <form th:action="@{/ts/import}" th:method="post" enctype="multipart/form-data">
                 <input class="year" id="import-year" type="text" name="year" style="display: none">
                 <input type="file" name="upfile" id="file" style="display: none">
-                <input type="submit" id="import upload" style="display: none">
+                <input type="submit" id="import" style="display: none">
             </form>
             <script>
                 document.getElementById("daoru").onclick=function () {
                     document.getElementById("file").click();
                 };
                 $("#file").change(function () {
-                    $("#upload").click();
+                    $("#import").click();
                 });
                 $("#select").change(function () {
                     var years=$("#select option:selected").text();
@@ -122,7 +118,7 @@
                     var years=$("#select option:selected").text();
                     Url = Url+years;
                     $("#export").attr('href',Url);
-                })
+                });
                 $("#export-bot").click(function () {
                     if( $('#export').attr('href') == '#' ){
                         alert("请选择年份！")
