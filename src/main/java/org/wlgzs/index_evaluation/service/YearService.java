@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 import org.wlgzs.index_evaluation.pojo.Year;
 
+import java.util.List;
+
 /**
  * @author zsh
  * @company wlgzs
@@ -16,7 +18,7 @@ public interface YearService extends IService<Year> {
 
     //查询所有年份
     @Transactional
-    IPage<Year> findAllYear(int pageNum, int pageSize);
+    List<Year> findAllYear();
 
     //通过年份名称查询
     @Transactional

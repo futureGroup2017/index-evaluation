@@ -20,7 +20,7 @@ public class Major {
     private static final long serialVersionUID = 1L;
 
     @TableId(value = "major_id", type = IdType.AUTO)
-    private Integer maiorId;
+    private Integer majorId;
     @TableField("major_name")
     private String majorName;
 }
