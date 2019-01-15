@@ -16,6 +16,8 @@ import org.wlgzs.index_evaluation.service.EmploymentPracticeService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +42,10 @@ public class EmploymentPracticeController {
     @RequestMapping("/importData")
     public Result importData(int year, HttpServletRequest request){
         return employmentPracticeService.importData(year, request);
+    }
+    @RequestMapping("/exportData")
+    public void exportData(int year, HttpServletResponse response) throws IOException {
+        employmentPracticeService.exportData(year, response);
     }
 
     /**

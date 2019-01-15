@@ -5,10 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.EmploymentRate;
@@ -16,6 +13,8 @@ import org.wlgzs.index_evaluation.service.EmploymentRateService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +39,17 @@ public class EmploymentRateController {
     @RequestMapping("/importData")
     public Result importData(int year,HttpServletRequest request){
         return employmentRateService.importData(year,request);
+    }
+
+    /**
+     * 导出就业率指数
+     * @param year
+     * @param response
+     * @throws IOException
+     */
+    @GetMapping("/exportData")
+    public void exportData(int year, HttpServletResponse response) throws IOException {
+        employmentRateService.exportData(year, response);
     }
 
     /**
