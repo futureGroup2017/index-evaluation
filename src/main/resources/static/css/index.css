@@ -218,9 +218,9 @@ header .rt_nav li a span{
     margin-top: 5px;
     padding-bottom: 30px;
     min-height: 550px;
+    height: 550px;
     position: relative;
-    overflow: hidden;
-    overflow-y: auto;
+    overflow-y:scroll;
     background-color: #F3F3F3;
     border:1px solid #838183 ;
     z-index:1;

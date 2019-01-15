@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<meta charset="UTF-8">
 		<title>大学生指数评价系统</title>
@@ -14,6 +14,15 @@
 		<link rel="stylesheet" href="css/matter.css" />
 		<script>
 			var colors = ['255,103,103', '97,223,255', '255,232,88', '141,255,139'];
+		</script>
+
+		<script th:inline="javascript">
+			/*<![CDATA[*/
+			var deleteMessages = [[${msg}]];
+			if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') {
+				alert(deleteMessages);
+			}
+			/*]]>*/
 		</script>
 	</head>
 
@@ -30,7 +39,7 @@
 						<span style="font-size: 12px">修改密码</span>
 				</li>
 				<li>
-					<a class="quit_icon">
+					<a class="quit_icon" th:href="@{/out}" th:target="_self">
 						<i class="fa fa-send"></i>
 						<span>安全退出</span>
 					</a>
@@ -55,7 +64,7 @@
 					<a href="Being-interviewed.html">生源质量指数</a>
 				</li>
 				<li>
-					<a href="result.html">师资结构指数</a>
+					<a th:href="@{/ts/to}" th:target="_self">师资结构指数</a>
 				</li>
 				<li>
 					<a href="set.html">就业状态指数</a>
@@ -106,12 +115,12 @@
 		<div class="window">
             <div class="window-center">
                 <div class="close-window">×</div>
-                <form action="****" method="****">
-                    <input type="text" name="****" style="display: none;">
-                    <input type="text" name="****" style="display: none;">
-                    <input placeholder="请输入原密码" name="****" type="password" style="width: 70%;height: 40px;border: solid 2px white;display: block;margin: 20px auto;color: white;font-size: 15px;margin-top: 60px">
-                    <input placeholder="请输入新密码" id="newpassword" name="****" type="password" style="width: 70%;height: 40px;border: solid 2px white;display: block;margin: 20px auto;color: white;font-size: 15px">
-                    <input placeholder="验证新密码" id="newpassword2" name="****" type="password" style="width: 70%;height: 40px;border: solid 2px white;display: block;margin: 20px auto;color: white;font-size: 15px">
+                <form th:action="@{/update}" th:method="post">
+                    <input type="text" name="userId" style="display: none;" th:value="${session.user.getUserId()}">
+                    <input type="text" name="userName" style="display: none;" th:value="${session.user.getUserName()}">
+                    <input placeholder="请输入原密码" name="old" type="password" style="width: 70%;height: 40px;border: solid 2px white;display: block;margin: 20px auto;color: white;font-size: 15px;margin-top: 60px" required="required">
+                    <input placeholder="请输入新密码" id="newpassword" name="password" type="password" style="width: 70%;height: 40px;border: solid 2px white;display: block;margin: 20px auto;color: white;font-size: 15px" required="required">
+                    <input placeholder="验证新密码" id="newpassword2" type="password" style="width: 70%;height: 40px;border: solid 2px white;display: block;margin: 20px auto;color: white;font-size: 15px" required="required">
                     <input id="submit" value="提交" type="button" style="text-align:center;width:35%;height: 40px;background-color: white;margin-left: 15%">
                     <input type="reset" style="display: inline-block;width: 35%;height: 40px;background-color: white" />
                 </form>

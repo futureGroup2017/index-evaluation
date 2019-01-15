@@ -42,10 +42,10 @@
         </dt>
         <dd th:text="${msg}" style="color: red;height: 21px;"></dd>
         <dd class="user_icon">
-            <input type="text" name="username" placeholder="账号" class="login_txtbx"/>
+            <input type="text" name="userName" placeholder="账号" class="login_txtbx" required="required"/>
         </dd>
         <dd class="pwd_icon">
-            <input type="password" name="password" placeholder="密码" class="login_pass"/>
+            <input type="password" name="password" placeholder="密码" class="login_pass" required="required"/>
         </dd>
         <dd>
             <input type="submit" value="立即登录" class="submit_btn"/>

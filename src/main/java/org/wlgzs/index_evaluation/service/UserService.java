@@ -15,4 +15,8 @@ public interface UserService extends IService<User> {
     //通过用户名查找用户
     @Transactional
     User findByUserName(String userName);
+
+    //修改密码
+    @Transactional
+    Integer update(User user);
 }

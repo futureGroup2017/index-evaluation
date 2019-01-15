@@ -23,4 +23,9 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         queryWrapper.eq("user_name",userName);
         return baseMapper.selectOne(queryWrapper);
     }
+
+    @Override
+    public Integer update(User user) {
+        return baseMapper.updateById(user);
+    }
 }

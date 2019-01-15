@@ -19,4 +19,8 @@ public interface EmploymentService extends IService<Employment>{
     //批量导入
     @Transactional
     List<Employment> importExcelInfo(InputStream in, MultipartFile file);
+
+    //添加
+    @Transactional
+    Integer add(Employment employment);
 }
