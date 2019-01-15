@@ -151,39 +151,45 @@ public class EmployerSatisfaction {
     /**
      * 招聘毕业生的持续度
      */
-    @TableField(value = "sustain")
+   /* @TableField(value = "sustain")
     private Double sustain;
-    /**
+    *//**
      * 招聘毕业生的持续度非常满意人数
-     */
+     *//*
     @TableField(value = "sustain1")
     private int sustain1;
-    /**
+    *//**
      * 招聘毕业生的持续度满意人数
-     */
+     *//*
     @TableField(value = "sustain2")
     private int sustain2;
-    /**
+    *//**
      * 招聘毕业生的持续度一般人数
-     */
+     *//*
     @TableField(value = "sustain3")
     private int sustain3;
-    /**
+    *//**
      * 招聘毕业生的持续度不满意人数
-     */
+     *//*
     @TableField(value = "sustain4")
     private int sustain4;
-    /**
+    *//**
      * 招聘毕业生的持续度非常不满意人数
-     */
+     *//*
     @TableField(value = "sustain5")
-    private int sustain5;
+    private int sustain5;*/
+
+    /**
+     * 用人单位满意度指数
+     */
+    @TableField(value = "satisfaction_index")
+    private  Double satisfactionIndex;
     /**
      * 年份
      */
     @TableField(value = "year")
     private int year;
-    public EmployerSatisfaction(String college, Double level, int level1, int level2, int level3, int level4, int level5, Double ability, int ability1, int ability2, int ability3, int ability4, int ability5, Double match, int match1, int match2, int match3, int match4, int match5, Double satisfaction, int satisfaction1, int satisfaction2, int satisfaction3, int satisfaction4, int satisfaction5, int year) {
+    public EmployerSatisfaction(String college, Double level, int level1, int level2, int level3, int level4, int level5, Double ability, int ability1, int ability2, int ability3, int ability4, int ability5, Double match, int match1, int match2, int match3, int match4, int match5, Double satisfaction, int satisfaction1, int satisfaction2, int satisfaction3, int satisfaction4, int satisfaction5,Double satisfactionIndex, int year) {
         this.college = college;
         this.level = level;
         this.level1 = level1;
@@ -209,6 +215,7 @@ public class EmployerSatisfaction {
         this.satisfaction3 = satisfaction3;
         this.satisfaction4 = satisfaction4;
         this.satisfaction5 = satisfaction5;
+        this.satisfactionIndex = satisfactionIndex;
         this.year = year;
     }
 

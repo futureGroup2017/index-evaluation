@@ -91,9 +91,10 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             int sustain5 = Integer.parseInt(row.getCell(5).getStringCellValue());
             double num4 =  sustain1+sustain2+sustain3+sustain4+sustain5;
             double sustain  =(double) Math.round((sustain1+sustain2*0.8d+sustain3*0.6d+sustain4*0.4d+sustain5*0.2d)*100d/num4*0.1895*1000)/1000;*/
+           double  satisfactionIndex  = (double) Math.round((level+ability+match+satisfaction)*132.5)/1000;
             EmployerSatisfaction em  = new EmployerSatisfaction(college,level,level1,level2,level3,level4,level5,
                     ability,ability1,ability2,ability3,ability4,ability5,match,match1,match2,match3,match4,match5,
-                    satisfaction,satisfaction1,satisfaction2,satisfaction3,satisfaction4,satisfaction5,time);
+                    satisfaction,satisfaction1,satisfaction2,satisfaction3,satisfaction4,satisfaction5,satisfactionIndex,time);
             employerSatisfactionList.add(em);
         }
         return employerSatisfactionList;
