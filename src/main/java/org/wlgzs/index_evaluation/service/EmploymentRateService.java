@@ -19,4 +19,6 @@ public interface EmploymentRateService extends IService<EmploymentRate> {
      * @param request
      */
     Result importData(int year, HttpServletRequest request);
+
+    Result deleteYear(int year);
 }

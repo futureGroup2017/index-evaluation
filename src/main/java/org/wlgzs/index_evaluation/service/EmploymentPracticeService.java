@@ -14,4 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 public interface EmploymentPracticeService extends IService<EmploymentPractice> {
 
     Result importData(int year, HttpServletRequest request);
+
+    Result deleteYear(int year);
 }

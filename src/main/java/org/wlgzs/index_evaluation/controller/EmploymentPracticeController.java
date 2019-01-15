@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -39,6 +40,12 @@ public class EmploymentPracticeController {
         return employmentPracticeService.importData(year, request);
     }
 
+    /**
+     * 查询全部就业创业实践
+     * @param model
+     * @param pageNum
+     * @param pageSize
+     */
     @RequestMapping("/findAll")
     public ModelAndView findAll(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                 @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
@@ -47,10 +54,20 @@ public class EmploymentPracticeController {
         IPage<EmploymentPractice> page = employmentPracticeService.page(practicePage, practiceQueryWrapper);
         model.addAttribute("current",page.getCurrent());  //当前页数
         model.addAttribute("pages",page.getPages());   //总页数
-        model.addAttribute("college",page.getRecords());   //集合
+        model.addAttribute("employmentPractice",page.getRecords());   //集合
         model.addAttribute("msg","查询成功");
         log.info("查询成功:"+page.getRecords());
         return new ModelAndView("test");
     }
+
+    /**
+     * 按照年份删除数据
+     * @param year
+     */
+    @DeleteMapping("/deleteYear")
+    public Result deleteYear(int year){
+        return employmentPracticeService.deleteYear(year);
+    }
+
 
 }
