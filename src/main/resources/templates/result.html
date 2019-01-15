@@ -11,21 +11,10 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/result.css}">
     <script th:src="@{/js/jquery.js}"></script>
-    <style>
-        form{
-            display: inline-block;
-        }
+    <style>form{display: inline-block;}
     </style>
-    <script th:inline="javascript">
-        /*<![CDATA[*/
-        var deleteMessages = [[${msg}]];
-        if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') {
-            alert(deleteMessages);
-        }
-        /*]]>*/
-    </script>
+    <script th:inline="javascript">var deleteMessages = [[${msg}]];if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') {alert(deleteMessages);}</script>
 </head>
-
 <body>
 <header>
     <h1>
@@ -47,7 +36,6 @@
         </li>
     </ul>
 </header>
-<!--aside nav-->
 <aside class="aside_nav">
     <ul>
         <div class="closeche">
@@ -91,9 +79,10 @@
                 <option class="selects" th:each="year:${allYear}" th:text="${year.getYearName()}"></option>
             </select>
             <input type="button" id="daoru" value="导入" class="result" />
-            <form>
-                <input class="year" type="text" name="year" style="display: none">
-                <input type="button" value="导出" class="result" />
+            <!--用于导出数据-->
+            <form th:action="@{/ts/import}" th:method="get">
+                <input id="export-year" class="year" type="text" name="year" style="display: none">
+                <input type="button" id="export" value="导出" class="result" />
             </form>
             <!--用于删除-->
             <form th:action="@{/ts/delete}" th:method="get">
@@ -114,14 +103,17 @@
                     $("#upload").click();
                 });
                 $("#select").change(function () {
-                    var years=$("#select option:selected").text();
-                    $(".year").val(years);
+                    var years=$("#select option:selected").text();$(".year").val(years);$("#export").attr("type","submit");
+                });
+                $("#export").click(function () {
+                    var values=$("#export-year").val();if ( values == ''){alert('请选择年份!');}
                 });
             </script>
             <!--用于查询搜索-->
             <div class="searrch" style="position: absolute;top: 0;right: 0;">
-                <form>
-                    <input type="text" name="" class="ipt">
+                <form th:action="@{/ts/search}" th:method="post">
+                    <input type="text" placeholder="请输入学院名称" name="collge" class="ipt">
+                    <input class="year" type="text" name="year" style="display: none">
                     <input type="submit" class="submit">
                 </form>
             </div>
@@ -172,7 +164,6 @@
             </table>
         </div>
     </div>
-    <!--分页功能-->
     <div class="fenye" style="text-align:center" th:if="${pages > 0}">
         <ul class="pagination" th:if="${pages > 1}">
             <li th:if="${current == 1}"><a class="noclick" href="javascript:;">首页</a></li>
