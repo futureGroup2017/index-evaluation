@@ -12,7 +12,8 @@ spring:
     cache: false
   servlet:
     multipart:
-      max-file-size: 5MB
+      max-file-size: 100MB
+      max-request-size: 100MB
   datasource:
     name: mysql
     type: com.alibaba.druid.pool.DruidDataSource

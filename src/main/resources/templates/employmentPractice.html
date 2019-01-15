@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>大学生指数评价系统</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/txt.wav.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/result.css}">
+
+</head>
+
+<body>
+<header>
+    <h1>
+        <img th:src="@{/images/top1.png}"/>
+        <span class="txtwav bounce">河南科技学院</span>
+    </h1>
+    <ul class="rt_nav">
+        <li>
+            <a th:href="@{/toindex}" th:target="_self" class="website_icon">
+                <i class="fa fa-fire"></i>
+                <span>站点首页</span>
+            </a>
+        </li>
+        <li>
+            <a class="quit_icon" th:href="@{/out}" th:target="_self">
+                <i class="fa fa-send"></i>
+                <span>安全退出</span>
+            </a>
+        </li>
+    </ul>
+</header>
+<!--aside nav-->
+<aside class="aside_nav">
+    <ul>
+        <div class="closeche">
+            <i class="fa fa-caret-right"></i>
+        </div>
+        <li>
+            <a href="index.html">欢迎登录</a>
+        </li>
+        <li>
+            <a href="Enrolment.html">就业竞争力指数</a>
+        </li>
+        <li>
+            <a href="Being-interviewed.html">生源质量指数</a>
+        </li>
+        <li class="active">
+            <a href="result.html">师资结构指数</a>
+        </li>
+        <li>
+            <a href="set.html">就业状态指数</a>
+        </li>
+        <li>
+            <a th:href="@{/employmentRate/findAll}">就业率指数</a>
+            <i class="fa fa-angle-double-right"></i>
+        </li>
+        <li>
+            <a href="employment.html">用人单位满意度指数</a>
+        </li>
+        <li>
+            <a href="Satisfied.html">就业创业实践指数</a>
+        </li>
+    </ul>
+</aside>
+<section class="wrap ">
+    <div class="tables">
+        <section>
+            <h1 class="top-title">师 资 结 构 指 数</h1>
+        </section>
+        <section>
+            <a href=""><input type="button" id="daoru" value="导入" class="result"/></a>
+            <a href=""><input type="button" value="导出" class="result"/></a>
+            <select class="selects">
+                <option value="" disabled selected hidden>选择删除年份</option>
+                <option class="selects" th:each="year:${allYear}" th:text="${year}"></option>
+            </select>
+            <a href=""><input type="button" value="删除" class="result"/></a>
+            <input type="file" id="file" style="display: none">
+            <script>
+                window.onload = function () {
+                    $("#daoru").click(function () {
+                        $("#file").click();
+                    })
+                }
+            </script>
+            <div class="searrch">
+                <form action="">
+                    <input type="text" class="ipt">
+                    <input type="submit" class="submit">
+                </form>
+            </div>
+        </section>
+        <div class="resultform">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>学院</th>
+                    <th>参赛人数比-1(职业生涯规划大赛</th>
+                    <th>参赛人数比-1(创业大赛）</th>
+                    <th>参赛人数比2-省创业大赛总人数</th>
+                    <th>M1: 参赛人数比47.5</th>
+                    <th>获奖质量积分-1(生涯规划大赛</th>
+                    <th>获奖质量积分-1(创业大赛）</th>
+                    <th>M2: 获奖质量比52.5</th>
+                    <th>项目数量</th>
+                    <th>M3: 项目数量比47</th>
+                    <th>项目质量</th>
+                    <th>M4: 项目质量比53</th>
+
+                    <th>参赛状态39</th>
+                    <th>创业项目28.5</th>
+                    <th>特色工作32.5</th>
+                    <th>就业创业实践指数</th>
+                    <th>年份</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="employmentPractice: ${employmentPractices}">
+                    <td th:text="${employmentPractice.getCollege()}"></td>
+                    <td th:text="${employmentPractice.getM11()}"></td>
+                    <td th:text="${employmentPractice.getM12()}"></td>
+                    <td th:text="${employmentPractice.getM13()}"></td>
+                    <td th:text="${employmentPractice.getPeopleNumber()}"></td>
+                    <td th:text="${employmentPractice.getM21()}"></td>
+                    <td th:text="${employmentPractice.getM22()}"></td>
+                    <td th:text="${employmentPractice.getQuality()}"></td>
+                    <td th:text="${employmentPractice.getM31()}"></td>
+                    <td th:text="${employmentPractice.getProjectNumber()}"></td>
+                    <td th:text="${employmentPractice.getM41()}"></td>
+                    <td th:text="${employmentPractice.getProjectQuality()}"></td>
+
+                    <td th:text="${employmentPractice.getParticipationStatus()}"></td>
+                    <td th:text="${employmentPractice.getVentureProject()}"></td>
+                    <td th:text="${employmentPractice.getFeaturedWork()}"></td>
+                    <td th:text="${employmentPractice.getPractice()}"></td>
+                    <td th:text="${employmentPractice.getYear()}"></td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+</section>
+</body>
+<script th:src="@{js/jquery-2.1.0.js}"></script>
+<script th:src="@{dist/js/txt.wav.min.js}"></script>
+<script th:src="@{js/result.js}"></script>
+<script type="text/javascript">
+    window.onload = function (ev) {
+        $(function () {
+            //确定文档高度
+            var winheight = $(window).height();
+            winheight -= 70;
+            $('.wrap').css('height', winheight);
+            //点击缩回
+            $('.closeche').on('click', function () {
+                if ($('.aside_nav').css('left') == '0px') {
+                    $('.aside_nav').css('left', '-210px');
+                    $('.wrap').css({
+                        'width': '95%',
+                        'margin-left': '40px'
+                    });
+                } else {
+                    $('.aside_nav').css('left', '0px');
+                    $('.wrap').css({
+                        'width': '',
+                        'margin-left': '258px'
+                    })
+                }
+
+            })
+
+        });
+    }
+</script>
+</html>
