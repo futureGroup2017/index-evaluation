@@ -10,7 +10,12 @@
     <link rel="stylesheet" type="text/css" th:href="@{/dist/css/txt.wav.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/result.css}">
-
+    <script th:src="@{/js/jquery.js}"></script>
+    <style>
+        form{
+            display: inline-block;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,8 +41,6 @@
 </header>
 <!--aside nav-->
 <aside class="aside_nav">
-    <!--<h2><a href="">招新步骤</a></h2>-->
-
     <ul>
         <div class="closeche">
             <i class="fa fa-caret-right"></i>
@@ -47,7 +50,6 @@
         </li>
         <li>
             <a href="Enrolment.html">就业竞争力指数</a>
-
         </li>
         <li>
             <a href="Being-interviewed.html">生源质量指数</a>
@@ -75,25 +77,43 @@
         <section>
             <h1 class="top-title">师 资 结 构 指 数</h1>
         </section>
-        <section>
-            <a href=""><input type="button" id="daoru" value="导入" class="result" /></a>
-            <a href=""><input type="button" value="导出" class="result" /></a>
-            <select class="selects">
-                <option value="" disabled selected hidden>选择删除年份</option>
+        <section style="position: relative">
+            <select class="selects" id="select">
+                <option value="" disabled selected hidden>请选择年份</option>
                 <option class="selects" th:each="year:${allYear}" th:text="${year.getYearName()}"></option>
             </select>
-            <a href=""><input type="button" value="删除" class="result" /></a>
-            <input type="file" id="file" style="display: none">
+            <input type="button" id="daoru" value="导入" class="result" />
+            <form>
+                <input class="year" type="text" name="year" style="display: none">
+                <input type="button" value="导出" class="result" />
+            </form>
+            <!--用于删除-->
+            <form>
+                <input type="text" name="year" class="year" style="display: none">
+                <input type="submit" value="删除" class="result"/>
+            </form>
+            <!--用于文件上传   导入-->
+            <form th:action="@{/ts/import}" th:method="post" enctype="multipart/form-data">
+                <input class="year" type="text" name="year" style="display: none">
+                <input type="file" name="upfile" id="file" style="display: none">
+                <input type="submit" id="upload" style="display: none">
+            </form>
             <script>
-                window.onload=function () {
-                    $("#daoru").click(function () {
-                        $("#file").click();
-                    })
-                }
+                document.getElementById("daoru").onclick=function () {
+                    document.getElementById("file").click();
+                };
+                $("#file").change(function () {
+                    $("#upload").click();
+                });
+                $("#select").change(function () {
+                    var years=$("#select option:selected").text();
+                    $(".year").val(years);
+                });
             </script>
-            <div class="searrch">
-                <form action="">
-                    <input type="text" class="ipt">
+            <!--用于查询搜索-->
+            <div class="searrch" style="position: absolute;top: 0;right: 0;">
+                <form>
+                    <input type="text" name="" class="ipt">
                     <input type="submit" class="submit">
                 </form>
             </div>
@@ -143,13 +163,12 @@
                 </tr>
             </table>
         </div>
-
     </div>
 </section>
 </body>
-<script th:src="@{js/jquery-2.1.0.js}"></script>
-<script th:src="@{dist/js/txt.wav.min.js}"></script>
-<script th:src="@{js/result.js}"></script>
+<script th:src="@{/js/jquery-2.1.0.js}"></script>
+<script th:src="@{/dist/js/txt.wav.min.js}"></script>
+<script th:src="@{/js/result.js}"></script>
 <script type="text/javascript">
     window.onload=function (ev) {
         $(function() {
@@ -172,9 +191,7 @@
                         'margin-left': '258px'
                     })
                 }
-
             })
-
         });
     }
 </script>
