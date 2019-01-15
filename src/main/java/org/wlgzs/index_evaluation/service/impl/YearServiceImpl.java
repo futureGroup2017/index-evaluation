@@ -1,5 +1,6 @@
 package org.wlgzs.index_evaluation.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -8,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.wlgzs.index_evaluation.dao.YearDao;
 import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.YearService;
+
+import java.util.List;
 
 /**
  * @author zsh
@@ -19,10 +22,8 @@ import org.wlgzs.index_evaluation.service.YearService;
 public class YearServiceImpl extends ServiceImpl<YearDao,Year> implements YearService {
 
     @Override
-    public IPage<Year> findAllYear(int pageNum, int pageSize) {
-        Page<Year> page = new Page<>(pageNum,pageSize);
-        QueryWrapper<Year> yearEntityWrapper = new QueryWrapper<>();
-        return baseMapper.selectPage(page,yearEntityWrapper);
+    public List<Year> findAllYear() {
+        return baseMapper.selectList(new QueryWrapper<>());
     }
 
     @Override

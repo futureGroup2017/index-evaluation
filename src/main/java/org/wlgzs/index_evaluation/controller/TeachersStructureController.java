@@ -3,12 +3,16 @@ package org.wlgzs.index_evaluation.controller;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.pojo.TeachersStructure;
+import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.TeachersStructureService;
+import org.wlgzs.index_evaluation.service.YearService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -29,6 +33,19 @@ public class TeachersStructureController {
 
     @Autowired
     private TeachersStructureService teachersStructureService;
+    @Autowired
+    private YearService yearService;
+
+    @GetMapping("/to")
+    public ModelAndView to(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("result");
+        List<Year> allYear = yearService.findAllYear();
+        modelAndView.addObject("allYear",allYear);
+        List<TeachersStructure> allTeachersStructure = teachersStructureService.findAll();
+        modelAndView.addObject("allTeachersStructure",allTeachersStructure);
+        return modelAndView;
+    }
 
     @RequestMapping("/import")
     public void impor(HttpServletRequest request, Model model,Integer year) throws IOException {

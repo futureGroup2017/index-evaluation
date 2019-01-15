@@ -56,7 +56,7 @@ public class YearController {
         log.info(byName);
     }
 
-    //年份查询
+    /*//年份查询
     @RequestMapping("all")
     public ModelAndView selectAll(@RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                   @RequestParam(name = "pageSize", defaultValue = "10") int pageSize){
@@ -68,6 +68,6 @@ public class YearController {
         modelAndView.setViewName("a");
         log.info("所有年份信息为："+pageInfo.getRecords());
         return modelAndView;
-    }
+    }*/
 
 }

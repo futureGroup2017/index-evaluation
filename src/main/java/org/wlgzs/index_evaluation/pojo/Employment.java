@@ -171,4 +171,54 @@ public class Employment {
      * 年份
      */
     private Integer year;
+
+    /**
+     * 知识能力结构40.75
+     */
+    private double B11;
+
+    /**
+     * 标识性优势31.35
+     */
+    private double B12;
+
+    /**
+     * 择业精神27.9
+     */
+    private double B13;
+
+    /**
+     * 就业起薪28.55
+     */
+    private double B21;
+
+    /**
+     * 岗位胜任度24.2
+     */
+    private double B22;
+
+    /**
+     * 就业现状满意度28
+     */
+    private double B23;
+
+    /**
+     * 预期就业年限19.25
+     */
+    private double B24;
+
+    /**
+     * 个体就业潜力44.8
+     */
+    private double A1;
+
+    /**
+     * 个体就业表现55.2
+     */
+    private double A2;
+
+    /**
+     * 就业状态指数25.3
+     */
+    private double employmentStatus;
 }
