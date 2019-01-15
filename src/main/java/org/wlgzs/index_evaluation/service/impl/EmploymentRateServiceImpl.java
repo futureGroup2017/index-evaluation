@@ -1,5 +1,6 @@
 package org.wlgzs.index_evaluation.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -71,5 +72,16 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
         }
         log.info("就业率数据："+employmentRateList);
         return new Result(ResultCodeEnum.SAVE,employmentRateList);
+    }
+
+    @Override
+    public Result deleteYear(int year) {
+        if(year==0) return new Result(ResultCodeEnum.UNDELETE);
+        QueryWrapper<EmploymentRate> rateQueryWrapper = new QueryWrapper<>();
+        rateQueryWrapper.eq("year",year);
+        List<EmploymentRate> employmentRates = employmentRateMapper.selectList(rateQueryWrapper);
+        if(employmentRates == null) return new Result(ResultCodeEnum.UNDELETE);
+        employmentRateMapper.delete(rateQueryWrapper);
+        return new Result(ResultCodeEnum.DELETE,employmentRates);
     }
 }
