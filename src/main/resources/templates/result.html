@@ -75,7 +75,7 @@
         </section>
         <section style="position: relative">
             <select class="selects" id="select">
-                <option value="" selected>请选择年份</option>
+                <option value="">请选择年份</option>
                 <option class="selects" th:each="year:${allYear}" th:text="${year.getYearName()}"></option>
             </select>
             <input type="button" id="daoru" value="导入" class="result" />
@@ -127,8 +127,8 @@
             </script>
             <!--用于查询搜索-->
             <div class="searrch" style="position: absolute;top: 0;right: 0;">
-                <form th:action="@{/ts/search}" th:method="post">
-                    <input type="text" placeholder="请输入学院名称" name="collge" class="ipt">
+                <form th:action="@{/ts/search}" th:method="get">
+                    <input type="text" placeholder="请输入学院名称" name="college" class="ipt">
                     <input class="year" type="text" name="year" style="display: none">
                     <input type="submit" class="submit">
                 </form>

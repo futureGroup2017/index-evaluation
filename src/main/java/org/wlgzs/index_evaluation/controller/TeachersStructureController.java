@@ -3,6 +3,7 @@ package org.wlgzs.index_evaluation.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -188,7 +189,6 @@ public class TeachersStructureController {
         Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
         QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
         IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-        System.out.println(iPage);
         modelAndView.addObject("current",iPage.getCurrent());//当前页数
         modelAndView.addObject("pages",iPage.getPages());//总页数
         modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
@@ -205,6 +205,32 @@ public class TeachersStructureController {
             e.printStackTrace();
         }
         log.info("导出成功");
+    }
+
+    @GetMapping("/search")
+    public ModelAndView search(Integer year,String college,
+                               @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                               @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("result2");
+        List<Year> allYear = yearService.findAllYear();
+        modelAndView.addObject("allYear",allYear);
+        Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
+        QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
+        if (year != null){
+            queryWrapper.eq("year",year);
+        }
+        log.info(college);
+        if (college != ""){
+            queryWrapper.eq("college_name",college);
+        }
+        IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
+        modelAndView.addObject("current",iPage.getCurrent());//当前页数
+        modelAndView.addObject("pages",iPage.getPages());//总页数
+        modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+        modelAndView.addObject("year",year);
+        modelAndView.addObject("college",college);
+        return modelAndView;
     }
 
 }
