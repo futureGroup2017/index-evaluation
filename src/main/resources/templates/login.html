@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <title>大学生毕业指数系统</title>
+    <meta name="author" content="DeathGhost"/>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" href="css/style1.css"/>
+    <style>
+        body {
+            height: 100%;
+            background: #16a085;
+            overflow: hidden;
+        }
+
+        canvas {
+            z-index: -1;
+            position: absolute;
+        }
+    </style>
+    <script src="js/jquery.js"></script>
+    <script src="js/verificationNumbers.js"></script>
+    <script src="js/Particleground.js"></script>
+    <script>
+        $(document).ready(function () {
+            //粒子背景特效
+            $('body').particleground({
+                dotColor: '#5cbdaa',
+                lineColor: '#5cbdaa'
+            });
+        });
+    </script>
+</head>
+<body>
+<form th:action="@{login}" id="form" name="form" method="post">
+    <!--<input type="hidden" name="returnUrl" th:value="${returnUrl}"/>-->
+    <dl class="admin_login">
+        <dt>
+            <strong>大学生毕业指数系统</strong>
+            <em>Graduation Index System for College Students</em>
+        </dt>
+        <dd th:text="${msg}" style="color: red;height: 21px;"></dd>
+        <dd class="user_icon">
+            <input type="text" name="username" placeholder="账号" class="login_txtbx"/>
+        </dd>
+        <dd class="pwd_icon">
+            <input type="password" name="password" placeholder="密码" class="login_pass"/>
+        </dd>
+        <dd>
+            <input type="submit" value="立即登录" class="submit_btn"/>
+        </dd>
+    </dl>
+</form>
+</body>
+</html>

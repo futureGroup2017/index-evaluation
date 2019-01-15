@@ -1,0 +1,324 @@
+html {
+    overflow-y: hidden;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+    background-color: #F3F3F3;
+    overflow: hidden;
+}
+a{
+    text-decoration: none;
+}
+a:active, a:hover {
+    outline: 0
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+td, th {
+    padding: 0
+}
+ul li{
+    list-style-type: none;
+}
+/*header*/
+header {
+    background: #1CC09F;
+    height: 60px;
+    border-bottom:1px solid #999 ;
+}
+input{
+    outline: none;
+    border:none;
+}
+header h1 {
+	width: 210px;
+	height: 60px;
+    margin: 0;
+    float: left;
+   background-color: #283643;
+    text-align: center;
+    cursor: pointer;
+}
+
+header h1 img {
+    width: auto;
+    margin: 10px 0px;
+    height: 40px;
+}
+header h1 span{
+    font-size: 20px;
+    color: #fff;
+    display: inline-block;
+    vertical-align: top;
+    font-weight: 500;
+    /*margin: 20px;*/
+    line-height: 70px;
+}
+header .rt_nav {
+    float: right;
+    overflow: hidden;
+    margin-right: 3%;
+    margin-top: 7px;
+}
+
+header .rt_nav li {
+    float: left;
+    padding: 0 25px;
+    text-align: center;
+    border-right: 1px #139667 solid;
+}
+
+header .rt_nav li:last-child {
+    border: none;
+}
+
+header .rt_nav li a {
+    color: white;
+    font-size: 12px;
+    text-shadow: 0 0 1px #20af83;
+    display: block;
+}
+
+header .rt_nav li a:hover {
+    color: #f4f4f4;
+}
+
+header .rt_nav li a:before {
+    font-family: 'adminthemesregular';
+    color: white;
+    font-size: 30px;
+    display: block;
+}
+header .rt_nav li a i{
+    display: block;
+    font-size: 18px;
+}
+header .rt_nav li a span{
+    margin-top: 7px;
+    display: block;
+}
+    /*aside nav*/
+.aside_nav {
+    width: 210px;
+    height: 100%;
+    position: absolute;
+    top: 60px;
+    background: #283643;
+    transition: all 0.5s;
+    left: 0px;
+}
+.aside_nav h2 {
+    text-align: center;
+    border-bottom: 1px #b6b6b6 solid;
+    margin: 0;
+    height: 45px;
+    line-height: 45px;
+    background: #efefef;
+}
+
+.aside_nav h2 a {
+    display: block;
+    color: #B5B5B5;
+    font-size: 14px;
+    text-shadow: 0 0 2px white;
+    text-align: center;
+}
+.aside_nav ul{
+    padding:0px ;
+    position: relative;
+}
+.aside_nav ul .closeche{
+	position: absolute;
+	right: -21px;
+	top: -10px;
+	width: 21px;
+	height: 35px;
+	background-color: #CFCECE;
+	text-align: center;
+	cursor: pointer;
+}
+.aside_nav ul .closeche i{
+	line-height: 35px;	
+}
+.aside_nav ul li {
+	
+    font-weight: bold;
+    height: 50px;
+    line-height: 50px;
+    border-bottom: 1px #34404B solid;
+ 
+    position: relative;
+}
+
+/*.aside_nav ul li :hover ::before {
+    position: absolute;
+    width: 5px;
+    height: 25px;
+    background: #67c1a5;
+    content: "";
+    top: 10px;
+    left: 0;
+}*/
+.aside_nav ul .active a{
+	color: #fff;
+    background: #1CC09F;
+}
+.aside_nav ul li a {
+    display: block;
+    color: #B5B5B5;
+    padding: 0 30px;
+    font-size: 15px;
+    letter-spacing: 2px;
+
+}
+.aside_nav ul li a:hover {
+    text-shadow: 0 1px 2px #f4f4f4;
+    color: #fff;
+    text-decoration: none;
+   /* background-color: #1CC09F;*/
+}
+.aside_nav ul li i{
+    position: absolute;
+    color: #fff;
+    line-height: 30px;
+    top:0px;
+    right: 10px;
+    margin: 10px 0px ;
+    animation:navactive 1s  infinite;
+}
+@keyframes  navactive{
+    from{
+        transform:scale(1,1);
+        right: 20px;
+    }
+    to{
+        transform: scale(1,1);
+        right: 10px;
+    }
+}
+.aside_nav .btm_infor {
+    height: 35px;
+    line-height: 35px;
+    width: 100%;
+    background: #efefef;
+    border-top: 1px #b6b6b6 solid;
+    text-align: center;
+    color: #aaa;
+}
+.wrap {
+	transition: all 0.5s;
+    margin-left: 248px;
+    margin-right: 10px;
+    margin-top: 5px;
+    padding-bottom: 30px;
+    min-height: 550px;
+    position: relative;
+    overflow: hidden;
+    overflow-y: auto;
+    background-color: #F3F3F3;
+    border:1px solid #838183 ;
+    z-index:1;
+}
+.wrap::-webkit-scrollbar { /*滚动条整体部分，其中的属性有width,height,background,border等（就和一个块级元素一样）（位置1）*/
+    width: 10px;
+    height: 10px;
+}
+.wrap::-webkit-scrollbar-button { /*滚动条两端的按钮，可以用display:none让其不显示，也可以添加背景图片，颜色改变显示效果（位置2）*/
+    background: #74D334;
+}
+.wrap::-webkit-scrollbar-track { /*外层轨道，可以用display:none让其不显示，也可以添加背景图片，颜色改变显示效果（位置3）*/
+    background: #FF66D5;
+}
+.wrap::-webkit-scrollbar-track-piece { /*内层轨道，滚动条中间部分（位置4）*/
+    background: #FF66D5;
+}
+.wrap::-webkit-scrollbar-thumb { /*滚动条里面可以拖动的那部分（位置5）*/
+    background: #FFA711;
+    border-radius: 4px;
+}
+.wrap::-webkit-scrollbar-corner { /*边角（位置6）*/
+    background: #82AFFF;
+}
+.wrap {
+    scrollbar-arrow-color: #f4ae21; /**//*三角箭头的颜色*/
+    scrollbar-face-color: #333; /**//*立体滚动条的颜色*/
+    scrollbar-3dlight-color: #666; /**//*立体滚动条亮边的颜色*/
+    scrollbar-highlight-color: #666; /**//*滚动条空白部分的颜色*/
+    scrollbar-shadow-color: #999; /**//*立体滚动条阴影的颜色*/
+    scrollbar-darkshadow-color: #666; /**//*立体滚动条强阴影的颜色*/
+    scrollbar-track-color: #666; /**//*立体滚动条背景颜色*/
+    scrollbar-base-color: #f8f8f8; /**//*滚动条的基本颜色*/
+}
+.bgcanvas{
+	position: fixed;
+	top: 0px;
+	margin: 0px auto;
+	width: 100%;
+	height: 100%;
+	background-color: #655c5c;
+	opacity:0.7 ;
+	z-index: 2;
+}
+
+.bgcanvas .container{
+	color: #fff;
+}
+.tables{
+   margin: 20px;
+}
+.title{
+    width: 350px;
+    height:45px;
+    border:solid 2px #283643;
+    position: absolute;
+    left: 50%;
+    margin-left: -175px;
+    top:50px;
+    line-height: 45px;
+    text-align: center;
+    color: #283643;
+    font-size: 20px;
+}
+.window{
+    width: 100%;
+    height:100%;
+    position: fixed;
+    top:0;
+    left:0;
+    z-index: 99;
+    background:rgba(0,0,0,0.9);
+    display: none;
+}
+.window-center{
+    width: 500px;
+    height:350px;
+    border-radius: 20px;
+    position: absolute;
+    border: solid 2px white;
+    top:50%;
+    left:50%;
+    margin-left: -200px;
+    margin-top: -150px;
+}
+.close-window{
+    width: 40px;
+    height:40px;
+    line-height: 40px;
+    text-align: center;
+    position: absolute;
+    top:15px;
+    right:15px;
+    color: white;
+    cursor: pointer;
+    font-size: 35px;
+    transition: 0.4s;
+}
+.close-window:hover{
+    transform: rotateZ(180deg);
+}
