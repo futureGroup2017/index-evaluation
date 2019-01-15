@@ -16,12 +16,13 @@ import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.TeachersStructureService;
 import org.wlgzs.index_evaluation.service.YearService;
+import org.wlgzs.index_evaluation.util.ExportUtilTeachersStructure;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,13 +85,17 @@ public class TeachersStructureController {
 
     @GetMapping("/to")
     public ModelAndView to(@RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                           @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
+                           @RequestParam(name = "pageSize", defaultValue = "16") int pageSize,
+                           @RequestParam(name = "year", defaultValue = "0")Integer year){
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("result");
         List<Year> allYear = yearService.findAllYear();
         modelAndView.addObject("allYear",allYear);
         Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
         QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
+        if (year != 0){
+            queryWrapper.eq("year",year);
+        }
         IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
         modelAndView.addObject("current",iPage.getCurrent());//当前页数
         modelAndView.addObject("pages",iPage.getPages());//总页数
@@ -189,4 +194,18 @@ public class TeachersStructureController {
         modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
         return modelAndView;
     }
+
+    @RequestMapping("/export")
+    public void export(Integer year, HttpServletResponse response){
+        log.info("正在导出数据");
+        try {
+            teachersStructureService.export(year,response);
+        } catch (Exception e) {
+            log.info("导出错误");
+            e.printStackTrace();
+        }
+        log.info("导出成功");
+    }
+
 }
+

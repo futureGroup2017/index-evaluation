@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.pojo.Year;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.List;
 
@@ -20,6 +21,10 @@ public interface TeachersStructureService extends IService<TeachersStructure> {
     //批量导入
     @Transactional
     List<TeachersStructure> importExcelInfo(InputStream in, MultipartFile file);
+
+    //批量导出
+    @Transactional
+    void export(Integer year, HttpServletResponse response);
 
     //单个添加
     @Transactional
