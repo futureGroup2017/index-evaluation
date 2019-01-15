@@ -5,9 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.EmploymentRate;
@@ -15,6 +13,10 @@ import org.wlgzs.index_evaluation.service.EmploymentRateService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author AlgerFan
@@ -39,17 +41,48 @@ public class EmploymentRateController {
         return employmentRateService.importData(year,request);
     }
 
+    /**
+     * 导出就业率指数
+     * @param year
+     * @param response
+     * @throws IOException
+     */
+    @GetMapping("/exportData")
+    public void exportData(int year, HttpServletResponse response) throws IOException {
+        employmentRateService.exportData(year, response);
+    }
+
+    /**
+     * 查询全部就业率
+     * @param model
+     * @param pageNum
+     * @param pageSize
+     */
     @RequestMapping("/findAll")
     public ModelAndView findAll(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                 @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
-        Page<EmploymentRate> practicePage = new Page<>(pageNum,pageSize);
-        QueryWrapper<EmploymentRate> practiceQueryWrapper = new QueryWrapper<>();
-        IPage<EmploymentRate> page = employmentRateService.page(practicePage, practiceQueryWrapper);
+        Page<EmploymentRate> ratePage = new Page<>(pageNum,pageSize);
+        QueryWrapper<EmploymentRate> rateQueryWrapper = new QueryWrapper<>();
+        IPage<EmploymentRate> page = employmentRateService.page(ratePage, rateQueryWrapper);
+        Set<Integer> years = new HashSet<>();
+        for (int i = 0; i < page.getRecords().size(); i++) {
+            years.add(page.getRecords().get(i).getYear());
+        }
         model.addAttribute("current",page.getCurrent());  //当前页数
         model.addAttribute("pages",page.getPages());   //总页数
-        model.addAttribute("college",page.getRecords());   //集合
+        model.addAttribute("employmentRates",page.getRecords());   //集合
+        model.addAttribute("allYear",years);//年份
         model.addAttribute("msg","查询成功");
         log.info("查询成功:"+page.getRecords());
-        return new ModelAndView("test");
+        return new ModelAndView("employmentRate");
+    }
+
+    /**
+     * 按照年份删除数据
+     * @param year
+     */
+    @DeleteMapping("/deleteYear")
+    public Result deleteYear(int year){
+        return employmentRateService.deleteYear(year);
     }
 }

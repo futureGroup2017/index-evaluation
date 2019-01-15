@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,10 @@ import org.wlgzs.index_evaluation.service.EmploymentPracticeService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author AlgerFan
@@ -38,7 +43,17 @@ public class EmploymentPracticeController {
     public Result importData(int year, HttpServletRequest request){
         return employmentPracticeService.importData(year, request);
     }
+    @RequestMapping("/exportData")
+    public void exportData(int year, HttpServletResponse response) throws IOException {
+        employmentPracticeService.exportData(year, response);
+    }
 
+    /**
+     * 查询全部就业创业实践
+     * @param model
+     * @param pageNum
+     * @param pageSize
+     */
     @RequestMapping("/findAll")
     public ModelAndView findAll(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                 @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
@@ -47,10 +62,25 @@ public class EmploymentPracticeController {
         IPage<EmploymentPractice> page = employmentPracticeService.page(practicePage, practiceQueryWrapper);
         model.addAttribute("current",page.getCurrent());  //当前页数
         model.addAttribute("pages",page.getPages());   //总页数
-        model.addAttribute("college",page.getRecords());   //集合
+        model.addAttribute("employmentPractices",page.getRecords());   //集合
+        Set<Integer> years = new HashSet<>();
+        for (int i = 0; i < page.getRecords().size(); i++) {
+            years.add(page.getRecords().get(i).getYear());
+        }
+        model.addAttribute("allYear",years);//年份
         model.addAttribute("msg","查询成功");
         log.info("查询成功:"+page.getRecords());
-        return new ModelAndView("test");
+        return new ModelAndView("employmentPractice");
     }
+
+    /**
+     * 按照年份删除数据
+     * @param year
+     */
+    @DeleteMapping("/deleteYear")
+    public Result deleteYear(int year){
+        return employmentPracticeService.deleteYear(year);
+    }
+
 
 }
