@@ -3,6 +3,7 @@ package org.wlgzs.index_evaluation.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.hssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -15,10 +16,14 @@ import org.wlgzs.index_evaluation.util.ExcelUtilTwo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,6 +143,11 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
     }
 
     @Override
+    public void exportData(int year, HttpServletResponse response) throws IOException {
+
+    }
+
+    @Override
     public Result deleteYear(int year) {
         if(year==0) return new Result(ResultCodeEnum.UNDELETE);
         QueryWrapper<EmploymentPractice> practiceQueryWrapper = new QueryWrapper<>();
@@ -147,4 +157,5 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
         employmentPracticeMapper.delete(practiceQueryWrapper);
         return new Result(ResultCodeEnum.DELETE,employmentPractices);
     }
+
 }

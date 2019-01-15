@@ -5,6 +5,8 @@ import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.EmploymentRate;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * @author AlgerFan
@@ -20,5 +22,8 @@ public interface EmploymentRateService extends IService<EmploymentRate> {
      */
     Result importData(int year, HttpServletRequest request);
 
+    void exportData(int year, HttpServletResponse response) throws IOException;
+
     Result deleteYear(int year);
+
 }
