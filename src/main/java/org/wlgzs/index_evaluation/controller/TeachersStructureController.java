@@ -183,6 +183,7 @@ public class TeachersStructureController {
         Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
         QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
         IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
+        System.out.println(iPage);
         modelAndView.addObject("current",iPage.getCurrent());//当前页数
         modelAndView.addObject("pages",iPage.getPages());//总页数
         modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合

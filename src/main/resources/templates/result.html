@@ -173,35 +173,29 @@
         </div>
     </div>
     <!--分页功能-->
-    <div class="fenye" th:if="${TotalPages > 0}" style="text-align: center">
-
-        <ul class="pagination" th:if="${Number == 1} and ${TotalPages > 1}">
-            <!--//如果当前页等于1，总页数大于1（不显示上一页）   Number&ndash;&gt;当前页-->
-            <li><a th:href="@{/ProductListController/searchProductList(page=1,product_category=${product_category})}">首页</a></li>
-            <li class="active" th:each="i:${#numbers.sequence(1,TotalPages)}">
+    <div class="fenye" style="text-align:center" th:if="${pages > 0}">
+        <ul class="pagination" th:if="${pages > 1}">
+            <li th:if="${current == 1}"><a class="noclick" href="javascript:;">首页</a></li>
+            <li><a th:if="${current > 1}" th:href="@{/ts/to(pageNum=1)}">首页</a></li><!--//跳转至第一页-->
+            <li><a th:if="${current > 1}" th:href="@{/ts/to(pageNum=${current-1})}">上一页</a></li>
+            <!--//请求页数-1-->
+            <li class="active" th:each="i:${#numbers.sequence(1,pages)}">
                 <!--//从1到总页数遍历，并赋值给i    TotalPages&ndash;&gt;总页数-->
-                <a th:if="${i > Number-3} and ${i < Number+3} and ${i == Number}" href="javascript:void(0);"
-                   th:text="${i}">#</a><!--//限制显示页数的条数  4到6个页数   而且等于当前页，不能点击-->
-                <a th:if="${i > Number-3} and ${i < Number+3} and ${i != Number}"
-                   th:href="@{/ProductListController/searchProductList(page=${i})}" th:text="${i}"
-                   style="color: #999;background-color: red;border-color: #999;">#</a><!--//限制显示页数的条数  4到6个页数-->
+                <a th:if="${i > current-5} and ${i < current+5} and ${i == current}" class="pageOne"
+                   style="background-color: #18b985;border: 1px solid #ddd;" href="javascript:void(0);"
+                   th:text="${i}">#</a>
+                <!--//限制显示页数的条数  4到6个页数   而且等于当前页，不能点击-->
+                <a th:if="${i > current-5} and ${i < current+5} and ${i != current}"
+                   th:href="@{/ts/to(pageNum=${i})}" th:text="${i}"
+                   style="color: #000000;background-color: #fff;border: 1px solid #ddd;cursor: pointer;"
+                   class="hoveras">#</a><!--//限制显示页数的条数  4到6个页数-->
             </li>
-            <li><a th:href="@{/ProductListController/searchProductList(page=${Number+1},product_category=${product_category})}">下一页</a></li><!--//请求页数+1-->
-        </ul>
-        <ul class="pagination" th:if="${Number > 1} and ${TotalPages > 1}"><!--//显示上一页-->
-            <li><a th:href="@{/ProductListController/searchProductList(page=1,product_category=${product_category})}">首页</a></li><!--//跳转至第一页-->
-            <li><a th:href="@{/ProductListController/searchProductList(page=${Number-1},product_category=${product_category})}">上一页</a></li><!--//请求页数-1-->
-            <li class="active" th:each="i:${#numbers.sequence(1,TotalPages)}">
-                <!--//从1到总页数遍历，并赋值给i    TotalPages&ndash;&gt;总页数-->
-                <a th:if="${i > Number-3} and ${i < Number+3} and ${i == Number}" href="javascript:void(0);"
-                   th:text="${i}">#</a><!--//限制显示页数的条数  4到6个页数   而且等于当前页，不能点击-->
-                <a th:if="${i > Number-3} and ${i < Number+3} and ${i != Number}"
-                   th:href="@{/ProductListController/searchProductList(page=${i})}" th:text="${i}"
-                   style="color: #999;background-color: #fff;border-color: #999;">#</a><!--//限制显示页数的条数  4到6个页数-->
-            </li>
-            <li th:if="${Number != TotalPages}"><a
-                    th:href="@{/ProductListController/searchProductList(page=${Number+1},product_category=${product_category})}">下一页</a></li><!--//请求页数+1-->
-            <li><a th:href="@{/ProductListController/searchProductList(page=${Number},product_category=${product_category})}">尾页</a></li><!--//跳转至第Number页-->
+            <li th:if="${current != pages}"><a
+                    th:href="@{/ts/to(pageNum=${current+1})}">下一页</a></li><!--//请求页数+1-->
+            <li th:if="${current == pages}"><a
+                    class="noclick" href="javascript:;">尾页</a></li>
+            <li th:if="${current != pages}"><a
+                    th:href="@{/ts/to(pageNum=${pages})}">尾页</a></li><!--//跳转至第Number页-->
         </ul>
     </div>
 </section>
