@@ -36,6 +36,25 @@ public class TeachersStructureController {
     @Autowired
     private YearService yearService;
 
+    @GetMapping("/delete")
+    public ModelAndView delete(Integer year){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("result");
+        List<Year> allYear = yearService.findAllYear();
+        modelAndView.addObject("allYear",allYear);
+        List<TeachersStructure> byYear = teachersStructureService.findByYear(year);
+        List<TeachersStructure> allTeachersStructure = teachersStructureService.findAll();
+        modelAndView.addObject("allTeachersStructure",allTeachersStructure);
+        for (TeachersStructure t :byYear){
+            if (teachersStructureService.delete(t) == 0){
+                modelAndView.addObject("msg","删除出错，请重试！");
+                return modelAndView;
+            }
+        }
+        modelAndView.addObject("msg","删除成功");
+        return modelAndView;
+    }
+
     @GetMapping("/to")
     public ModelAndView to(){
         ModelAndView modelAndView = new ModelAndView();
@@ -48,7 +67,7 @@ public class TeachersStructureController {
     }
 
     @RequestMapping("/import")
-    public void impor(HttpServletRequest request, Model model,Integer year) throws IOException {
+    public void impor(HttpServletRequest request, Integer year) throws IOException {
         //获取上传的文件
         MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
         MultipartFile file = multipart.getFile("upfile");

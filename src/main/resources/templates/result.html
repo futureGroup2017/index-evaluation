@@ -43,7 +43,7 @@
             <i class="fa fa-caret-right"></i>
         </div>
         <li>
-            <a href="index.html">欢迎登录</a>
+            <a th:href="@{/toindex}" th:target="_self">欢迎登录</a>
         </li>
         <li>
             <a href="Enrolment.html">就业竞争力指数</a>
@@ -147,9 +147,9 @@
     </div>
 </section>
 </body>
-<script th:src="@{js/jquery-2.1.0.js}"></script>
-<script th:src="@{dist/js/txt.wav.min.js}"></script>
-<script th:src="@{js/result.js}"></script>
+<script th:src="@{/js/jquery-2.1.0.js}"></script>
+<script th:src="@{/dist/js/txt.wav.min.js}"></script>
+<script th:src="@{/js/result.js}"></script>
 <script type="text/javascript">
     window.onload=function (ev) {
         $(function() {
