@@ -16,6 +16,8 @@ import org.wlgzs.index_evaluation.service.EmploymentPracticeService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * @author AlgerFan
@@ -54,10 +56,15 @@ public class EmploymentPracticeController {
         IPage<EmploymentPractice> page = employmentPracticeService.page(practicePage, practiceQueryWrapper);
         model.addAttribute("current",page.getCurrent());  //当前页数
         model.addAttribute("pages",page.getPages());   //总页数
-        model.addAttribute("employmentPractice",page.getRecords());   //集合
+        model.addAttribute("employmentPractices",page.getRecords());   //集合
+        Set<Integer> years = new HashSet<>();
+        for (int i = 0; i < page.getRecords().size(); i++) {
+            years.add(page.getRecords().get(i).getYear());
+        }
+        model.addAttribute("allYear",years);//年份
         model.addAttribute("msg","查询成功");
         log.info("查询成功:"+page.getRecords());
-        return new ModelAndView("test");
+        return new ModelAndView("employmentPractice");
     }
 
     /**
