@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.pojo.TeachersStructure;
+import org.wlgzs.index_evaluation.pojo.Year;
 
 import java.io.InputStream;
 import java.util.List;
@@ -29,5 +30,14 @@ public interface TeachersStructureService extends IService<TeachersStructure> {
     Integer update(TeachersStructure teachersStructure);
 
     //查询所有数据
+    @Transactional
     List<TeachersStructure> findAll();
+
+    //根据年份查询
+    @Transactional
+    List<TeachersStructure> findByYear(Integer year);
+
+    //删除
+    @Transactional
+    Integer delete(TeachersStructure teachersStructure);
 }

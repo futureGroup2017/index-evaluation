@@ -1,5 +1,7 @@
 package org.wlgzs.index_evaluation.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -62,5 +64,17 @@ public class TeachersStructureServiceImpl extends ServiceImpl<TeachersStructureM
     @Override
     public List<TeachersStructure> findAll() {
         return baseMapper.selectList(null);
+    }
+
+    @Override
+    public List<TeachersStructure> findByYear(Integer year) {
+        QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("year",year);
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public Integer delete(TeachersStructure teachersStructure) {
+        return baseMapper.deleteById(teachersStructure.getTsId());
     }
 }
