@@ -10,41 +10,41 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
-import org.wlgzs.index_evaluation.pojo.EmploymentRate;
-import org.wlgzs.index_evaluation.service.EmploymentRateService;
+import org.wlgzs.index_evaluation.pojo.EmploymentPractice;
+import org.wlgzs.index_evaluation.service.EmploymentPracticeService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author AlgerFan
- * @date Created in 2019/1/13 17
- * @Description 就业率指数
+ * @date Created in 2019/1/14 15
+ * @Description 就业创业实践指数
  */
 @RestController
-@RequestMapping("/employmentRate")
+@RequestMapping("/employmentPractice")
 @Log4j2
-public class EmploymentRateController {
+public class EmploymentPracticeController {
 
     @Resource
-    private EmploymentRateService employmentRateService;
+    private EmploymentPracticeService employmentPracticeService;
 
     /**
-     * 导入学院、初次就业率、年终就业率
-     * @param request
+     * 导入就业创业实践数据
      * @param year
+     * @param request
      */
     @RequestMapping("/importData")
-    public Result importData(int year,HttpServletRequest request){
-        return employmentRateService.importData(year,request);
+    public Result importData(int year, HttpServletRequest request){
+        return employmentPracticeService.importData(year, request);
     }
 
     @RequestMapping("/findAll")
     public ModelAndView findAll(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                 @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
-        Page<EmploymentRate> practicePage = new Page<>(pageNum,pageSize);
-        QueryWrapper<EmploymentRate> practiceQueryWrapper = new QueryWrapper<>();
-        IPage<EmploymentRate> page = employmentRateService.page(practicePage, practiceQueryWrapper);
+        Page<EmploymentPractice> practicePage = new Page<>(pageNum,pageSize);
+        QueryWrapper<EmploymentPractice> practiceQueryWrapper = new QueryWrapper<>();
+        IPage<EmploymentPractice> page = employmentPracticeService.page(practicePage, practiceQueryWrapper);
         model.addAttribute("current",page.getCurrent());  //当前页数
         model.addAttribute("pages",page.getPages());   //总页数
         model.addAttribute("college",page.getRecords());   //集合
@@ -52,4 +52,5 @@ public class EmploymentRateController {
         log.info("查询成功:"+page.getRecords());
         return new ModelAndView("test");
     }
+
 }
