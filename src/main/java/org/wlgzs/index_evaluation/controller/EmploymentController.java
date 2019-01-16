@@ -47,7 +47,7 @@ public class EmploymentController {
                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                @RequestParam(name = "pageSize", defaultValue = "16") int pageSize) throws UnsupportedEncodingException {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("result");
+        modelAndView.setViewName("set");
         List<Year> allYear = yearService.findAllYear();
         modelAndView.addObject("allYear",allYear);
         Page<Employment> practiceQueryWrapper = new Page<>(pageNum,pageSize);
@@ -57,12 +57,12 @@ public class EmploymentController {
         }
         log.info(query.getCollege() != "");
         if (query.getCollege() != "" && query.getCollege() != null){
-            queryWrapper.eq("college_name",query.getCollege());
+            queryWrapper.eq("college",query.getCollege());
         }
         IPage<Employment> iPage = employmentService.page(practiceQueryWrapper,queryWrapper);
         modelAndView.addObject("current",iPage.getCurrent());//当前页数
         modelAndView.addObject("pages",iPage.getPages());//总页数
-        modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+        modelAndView.addObject("allEmployment",iPage.getRecords());//所有的数据集合
         modelAndView.addObject("query",query);
         return modelAndView;
     }
