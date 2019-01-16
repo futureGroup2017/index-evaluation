@@ -1,15 +1,22 @@
 package org.wlgzs.index_evaluation.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.hssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.dao.EmploymentMapper;
 import org.wlgzs.index_evaluation.pojo.Employment;
+import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.service.EmploymentService;
 import org.wlgzs.index_evaluation.util.ExcelUtil;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,5 +144,152 @@ public class EmploymentServiceImpl extends ServiceImpl<EmploymentMapper, Employm
     @Override
     public Integer add(Employment employment) {
         return baseMapper.insert(employment);
+    }
+
+    @Override
+    public void export(Integer year, HttpServletResponse response) {
+        QueryWrapper<Employment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("year",year);
+        List<Employment> SignList = baseMapper.selectList(queryWrapper);
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet("就业状态指数导出表");
+        sheet.setDefaultRowHeightInPoints(20);
+        HSSFPrintSetup ps = sheet.getPrintSetup();
+        ps.setLandscape(false); // 打印方向，true：横向，false：纵向
+        ps.setPaperSize(HSSFPrintSetup.A4_PAPERSIZE); //纸张
+        sheet.setHorizontallyCenter(true);//设置打印页面为水平居中
+
+        //设置要导出的文件的名字
+        String fileName = year+"就业状态指数.xls";
+        try {
+            fileName = URLEncoder.encode(fileName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        //新增数据行，并且设置单元格数据
+        int rowNum = 1;
+        String[] headers = { "学院", "知识能力结构40.75", "标识性优势31.35", "择业精神27.9", "就业起薪28.55",
+                "岗位胜任度24.2", "就业现状满意度28","预期就业年限19.25" ,
+                "个体就业潜力44.8","个体就业表现55.2","就业状态指数25.3"};
+        //headers表示excel表中第一行的表头
+        HSSFRow row1 = sheet.createRow(0);
+        //设置行高
+        row1.setHeightInPoints(30);
+        //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
+        for (int i = 0;i<11;i++){
+            sheet.setColumnWidth(i, 19 * 256);
+        }
+        //其他表样式
+        HSSFCellStyle style = workbook.createCellStyle();
+        style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        style.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        style.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+        HSSFFont font = workbook.createFont();
+        font.setFontName("宋体");
+        font.setFontHeightInPoints((short) 12);//设置字体大小
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);//设置字体水平居中
+        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直居中
+        style.setFont(font);
+        //表头样式
+        HSSFCellStyle style2 = workbook.createCellStyle();
+        style2.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        style2.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        style2.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+        HSSFFont font2 = workbook.createFont();//其他字体样式
+        font2.setFontName("宋体");
+        font2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
+        font2.setFontHeightInPoints((short) 14);//设置字体大小
+        style2.setAlignment(HSSFCellStyle.ALIGN_CENTER);//设置字体水平居中
+        style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直居中
+        style2.setFont(font2);
+
+        //在excel表中添加表头
+        for (int i = 0; i < headers.length; i++) {
+            HSSFCell cell = row1.createCell(i);
+            HSSFRichTextString text = new HSSFRichTextString(headers[i]);
+            cell.setCellStyle(style2);
+            cell.setCellValue(text);
+        }
+
+        //在表中存放查询到的数据放入对应的列
+        HSSFCell cell;
+
+        for (int i = 0; i < SignList.size(); i++) {
+            Employment employment = SignList.get(i);// 获取sign对象
+            HSSFRow row = sheet.createRow(rowNum);
+            //设置行高
+            row.setHeightInPoints(25);
+            //学院
+            if (employment.getCollege() != null) {
+                cell = row.createCell(0);// 创建第i+1行第0列
+                cell.setCellValue(employment.getCollege());// 设置第i+1行第0列的值
+                cell.setCellStyle(style);// 设置风格
+            }
+            //知识能力结构40.75
+            cell = row.createCell(1); // 创建第i+1行第1列
+            cell.setCellValue(employment.getB11());// 设置第i+1行第1列的值
+            cell.setCellStyle(style); // 设置风格
+            //标识性优势31.35
+            cell = row.createCell(2);
+            cell.setCellValue(employment.getB12());
+            cell.setCellStyle(style);
+            //择业精神27.9
+            cell = row.createCell(3);
+            cell.setCellValue(employment.getB13());
+            cell.setCellStyle(style);
+            //就业起薪28.55
+            cell = row.createCell(4);
+            cell.setCellValue(employment.getB21());
+            cell.setCellStyle(style);
+            //岗位胜任度24.2
+            cell = row.createCell(5);
+            cell.setCellValue(employment.getB22());
+            cell.setCellStyle(style);
+            //就业现状满意度28
+            cell = row.createCell(6);
+            cell.setCellValue(employment.getB23());
+            cell.setCellStyle(style);
+            //预期就业年限19.25
+            cell = row.createCell(7);
+            cell.setCellValue(employment.getB24());
+            cell.setCellStyle(style);
+            //个体就业潜力44.8
+            cell = row.createCell(8);
+            cell.setCellValue(employment.getA1());
+            cell.setCellStyle(style);
+            //个体就业表现55.2
+            cell = row.createCell(9);
+            cell.setCellValue(employment.getA2());
+            cell.setCellStyle(style);
+            //就业状态指数25.3
+            cell = row.createCell(10);
+            cell.setCellValue(employment.getEmploymentStatus());
+            cell.setCellStyle(style);
+            rowNum++;
+        }
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+        try {
+            response.flushBuffer();
+            workbook.write(response.getOutputStream());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }catch (IllegalStateException ee){
+            log.info("IllegalStateException异常");
+        }
+    }
+
+    @Override
+    public Integer delete(Employment employment) {
+        return baseMapper.deleteById(employment.getEmId());
+    }
+
+    @Override
+    public List<Employment> findByYear(Integer year) {
+        QueryWrapper<Employment> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("year",year);
+        return baseMapper.selectList(queryWrapper);
     }
 }
