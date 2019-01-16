@@ -113,11 +113,13 @@
                 });
                 // 删除
                 $("#delete").click(function () {
-                    var values=$("#delete-year").val();if ( values == ''){alert('请选择年份!');}
+                    var values=$("#delete-year").val();if ( values == ''){
+                        console.log('请选择年份!');}
                 });
                 // 导入
                 $("#import").click(function () {
-                    var values=$("#import-year").val();if ( values == ''){alert('请选择年份!');}
+                    var values=$("#import-year").val();if ( values == ''){
+                        console.log('请选择年份!');}
                 });
                 $("#select").change(function () {
                     var Url = "/em/export?year=";
