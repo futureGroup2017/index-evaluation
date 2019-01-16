@@ -12,16 +12,18 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.TeachersStructureService;
 import org.wlgzs.index_evaluation.service.YearService;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,22 +84,6 @@ public class TeachersStructureController {
         return modelAndView;
     }
 
-    @GetMapping("/to")
-    public ModelAndView to(@RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                           @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("result");
-        List<Year> allYear = yearService.findAllYear();
-        modelAndView.addObject("allYear",allYear);
-        Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-        QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-        IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-        modelAndView.addObject("current",iPage.getCurrent());//当前页数
-        modelAndView.addObject("pages",iPage.getPages());//总页数
-        modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
-        return modelAndView;
-    }
-
     @RequestMapping("/import")
     public ModelAndView impor(HttpServletRequest request, Integer year,
                               @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
@@ -105,8 +91,18 @@ public class TeachersStructureController {
         ModelAndView modelAndView = new ModelAndView();
         List<Year> allYear = yearService.findAllYear();
         modelAndView.addObject("allYear",allYear);
-        List<TeachersStructure> allTeachersStructure;
         modelAndView.setViewName("result");
+        if (year == null){
+            Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
+            QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
+            IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
+            modelAndView.addObject("current",iPage.getCurrent());//当前页数
+            modelAndView.addObject("pages",iPage.getPages());//总页数
+            modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+            modelAndView.addObject("msg","请选择年份");
+            modelAndView.addObject("query",new Query());
+            return modelAndView;
+        }
         //获取上传的文件
         MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
         MultipartFile file = multipart.getFile("upfile");
@@ -120,6 +116,7 @@ public class TeachersStructureController {
             modelAndView.addObject("current",iPage.getCurrent());//当前页数
             modelAndView.addObject("pages",iPage.getPages());//总页数
             modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+            modelAndView.addObject("query",new Query());
             return modelAndView;
         }
         List<TeachersStructure> teachersStructures = teachersStructureService.importExcelInfo(in, file);
@@ -183,10 +180,48 @@ public class TeachersStructureController {
         Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
         QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
         IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-        System.out.println(iPage);
         modelAndView.addObject("current",iPage.getCurrent());//当前页数
         modelAndView.addObject("pages",iPage.getPages());//总页数
         modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+        modelAndView.addObject("query",new Query());
         return modelAndView;
     }
+
+    @RequestMapping("/export")
+    public void export(Integer year, HttpServletResponse response){
+        log.info("正在导出数据");
+        try {
+            teachersStructureService.export(year,response);
+        } catch (Exception e) {
+            log.info("导出错误");
+            e.printStackTrace();
+        }
+        log.info("导出成功");
+    }
+
+    @GetMapping("/search")
+    public ModelAndView search(Query query,
+                               @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                               @RequestParam(name = "pageSize", defaultValue = "16") int pageSize) throws UnsupportedEncodingException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("result");
+        List<Year> allYear = yearService.findAllYear();
+        modelAndView.addObject("allYear",allYear);
+        Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
+        QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
+        if (query.getYear() != null){
+            queryWrapper.eq("year",query.getYear());
+        }
+        if (query.getCollege() != "" && query.getCollege() != null){
+            queryWrapper.eq("college_name",query.getCollege());
+        }
+        IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
+        modelAndView.addObject("current",iPage.getCurrent());//当前页数
+        modelAndView.addObject("pages",iPage.getPages());//总页数
+        modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+        modelAndView.addObject("query",query);
+        return modelAndView;
+    }
+
 }
+

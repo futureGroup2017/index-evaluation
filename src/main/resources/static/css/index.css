@@ -28,7 +28,7 @@ ul li{
 }
 /*header*/
 header {
-    background: #1CC09F;
+    background: #283643;
     height: 60px;
     border-bottom:1px solid #999 ;
 }
@@ -71,7 +71,7 @@ header .rt_nav li {
     float: left;
     padding: 0 25px;
     text-align: center;
-    border-right: 1px #139667 solid;
+    border-right: 1px white solid;
 }
 
 header .rt_nav li:last-child {
@@ -136,7 +136,7 @@ header .rt_nav li a span{
 .aside_nav ul .closeche{
 	position: absolute;
 	right: -21px;
-	top: -10px;
+	top: 0;
 	width: 21px;
 	height: 35px;
 	background-color: #CFCECE;
