@@ -43,6 +43,13 @@ public class EmploymentPracticeController {
     public Result importData(int year, HttpServletRequest request){
         return employmentPracticeService.importData(year, request);
     }
+
+    /**
+     * 导入就业创业实践指数
+     * @param year
+     * @param response
+     * @throws IOException
+     */
     @RequestMapping("/exportData")
     public void exportData(int year, HttpServletResponse response) throws IOException {
         employmentPracticeService.exportData(year, response);
