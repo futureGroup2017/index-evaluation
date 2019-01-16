@@ -49,7 +49,7 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
         List<EmploymentRate> employmentRateList = new ArrayList<>();
         try {
             InputStream in = file.getInputStream();
-            DecimalFormat decimalFormat = new DecimalFormat(".000");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+            DecimalFormat decimalFormat = new DecimalFormat(".000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
             listob = ExcelUtil.getBankListByExcel(in,file.getOriginalFilename());
             //遍历listob数据，把数据放到List中
             for (List<Object> objects : listob) {
@@ -81,7 +81,7 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
     @Override
     public void exportData(int year, HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
-        HSSFSheet sheet = workbook.createSheet("信息表");
+        HSSFSheet sheet = workbook.createSheet();
         sheet.setDefaultRowHeightInPoints(20);
         HSSFPrintSetup ps = sheet.getPrintSetup();
         ps.setLandscape(false); // 打印方向，true：横向，false：纵向
