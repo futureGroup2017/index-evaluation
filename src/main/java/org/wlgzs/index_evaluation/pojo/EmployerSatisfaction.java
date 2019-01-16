@@ -24,12 +24,12 @@ public class EmployerSatisfaction {
     @TableId(value = "es_id", type = IdType.AUTO)
     private Integer esId;
     /**
-     * 学院
+     * 学院*
      */
     @TableField(value = "college")
     private String college;
     /**
-     * 毕业生的精神状态与工作水平
+     * 毕业生的精神状态与工作水平 *
      */
     @TableField(value = "level")
     private Double level;
@@ -59,7 +59,7 @@ public class EmployerSatisfaction {
     @TableField(value = "level5")
     private int level5;
     /**
-     * 毕业生的综合素质能力
+     * 毕业生的综合素质能力 *
      */
     @TableField(value = "ability")
     private Double ability;
@@ -89,7 +89,7 @@ public class EmployerSatisfaction {
     @TableField(value = "ability5")
     private int ability5;
     /**
-     * 毕业生的“能力-岗位”匹配度
+     * 毕业生的“能力-岗位”匹配度*
      */
     @TableField(value = "matched")
     private Double matched;
@@ -119,7 +119,7 @@ public class EmployerSatisfaction {
     @TableField(value = "match5")
     private int match5;
     /**
-     * 对毕业生的工作满意度
+     * 对毕业生的工作满意度*
      */
     @TableField(value = "satisfaction")
     private Double satisfaction;

@@ -60,6 +60,7 @@ public class TeachersStructureController {
             modelAndView.addObject("current",iPage.getCurrent());//当前页数
             modelAndView.addObject("pages",iPage.getPages());//总页数
             modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+            modelAndView.addObject("query",new Query());
             return modelAndView;
         }
         for (TeachersStructure t :byYear){
@@ -71,6 +72,7 @@ public class TeachersStructureController {
                 modelAndView.addObject("current",iPage.getCurrent());//当前页数
                 modelAndView.addObject("pages",iPage.getPages());//总页数
                 modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+                modelAndView.addObject("query",new Query());
                 return modelAndView;
             }
         }
@@ -81,6 +83,7 @@ public class TeachersStructureController {
         modelAndView.addObject("current",iPage.getCurrent());//当前页数
         modelAndView.addObject("pages",iPage.getPages());//总页数
         modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+        modelAndView.addObject("query",new Query());
         return modelAndView;
     }
 
@@ -106,7 +109,6 @@ public class TeachersStructureController {
         //获取上传的文件
         MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
         MultipartFile file = multipart.getFile("upfile");
-        log.info(file.getOriginalFilename().equals("师资结构指数样表.xlsx"));
         InputStream in = file.getInputStream();
         if (!file.getOriginalFilename().equals("师资结构指数样表.xlsx")){
             modelAndView.addObject("msg","上传文件错误，请确认是师资结构指数样表.xlsx！");

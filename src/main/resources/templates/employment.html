@@ -1,68 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>大学生指数评价系统</title>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="dist/css/txt.wav.css">
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <link rel="stylesheet" type="text/css" href="css/result.css">
-
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/txt.wav.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/result.css}">
+    <script th:src="@{/js/jquery.js}"></script>
+    <style>form{display: inline-block;}
+    </style>
+    <script th:inline="javascript">var deleteMessages = [[${msg}]];if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') {alert(deleteMessages);}</script>
 </head>
-
 <body>
 <header>
     <h1>
-        <img src="images/top1.png"/>
+        <img th:src="@{/images/top1.png}"/>
         <span class="txtwav bounce">河南科技学院</span>
     </h1>
     <ul class="rt_nav">
         <li>
-            <a href="" target="_blank" class="website_icon">
+            <a th:href="@{/toindex}" th:target="_self" class="website_icon">
                 <i class="fa fa-fire"></i>
                 <span>站点首页</span>
             </a>
         </li>
         <li>
-            <a href="login.php" class="quit_icon">
-                <i class="fa fa-send"></i>
+            <a class="quit_icon" th:href="@{/out}" th:target="_self">
+                <i class="fa fa-send" ></i>
                 <span>安全退出</span>
             </a>
         </li>
     </ul>
 </header>
-<!--aside nav-->
 <aside class="aside_nav">
-    <!--<h2><a href="">招新步骤</a></h2>-->
-
     <ul>
         <div class="closeche">
             <i class="fa fa-caret-right"></i>
         </div>
         <li>
-            <a href="index.html">欢迎登录</a>
+            <a th:href="@{/toindex}" th:target="_self">欢迎登录</a>
         </li>
         <li>
-            <a href="Enrolment.html">就业竞争力指数</a>
-
+            <a href="Enrolment">就业竞争力指数</a>
         </li>
         <li>
             <a href="Being-interviewed.html">生源质量指数</a>
         </li>
         <li>
-            <a th:href="@{/ts/to}">师资结构指数</a>
+            <a th:href="@{/ts/search}">师资结构指数</a>
         </li>
         <li>
-            <a href="set.html">就业状态指数</a>
+            <a th:href="@{/em/search}">就业状态指数</a>
         </li>
         <li>
             <a th:href="@{/employmentRate/findAll}">就业率指数</a>
         </li>
-        <li class="active" style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
-            <a href="employment.html">用人单位满意度指数</a>
+        <li class="active">
+            <a th:href="@{/es/search}">用人单位满意度指数</a>
             <i class="fa fa-angle-double-right"></i>
         </li>
         <li>
@@ -75,29 +73,74 @@
         <section>
             <h1 class="top-title">用 人 单 位 满 意 度 指 数</h1>
         </section>
-        <section>
-            <a href=""><input type="button" id="daoru" value="导入" class="result" /></a>
-            <a href=""><input type="button" value="导出" class="result" /></a>
-            <select class="selects">
-                <option value="" disabled selected hidden>选择删除年份</option>
-                <option class="selects" value ="2019年">2019年</option>
-                <option class="selects" value ="2018年">2018年</option>
-                <option class="selects" value ="2017年">2017年</option>
-                <option class="selects" value="2016年">2016年</option>
-                <option class="selects" value="2015年">2015年</option>
+        <section style="position: relative">
+            <select class="selects" id="select" th:if="${query.getYear()!=null}">
+                <option th:value="${query.getYear()}" hidden disabled selected th:text="${query.getYear()}"></option>
+                <option value="">请选择年份</option>
+                <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
             </select>
-            <a href=""><input type="button" value="删除" class="result" /></a>
-            <input type="file" id="file" style="display: none">
+            <select class="selects" id="select" th:if="${query.getYear()==null}">
+                <option value="" selected>请选择年份</option>
+                <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
+            </select>
+            <input type="button" id="daoru" value="导入" class="result" />
+            <!--用于导出数据-->
+            <a id="export" th:if="${query.getYear()!=null}" th:href="@{/es/export(year=${query.getYear()})}"><input type="button" id="export-bot" value="导出" class="result" /></a>
+            <a id="export" th:if="${query.getYear()==null}" href="#"><input type="button" id="export-bot" value="导出" class="result" /></a>
+            <!--用于删除-->
+            <form th:action="@{/es/delete}" th:method="get">
+                <input type="text"  id="delete-year" name="year" class="year" style="display: none">
+                <input type="submit" id="delete" value="删除" class="result"/>
+            </form>
+            <!--用于文件上传   导入-->
+            <form th:action="@{/es/import}" th:method="post" enctype="multipart/form-data">
+                <input class="year" id="import-year" type="text" name="year" style="display: none">
+                <input type="file" name="file" id="file" style="display: none">
+                <input type="submit" id="import" style="display: none">
+            </form>
             <script>
-                window.onload=function () {
-                    $("#daoru").click(function () {
-                        $("#file").click();
-                    })
-                }
+                document.getElementById("daoru").onclick=function () {
+                    document.getElementById("file").click();
+                };
+                $("#file").change(function () {
+                    $("#import").click();
+                });
+                $("#select").change(function () {
+                    var years=$("#select option:selected").val();
+                    $(".year").val(years);
+                    $("#delete").attr("type","submit");
+                    $("#import").attr("type","submit");
+                });
+                // 删除
+                $("#delete").click(function () {
+                    var values=$("#delete-year").val();if ( values == ''){alert('请选择年份!');}
+                });
+                // 导入
+                $("#import").click(function () {
+                    var values=$("#import-year").val();if ( values == ''){
+                        console.log('请选择年份!');}
+                });
+                $("#select").change(function () {
+                    var Url = "/es/export?year=";
+                    var years=$("#select option:selected").val();
+                    Url = Url+years;
+                    if(years == ''){
+                        Url='#';
+                    }
+                    $("#export").attr('href',Url);
+                });
+                $("#export-bot").click(function () {
+                    if( $('#export').attr('href') == '#' ){
+                        alert("请选择年份！")
+                    }
+                })
+                <!--用于查询搜索-->
             </script>
-            <div class="searrch">
-                <form action="">
-                    <input type="text" class="ipt">
+            <div class="searrch" style="position: absolute;top: 0;right: 0;">
+                <form th:action="@{/es/search(year=${query.getYear()})}" th:method="get">
+                    <input type="text" placeholder="请输入学院名称" th:value="${query.getCollege()}" name="college" class="ipt">
+                    <input class="year"  th:if="${query.getYear()!=null}" th:value="${query.getYear()}" type="text" name="year" style="display: none">
+                    <input class="year"  th:if="${query.getYear()==null}" type="text" name="year" style="display: none">
                     <input type="submit" class="submit">
                 </form>
             </div>
@@ -106,181 +149,83 @@
             <table class="table table-bordered table-hover">
                 <thead>
                 <tr>
-                    <th>姓名</th>
-                    <th>性别</th>
-                    <th>班级</th>
-                    <th>一面</th>
-                    <th>操作</th>
-                    <th>姓名</th>
-                    <th>性别</th>
-                    <th>班级</th>
-                    <th>一面</th>
-                    <th>操作</th>
-                    <th>姓名</th>
-                    <th>性别</th>
-                    <th>班级</th>
-                    <th>一面</th>
-                    <th>操作</th>
-                    <th>姓名</th>
-                    <th>性别</th>
-                    <th>班级</th>
+                    <th>学院</th>
+                    <th>毕业生的精神状态与工作态度18.95</th>
+                    <th>毕业生的综合素质能力24.2</th>
+                    <th>毕业生的“能力-岗位”匹配度22.25</th>
+                    <th>对毕业生的工作满意度19.45</th>
+                    <th>用人单位满意度指数13.25</th>
+                    <th>年份</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
+                <tr th:each="Satis: ${employerSatisfactions}">
+                    <td th:text="${Satis.getCollege()}"></td>
+                    <td th:text="${Satis.getLevel()}"></td>
+                    <td th:text="${Satis.getAbility()}"></td>
+                    <td th:text="${Satis.getMatched()}"></td>
+                    <td th:text="${Satis.getSatisfaction()}"></td>
+                    <td th:text="${Satis.getSatisfactionIndex()}"></td>
+                    <td th:text="${Satis.getYear()}"></td>
                 </tr>
             </table>
         </div>
-
+    </div>
+    <!-- 分页 -->
+    <div class="fenye" style="text-align:center" th:if="${pages > 0}">
+        <ul class="pagination" th:if="${pages > 1}">
+            <li th:if="${current == 1}"><a class="noclick" href="javascript:;">首页</a></li>
+            <li><a th:if="${current > 1}" th:href="@{/es/search(pageNum=1,year=${query.getYear()},college=${query.getCollege()})}">首页</a></li><!--//跳转至第一页-->
+            <li><a th:if="${current > 1}" th:href="@{/es/search(pageNum=${current-1},year=${query.getYear()},college=${query.getCollege()})}">上一页</a></li>
+            <!--//请求页数-1-->
+            <li class="active" th:each="i:${#numbers.sequence(1,pages)}">
+                <!--//从1到总页数遍历，并赋值给i    TotalPages&ndash;&gt;总页数-->
+                <a th:if="${i > current-5} and ${i < current+5} and ${i == current}" class="pageOne"
+                   style="background-color: #18b985;border: 1px solid #ddd;" href="javascript:void(0);"
+                   th:text="${i}">#</a>
+                <!--//限制显示页数的条数  4到6个页数   而且等于当前页，不能点击-->
+                <a th:if="${i > current-5} and ${i < current+5} and ${i != current}"
+                   th:href="@{/es/search(pageNum=${i},year=${query.getYear()},college=${query.getCollege()})}" th:text="${i}"
+                   style="color: #000000;background-color: #fff;border: 1px solid #ddd;cursor: pointer;"
+                   class="hoveras">#</a><!--//限制显示页数的条数  4到6个页数-->
+            </li>
+            <li th:if="${current != pages}"><a
+                    th:href="@{/es/search(pageNum=${current+1},year=${query.getYear()},college=${query.getCollege()})}">下一页</a></li><!--//请求页数+1-->
+            <li th:if="${current == pages}"><a
+                    class="noclick" href="javascript:;">尾页</a></li>
+            <li th:if="${current != pages}"><a
+                    th:href="@{/es/search(pageNum=${pages},year=${query.getYear()},college=${query.getCollege()})}">尾页</a></li><!--//跳转至第Number页-->
+        </ul>
     </div>
 </section>
 </body>
-<script src="js/jquery-2.1.0.js"></script>
-<script src="dist/js/txt.wav.min.js"></script>
-<script src="js/result.js"></script>
+<script th:src="@{/js/jquery-2.1.0.js}"></script>
+<script th:src="@{/dist/js/txt.wav.min.js}"></script>
+<script th:src="@{/js/result.js}"></script>
 <script type="text/javascript">
-    $(function() {
-        //确定文档高度
-        var winheight = $(window).height();
-        winheight -= 70;
-        $('.wrap').css('height', winheight);
-        //点击缩回
-        $('.closeche').on('click', function() {
-            if($('.aside_nav').css('left') == '0px') {
-                $('.aside_nav').css('left', '-210px');
-                $('.wrap').css({
-                    'width': '95%',
-                    'margin-left': '40px'
-                });
-            } else {
-                $('.aside_nav').css('left', '0px');
-                $('.wrap').css({
-                    'width': '',
-                    'margin-left': '258px'
-                })
-            }
-
-        })
-
-    });
+    window.onload=function (ev) {
+        $(function() {
+            //确定文档高度
+            var winheight = $(window).height();
+            winheight -= 70;
+            $('.wrap').css('height', winheight);
+            //点击缩回
+            $('.closeche').on('click', function() {
+                if($('.aside_nav').css('left') == '0px') {
+                    $('.aside_nav').css('left', '-210px');
+                    $('.wrap').css({
+                        'width': '95%',
+                        'margin-left': '40px'
+                    });
+                } else {
+                    $('.aside_nav').css('left', '0px');
+                    $('.wrap').css({
+                        'width': '',
+                        'margin-left': '258px'
+                    })
+                }
+            })
+        });
+    }
 </script>
-
 </html>

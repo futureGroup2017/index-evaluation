@@ -92,9 +92,11 @@
                 <input type="text"  id="delete-year" name="year" class="year" style="display: none;">
                 <input type="submit" id="delete" value="删除" class="result"/>
             </form>
+            <span style="color: red;" th:if="${msg!=null}" th:text="${msg}"></span>
             <!--用于文件上传   导入-->
             <form th:action="@{/employmentPractice/importData}" th:method="post" enctype="multipart/form-data">
-                <input class="year" id="import-year" type="text" name="year" style="display: none;">
+                <input class="year" id="import-year" th:if="${query.getYear()!=null}" th:value="${query.getYear()}"  type="text" name="year" style="display: none;">
+                <input class="year" id="import-year" th:if="${query.getYear()==null}" type="text" name="year" style="display: none;">
                 <input type="file" name="file" id="file" style="display: none">
                 <input type="submit" id="import" style="display: none">
             </form>

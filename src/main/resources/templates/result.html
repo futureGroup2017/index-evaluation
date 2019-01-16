@@ -61,7 +61,7 @@
             <a th:href="@{/employmentRate/findAll}">就业率指数</a>
         </li>
         <li>
-            <a href="employment.html">用人单位满意度指数</a>
+            <a th:href="@{/es/search}">用人单位满意度指数</a>
         </li>
         <li>
             <a th:href="@{/employmentPractice/findAll}">就业创业实践指数</a>
@@ -113,7 +113,8 @@
                 });
                 // 删除
                 $("#delete").click(function () {
-                    var values=$("#delete-year").val();if ( values == ''){alert('请选择年份!');}
+                    var values=$("#delete-year").val();if ( values == ''){
+                        console.log('请选择年份!');}
                 });
                 // 导入
                 $("#import").click(function () {
