@@ -84,26 +84,6 @@ public class TeachersStructureController {
         return modelAndView;
     }
 
-    @GetMapping("/to")
-    public ModelAndView to(@RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                           @RequestParam(name = "pageSize", defaultValue = "16") int pageSize,
-                           @RequestParam(name = "year", defaultValue = "0")Integer year){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("result");
-        List<Year> allYear = yearService.findAllYear();
-        modelAndView.addObject("allYear",allYear);
-        Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-        QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-        if (year != 0){
-            queryWrapper.eq("year",year);
-        }
-        IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-        modelAndView.addObject("current",iPage.getCurrent());//当前页数
-        modelAndView.addObject("pages",iPage.getPages());//总页数
-        modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
-        return modelAndView;
-    }
-
     @RequestMapping("/import")
     public ModelAndView impor(HttpServletRequest request, Integer year,
                               @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
@@ -212,16 +192,16 @@ public class TeachersStructureController {
                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                @RequestParam(name = "pageSize", defaultValue = "16") int pageSize) throws UnsupportedEncodingException {
         ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("result2");
+        modelAndView.setViewName("result");
         List<Year> allYear = yearService.findAllYear();
         modelAndView.addObject("allYear",allYear);
         Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
         QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-        query.setCollege(new String(query.getCollege().getBytes("iso8859-1"),"utf-8"));
         if (query.getYear() != null){
             queryWrapper.eq("year",query.getYear());
         }
-        if (query.getCollege() != ""){
+        log.info(query.getCollege() != "");
+        if (query.getCollege() != "" && query.getCollege() != null){
             queryWrapper.eq("college_name",query.getCollege());
         }
         IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
