@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.wlgzs.index_evaluation.dao.EmploymentRateMapper;
-import org.wlgzs.index_evaluation.enums.Result;
-import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.EmploymentRate;
 import org.wlgzs.index_evaluation.service.EmploymentRateService;
 import org.wlgzs.index_evaluation.util.ExcelUtil;
@@ -36,14 +34,12 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
     private EmploymentRateMapper employmentRateMapper;
 
     @Override
-    public Result importData(int year, HttpServletRequest request) {
+    public boolean importData(int year, HttpServletRequest request) {
         //获取上传的文件
         MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
         MultipartFile file = multipart.getFile("file");
         if(file==null || file.getOriginalFilename()==null || year==0){
-            Result result = new Result(ResultCodeEnum.UNSAVE);
-            result.setMsg("上传失败 ");
-            return result;
+            return false;
         }
         List<List<Object>> listob;
         List<EmploymentRate> employmentRateList = new ArrayList<>();
@@ -75,7 +71,7 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
             e.printStackTrace();
         }
         log.info("就业率数据："+employmentRateList);
-        return new Result(ResultCodeEnum.SAVE,employmentRateList);
+        return true;
     }
 
     @Override
@@ -174,13 +170,13 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
     }
 
     @Override
-    public Result deleteYear(int year) {
-        if(year==0) return new Result(ResultCodeEnum.UNDELETE);
+    public boolean deleteYear(int year) {
+        if(year==0) return false;
         QueryWrapper<EmploymentRate> rateQueryWrapper = new QueryWrapper<>();
         rateQueryWrapper.eq("year",year);
         List<EmploymentRate> employmentRates = employmentRateMapper.selectList(rateQueryWrapper);
-        if(employmentRates == null) return new Result(ResultCodeEnum.UNDELETE);
+        if(employmentRates == null) return false;
         employmentRateMapper.delete(rateQueryWrapper);
-        return new Result(ResultCodeEnum.DELETE,employmentRates);
+        return true;
     }
 }
