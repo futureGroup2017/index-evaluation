@@ -80,5 +80,15 @@ public class EmployerSatisfactionController {
     empService.delete(model,year,pageNum,pageSize);
     return new ModelAndView();
     }
+    @GetMapping("")
+    public ModelAndView findAll(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                                @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
+        Page<EmployerSatisfaction> employerSatisfactionPage = new Page<>(pageNum,pageSize);
+        QueryWrapper<EmployerSatisfaction> employerSatisfactionQueryWrapper  = new QueryWrapper<>();
+        IPage<EmployerSatisfaction> iPage = empService.page(employerSatisfactionPage,employerSatisfactionQueryWrapper);
+        model.addAttribute("employerSatisfactions",iPage.getRecords());
+        return new ModelAndView("employment");
+
+    }
 
 }
