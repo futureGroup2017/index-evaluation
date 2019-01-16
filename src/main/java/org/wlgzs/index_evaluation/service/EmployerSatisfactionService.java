@@ -3,9 +3,11 @@ package org.wlgzs.index_evaluation.service;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.pojo.EmployerSatisfaction;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -21,5 +23,9 @@ public interface EmployerSatisfactionService extends IService<EmployerSatisfacti
     //数据添加到数据库
     @Transactional
     boolean add(List<EmployerSatisfaction> employerSatisfactions);
+    //导出excel表
+    void exportData(int year, HttpServletResponse response) throws IOException;
+    //删除数据
+    void delete(Model model, Integer year, int pageNum, int pageSize);
 
 }

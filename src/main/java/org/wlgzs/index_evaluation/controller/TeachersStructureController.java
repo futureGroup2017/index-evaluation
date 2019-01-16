@@ -63,7 +63,7 @@ public class TeachersStructureController {
             return modelAndView;
         }
         for (TeachersStructure t :byYear){
-            if (teachersStructureService.delete(t) == 0){
+                if (teachersStructureService.delete(t) == 0){
                 modelAndView.addObject("msg","删除出错，请重试！");
                 Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
                 QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
