@@ -9,13 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.pojo.EmploymentPractice;
 import org.wlgzs.index_evaluation.pojo.Query;
+import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.EmploymentPracticeService;
+import org.wlgzs.index_evaluation.service.YearService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -30,6 +33,8 @@ public class EmploymentPracticeController {
 
     @Resource
     private EmploymentPracticeService employmentPracticeService;
+    @Resource
+    private YearService yearService;
 
     /**
      * 导入就业创业实践数据
@@ -41,16 +46,16 @@ public class EmploymentPracticeController {
         if(year==null){
             model.addAttribute("msg","请选择年份");
             log.info("请选择年份");
-            return new ModelAndView("redirect:/employmentRate/findAll");
+            return new ModelAndView("redirect:/employmentPractice/findAll");
         }
         if(employmentPracticeService.importData(year, request)){
             model.addAttribute("msg","导入成功");
             log.info("导入成功");
-            return new ModelAndView("redirect:/employmentRate/findAll");
+            return new ModelAndView("redirect:/employmentPractice/findAll");
         } else {
             model.addAttribute("msg","导入失败");
             log.info("导入失败");
-            return new ModelAndView("redirect:/employmentRate/findAll");
+            return new ModelAndView("redirect:/employmentPractice/findAll");
         }
     }
 
@@ -87,11 +92,8 @@ public class EmploymentPracticeController {
         model.addAttribute("pages",page.getPages());   //总页数
         model.addAttribute("lists",page.getRecords());   //集合
         model.addAttribute("query",query);
-        Set<Integer> years = new HashSet<>();
-        for (int i = 0; i < page.getRecords().size(); i++) {
-            years.add(page.getRecords().get(i).getYear());
-        }
-        model.addAttribute("allYear",years);//年份
+        List<Year> allYear = yearService.findAllYear();
+        model.addAttribute("allYear",allYear);//年份
         model.addAttribute("msg","查询成功");
         log.info("查询成功:"+page.getRecords());
         return new ModelAndView("employmentPractice");
@@ -106,16 +108,16 @@ public class EmploymentPracticeController {
         if(year==null){
             model.addAttribute("msg","请选择年份");
             log.info("请选择年份");
-            return new ModelAndView("redirect:/employmentRate/findAll");
+            return new ModelAndView("redirect:/employmentPractice/findAll");
         }
         if(employmentPracticeService.deleteYear(year)){
             model.addAttribute("msg","删除成功");
             log.info("删除成功");
-            return new ModelAndView("redirect:/employmentRate/findAll");
+            return new ModelAndView("redirect:/employmentPractice/findAll");
         } else {
             model.addAttribute("msg","删除失败");
             log.info("删除失败");
-            return new ModelAndView("redirect:/employmentRate/findAll");
+            return new ModelAndView("redirect:/employmentPractice/findAll");
         }
     }
 
