@@ -1,17 +1,28 @@
 package org.wlgzs.index_evaluation.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.pojo.Employment;
+import org.wlgzs.index_evaluation.pojo.Query;
+import org.wlgzs.index_evaluation.pojo.TeachersStructure;
+import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.EmploymentService;
+import org.wlgzs.index_evaluation.service.YearService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -28,6 +39,33 @@ public class EmploymentController {
 
     @Autowired
     private EmploymentService employmentService;
+    @Autowired
+    private YearService yearService;
+
+    @GetMapping("/search")
+    public ModelAndView search(Query query,
+                               @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
+                               @RequestParam(name = "pageSize", defaultValue = "16") int pageSize) throws UnsupportedEncodingException {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("result");
+        List<Year> allYear = yearService.findAllYear();
+        modelAndView.addObject("allYear",allYear);
+        Page<Employment> practiceQueryWrapper = new Page<>(pageNum,pageSize);
+        QueryWrapper<Employment> queryWrapper = new QueryWrapper<>();
+        if (query.getYear() != null){
+            queryWrapper.eq("year",query.getYear());
+        }
+        log.info(query.getCollege() != "");
+        if (query.getCollege() != "" && query.getCollege() != null){
+            queryWrapper.eq("college_name",query.getCollege());
+        }
+        IPage<Employment> iPage = employmentService.page(practiceQueryWrapper,queryWrapper);
+        modelAndView.addObject("current",iPage.getCurrent());//当前页数
+        modelAndView.addObject("pages",iPage.getPages());//总页数
+        modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
+        modelAndView.addObject("query",query);
+        return modelAndView;
+    }
 
     @RequestMapping("/import")
     public void impor(HttpServletRequest request, Integer year) throws IOException {

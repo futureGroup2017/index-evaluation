@@ -80,7 +80,7 @@
                 <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
             </select>
             <select class="selects" id="select" th:if="${query.getYear()==null}">
-                <option value="" disabled selected>请选择年份</option>
+                <option value="" selected>请选择年份</option>
                 <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
             </select>
             <input type="button" id="daoru" value="导入" class="result" />
@@ -117,7 +117,8 @@
                 });
                 // 导入
                 $("#import").click(function () {
-                    var values=$("#import-year").val();if ( values == ''){alert('请选择年份!');}
+                    var values=$("#import-year").val();if ( values == ''){
+                        console.log('请选择年份!');}
                 });
                 $("#select").change(function () {
                     var Url = "/ts/export?year=";
