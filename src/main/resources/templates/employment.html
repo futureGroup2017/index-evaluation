@@ -85,17 +85,17 @@
             </select>
             <input type="button" id="daoru" value="导入" class="result" />
             <!--用于导出数据-->
-            <a id="export" th:if="${query.getYear()!=null}" th:href="@{/ts/export(year=${query.getYear()})}"><input type="button" id="export-bot" value="导出" class="result" /></a>
+            <a id="export" th:if="${query.getYear()!=null}" th:href="@{/es/export(year=${query.getYear()})}"><input type="button" id="export-bot" value="导出" class="result" /></a>
             <a id="export" th:if="${query.getYear()==null}" href="#"><input type="button" id="export-bot" value="导出" class="result" /></a>
             <!--用于删除-->
-            <form th:action="@{/ts/delete}" th:method="get">
+            <form th:action="@{/es/delete}" th:method="get">
                 <input type="text"  id="delete-year" name="year" class="year" style="display: none">
                 <input type="submit" id="delete" value="删除" class="result"/>
             </form>
             <!--用于文件上传   导入-->
-            <form th:action="@{/ts/import}" th:method="post" enctype="multipart/form-data">
+            <form th:action="@{/es/import}" th:method="post" enctype="multipart/form-data">
                 <input class="year" id="import-year" type="text" name="year" style="display: none">
-                <input type="file" name="upfile" id="file" style="display: none">
+                <input type="file" name="file" id="file" style="display: none">
                 <input type="submit" id="import" style="display: none">
             </form>
             <script>
@@ -121,7 +121,7 @@
                         console.log('请选择年份!');}
                 });
                 $("#select").change(function () {
-                    var Url = "/ts/export?year=";
+                    var Url = "/es/export?year=";
                     var years=$("#select option:selected").val();
                     Url = Url+years;
                     if(years == ''){
@@ -134,8 +134,8 @@
                         alert("请选择年份！")
                     }
                 })
+                <!--用于查询搜索-->
             </script>
-            <!--用于查询搜索-->
             <div class="searrch" style="position: absolute;top: 0;right: 0;">
                 <form th:action="@{/es/search(year=${query.getYear()})}" th:method="get">
                     <input type="text" placeholder="请输入学院名称" th:value="${query.getCollege()}" name="college" class="ipt">
@@ -150,43 +150,23 @@
                 <thead>
                 <tr>
                     <th>学院</th>
-                    <th>在校生数</th>
-                    <th>教师总数</th>
-                    <th>研究生学位教师总数</th>
-                    <th>高级职务教师总数</th>
-                    <th>生师比</th>
-                    <th>研究生学位教师占专任教师比例</th>
-                    <th>高级职务教师占专任教师比例</th>
-                    <th>生师比合格值</th>
-                    <th>生师比积分</th>
-                    <th>研究生学位教师积分</th>
-                    <th>高级职务教师积分</th>
-                    <th>生师比33.7</th>
-                    <th>高学历教师占比32.9</th>
-                    <th>高职称教师占比33.9</th>
-                    <th>师资结构指数11.07</th>
+                    <th>毕业生的精神状态与工作态度18.95</th>
+                    <th>毕业生的综合素质能力24.2</th>
+                    <th>毕业生的“能力-岗位”匹配度22.25</th>
+                    <th>对毕业生的工作满意度19.45</th>
+                    <th>用人单位满意度指数13.25</th>
                     <th>年份</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="Satis: ${employerSatisfactions}">
-                    <td th:text="${Satis.}"></td>
-                    <td th:text="${teacher.getStuNum()}"></td>
-                    <td th:text="${teacher.getTeaNum()}"></td>
-                    <td th:text="${teacher.getGraNum()}"></td>
-                    <td th:text="${teacher.getSenNum()}"></td>
-                    <td th:text="${teacher.getB21()}"></td>
-                    <td th:text="${teacher.getB22()}"></td>
-                    <td th:text="${teacher.getB23()}"></td>
-                    <td th:text="${teacher.getQualified()}"></td>
-                    <td th:text="${teacher.getM1()}"></td>
-                    <td th:text="${teacher.getM2()}"></td>
-                    <td th:text="${teacher.getM3()}"></td>
-                    <td th:text="${teacher.getW1()}"></td>
-                    <td th:text="${teacher.getW2()}"></td>
-                    <td th:text="${teacher.getW3()}"></td>
-                    <td th:text="${teacher.getA2()}"></td>
-                    <td th:text="${teacher.getYear()}"></td>
+                    <td th:text="${Satis.getCollege()}"></td>
+                    <td th:text="${Satis.getLevel()}"></td>
+                    <td th:text="${Satis.getAbility()}"></td>
+                    <td th:text="${Satis.getMatched()}"></td>
+                    <td th:text="${Satis.getSatisfaction()}"></td>
+                    <td th:text="${Satis.getSatisfactionIndex()}"></td>
+                    <td th:text="${Satis.getYear()}"></td>
                 </tr>
             </table>
         </div>

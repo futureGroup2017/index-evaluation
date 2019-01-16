@@ -13,4 +13,5 @@ public class Query {
 
     private Integer year;
     private String college;
+
 }

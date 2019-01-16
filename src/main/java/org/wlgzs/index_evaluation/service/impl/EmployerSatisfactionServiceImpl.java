@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.dao.EmployerSatisfactionMapper;
 import org.wlgzs.index_evaluation.pojo.EmployerSatisfaction;
+import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.service.EmployerSatisfactionService;
 
 import javax.annotation.Resource;
@@ -233,18 +234,23 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<>();
         Page<EmployerSatisfaction> page = new Page<>(pageNum,pageSize);
         if (year!=null){
+            queryWrapper.eq("year",year);
             List<EmployerSatisfaction> employerSatisfactions = baseMapper.selectList(queryWrapper);
-            IPage<EmployerSatisfaction> iPage = baseMapper.selectPage(page,queryWrapper);
             for (EmployerSatisfaction em:employerSatisfactions
                     ) {
                 baseMapper.deleteById(em.getEsId());
             }
+            QueryWrapper<EmployerSatisfaction> wrapper = new QueryWrapper<>();
+            IPage<EmployerSatisfaction> iPage = baseMapper.selectPage(page,wrapper);
+            model.addAttribute("msg","删除成功");
             model.addAttribute("current",iPage.getCurrent());//当前页数
             model.addAttribute("pages",iPage.getPages());//总页数
+            model.addAttribute("query",new Query());
             model.addAttribute("employerSatisfactions",iPage.getRecords());//所有的数据集合
 
         }
         else {
+            model.addAttribute("msg","删除失败");
             IPage<EmployerSatisfaction> iPage = baseMapper.selectPage(page,queryWrapper);
             model.addAttribute("msg","请选择年份");
             model.addAttribute("current",iPage.getCurrent());//当前页数

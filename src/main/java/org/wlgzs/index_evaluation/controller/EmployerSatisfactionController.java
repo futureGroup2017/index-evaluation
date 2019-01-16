@@ -10,7 +10,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.pojo.EmployerSatisfaction;
 import org.wlgzs.index_evaluation.pojo.Query;
+import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.EmployerSatisfactionService;
+import org.wlgzs.index_evaluation.service.YearService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -29,6 +31,8 @@ public class EmployerSatisfactionController {
 
     @Resource
     private EmployerSatisfactionService  empService;
+    @Resource
+    private YearService yearService;
 
     /**
      * 导入原始数据
@@ -37,12 +41,25 @@ public class EmployerSatisfactionController {
      * @throws IOException
      */
     @PostMapping("/import")
-    public void importExcel(@RequestParam("file") MultipartFile multipartFile,String year) throws IOException {
+    public ModelAndView importExcel(Model model,@RequestParam("file") MultipartFile multipartFile,String year) throws IOException {
+        Page<EmployerSatisfaction> employerSatisfactionPage = new Page<>(1,16);
         List<EmployerSatisfaction> list = empService.importExcel(multipartFile,year);
         boolean isTrue =  empService.add(list);
-        System.out.println(isTrue);
+        if (isTrue) {
+            List<Year> allYear = yearService.findAllYear();
+            model.addAttribute("allYear",allYear);
+            QueryWrapper<EmployerSatisfaction> employerSatisfactionQueryWrapper  = new QueryWrapper<>();
+            IPage<EmployerSatisfaction> iPage = empService.page(employerSatisfactionPage,employerSatisfactionQueryWrapper);
+            model.addAttribute("current",iPage.getCurrent());//当前页数
+            model.addAttribute("pages",iPage.getPages());//总页数
+            model.addAttribute("employerSatisfactions",iPage.getRecords());//所有的数据集合
+            model.addAttribute("query",new Query());
+            model.addAttribute("msg", "导入成功");
         }
-
+        else
+            model.addAttribute("msg","导入失败");
+        return new ModelAndView("employment");
+        }
     /**
      * 导出数据
      * @param response
@@ -66,29 +83,23 @@ public class EmployerSatisfactionController {
         if (query.getCollege() != null && !query.getCollege().equals("")){
             employerSatisfactionQueryWrapper.eq("college",query.getCollege());
         }
+        List<Year> allYear = yearService.findAllYear();
+        model.addAttribute("allYear",allYear);
         IPage<EmployerSatisfaction> iPage = empService.page(employerSatisfactionPage,employerSatisfactionQueryWrapper);
         model.addAttribute("current",iPage.getCurrent());//当前页数
         model.addAttribute("pages",iPage.getPages());//总页数
         model.addAttribute("employerSatisfactions",iPage.getRecords());//所有的数据集合
         model.addAttribute("query",query);
-        return new ModelAndView("");
+        return new ModelAndView("employment");
     }
     @GetMapping("/delete")
     public ModelAndView delete(Model model,Integer year,
                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
+        List<Year> allYear = yearService.findAllYear();
+        model.addAttribute("allYear",allYear);
     empService.delete(model,year,pageNum,pageSize);
-    return new ModelAndView();
-    }
-    @GetMapping("")
-    public ModelAndView findAll(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                                @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
-        Page<EmployerSatisfaction> employerSatisfactionPage = new Page<>(pageNum,pageSize);
-        QueryWrapper<EmployerSatisfaction> employerSatisfactionQueryWrapper  = new QueryWrapper<>();
-        IPage<EmployerSatisfaction> iPage = empService.page(employerSatisfactionPage,employerSatisfactionQueryWrapper);
-        model.addAttribute("employerSatisfactions",iPage.getRecords());
-        return new ModelAndView("employment");
-
+    return new ModelAndView("employment");
     }
 
 }
