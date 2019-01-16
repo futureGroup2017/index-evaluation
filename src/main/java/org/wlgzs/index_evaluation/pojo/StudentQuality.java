@@ -23,6 +23,9 @@ public class StudentQuality {
     @TableId(value = "quality_id", type = IdType.AUTO)
     private Integer qualityId;
     /**
+     * zhu
+     */
+    /**
      * 专业1志愿报考人数
      */
     @TableField(value = "fist_volunteer_num")
