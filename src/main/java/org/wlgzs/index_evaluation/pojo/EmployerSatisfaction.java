@@ -92,7 +92,7 @@ public class EmployerSatisfaction {
      * 毕业生的“能力-岗位”匹配度
      */
     @TableField(value = "matched")
-    private Double match;
+    private Double matched;
     /**
      * 匹配度非常满意人数
      */
@@ -189,7 +189,42 @@ public class EmployerSatisfaction {
      */
     @TableField(value = "year")
     private int year;
-    public EmployerSatisfaction(String college, Double level, int level1, int level2, int level3, int level4, int level5, Double ability, int ability1, int ability2, int ability3, int ability4, int ability5, Double match, int match1, int match2, int match3, int match4, int match5, Double satisfaction, int satisfaction1, int satisfaction2, int satisfaction3, int satisfaction4, int satisfaction5,Double satisfactionIndex, int year) {
+
+    @Override
+    public String toString() {
+        return "EmployerSatisfaction{" +
+                "esId=" + esId +
+                ", college='" + college + '\'' +
+                ", level=" + level +
+                ", level1=" + level1 +
+                ", level2=" + level2 +
+                ", level3=" + level3 +
+                ", level4=" + level4 +
+                ", level5=" + level5 +
+                ", ability=" + ability +
+                ", ability1=" + ability1 +
+                ", ability2=" + ability2 +
+                ", ability3=" + ability3 +
+                ", ability4=" + ability4 +
+                ", ability5=" + ability5 +
+                ", matched=" + matched +
+                ", match1=" + match1 +
+                ", match2=" + match2 +
+                ", match3=" + match3 +
+                ", match4=" + match4 +
+                ", match5=" + match5 +
+                ", satisfaction=" + satisfaction +
+                ", satisfaction1=" + satisfaction1 +
+                ", satisfaction2=" + satisfaction2 +
+                ", satisfaction3=" + satisfaction3 +
+                ", satisfaction4=" + satisfaction4 +
+                ", satisfaction5=" + satisfaction5 +
+                ", satisfactionIndex=" + satisfactionIndex +
+                ", year=" + year +
+                '}';
+    }
+
+    public EmployerSatisfaction(String college, Double level, int level1, int level2, int level3, int level4, int level5, Double ability, int ability1, int ability2, int ability3, int ability4, int ability5, Double match, int match1, int match2, int match3, int match4, int match5, Double satisfaction, int satisfaction1, int satisfaction2, int satisfaction3, int satisfaction4, int satisfaction5, Double satisfactionIndex, int year) {
         this.college = college;
         this.level = level;
         this.level1 = level1;
@@ -203,7 +238,7 @@ public class EmployerSatisfaction {
         this.ability3 = ability3;
         this.ability4 = ability4;
         this.ability5 = ability5;
-        this.match = match;
+        this.matched = match;
         this.match1 = match1;
         this.match2 = match2;
         this.match3 = match3;
