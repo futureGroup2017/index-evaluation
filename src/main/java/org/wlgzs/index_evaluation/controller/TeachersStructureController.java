@@ -3,7 +3,6 @@ package org.wlgzs.index_evaluation.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.TeachersStructureService;
 import org.wlgzs.index_evaluation.service.YearService;
-import org.wlgzs.index_evaluation.util.ExportUtilTeachersStructure;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -209,37 +208,27 @@ public class TeachersStructureController {
     }
 
     @GetMapping("/search")
-    public ModelAndView search(Integer year,String college,
+    public ModelAndView search(Query query,
                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                               @RequestParam(name = "pageSize", defaultValue = "3") int pageSize) throws UnsupportedEncodingException {
+                               @RequestParam(name = "pageSize", defaultValue = "16") int pageSize) throws UnsupportedEncodingException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("result2");
         List<Year> allYear = yearService.findAllYear();
         modelAndView.addObject("allYear",allYear);
         Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
         QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-        log.info(year);
-        if (year != null){
-            queryWrapper.eq("year",year);
+        query.setCollege(new String(query.getCollege().getBytes("iso8859-1"),"utf-8"));
+        if (query.getYear() != null){
+            queryWrapper.eq("year",query.getYear());
         }
-        if (college != ""){
-            queryWrapper.eq("college_name",college);
+        if (query.getCollege() != ""){
+            queryWrapper.eq("college_name",query.getCollege());
         }
         IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
         modelAndView.addObject("current",iPage.getCurrent());//当前页数
         modelAndView.addObject("pages",iPage.getPages());//总页数
         modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
-        modelAndView.addObject("year",year);
-        modelAndView.addObject("college",college);
-        if(year!=null && college !=""){
-            modelAndView.addObject("pa",java.net.URLEncoder.encode(",year=${year},college=${college}","UTF-8"));
-        } else if(year!=null && college==""){
-            modelAndView.addObject("pa",java.net.URLEncoder.encode(",year=${year}","ISO-8859-1"));
-        } else if(year==null && college!=""){
-            modelAndView.addObject("pa",",college=${college}");
-        } else if(year==null && college==""){
-            modelAndView.addObject("pa",",year=,college=");
-        }
+        modelAndView.addObject("query",query);
         return modelAndView;
     }
 
