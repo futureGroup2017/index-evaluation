@@ -13,7 +13,7 @@
     <script th:src="@{/js/jquery.js}"></script>
     <style>form{display: inline-block;}
     </style>
-    <script th:inline="javascript">var deleteMessages = [[${msg}]];if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') {alert(deleteMessages);}</script>
+    <script th:inline="javascript">var deleteMessages = [[${msg}]];if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') { }</script>
 </head>
 <body>
 <header>
@@ -77,11 +77,11 @@
             <select class="selects" id="select" th:if="${query.getYear()!=null}">
                 <option th:value="${query.getYear()}" hidden disabled selected th:text="${query.getYear()}"></option>
                 <option value="">请选择年份</option>
-                <option class="selects" th:each="year1:${allYear}" th:value="${year1.yearName}" th:text="${year1.yearName}"></option>
+                <option class="selects" th:each="years:${allYear}" th:value="${years.getYearName()}" th:text="${years.getYearName()}"></option>
             </select>
             <select class="selects" id="select" th:if="${query.getYear()==null}">
                 <option value="" selected>请选择年份</option>
-                <option class="selects" th:each="year1:${allYear}" th:value="${year1}" th:text="${year1}"></option>
+                <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
             </select>
             <input type="button" id="daoru" value="导入" class="result" />
             <!--用于导出数据-->
@@ -89,7 +89,7 @@
             <a id="export" th:if="${query.getYear()==null}" href="#"><input type="button" value="导出" class="result" /></a>
             <!--用于删除-->
             <form th:action="@{/employmentPractice/deleteYear}" th:method="delete">
-                <input type="text"  id="delete-year" name="year" class="year">
+                <input type="text"  id="delete-year" name="year" class="year" style="display: none;">
                 <input type="submit" id="delete" value="删除" class="result"/>
             </form>
             <!--用于文件上传   导入-->
