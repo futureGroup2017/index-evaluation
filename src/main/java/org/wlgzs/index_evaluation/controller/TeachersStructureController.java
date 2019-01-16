@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DecimalFormat;
 import java.util.List;
 
@@ -210,17 +211,17 @@ public class TeachersStructureController {
     @GetMapping("/search")
     public ModelAndView search(Integer year,String college,
                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                               @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
+                               @RequestParam(name = "pageSize", defaultValue = "3") int pageSize) throws UnsupportedEncodingException {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("result2");
         List<Year> allYear = yearService.findAllYear();
         modelAndView.addObject("allYear",allYear);
         Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
         QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
+        log.info(year);
         if (year != null){
             queryWrapper.eq("year",year);
         }
-        log.info(college);
         if (college != ""){
             queryWrapper.eq("college_name",college);
         }
@@ -230,6 +231,15 @@ public class TeachersStructureController {
         modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
         modelAndView.addObject("year",year);
         modelAndView.addObject("college",college);
+        if(year!=null && college !=""){
+            modelAndView.addObject("pa",java.net.URLEncoder.encode(",year=${year},college=${college}","UTF-8"));
+        } else if(year!=null && college==""){
+            modelAndView.addObject("pa",java.net.URLEncoder.encode(",year=${year}","ISO-8859-1"));
+        } else if(year==null && college!=""){
+            modelAndView.addObject("pa",",college=${college}");
+        } else if(year==null && college==""){
+            modelAndView.addObject("pa",",year=,college=");
+        }
         return modelAndView;
     }
 

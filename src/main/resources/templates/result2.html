@@ -51,7 +51,7 @@
             <a href="Being-interviewed.html">生源质量指数</a>
         </li>
         <li class="active">
-            <a href="result.html">师资结构指数</a>
+            <a th:href="@{/ts/to}">师资结构指数</a>
             <i class="fa fa-angle-double-right"></i>
         </li>
         <li>
@@ -74,9 +74,14 @@
             <h1 class="top-title">师 资 结 构 指 数</h1>
         </section>
         <section style="position: relative">
-            <select class="selects" id="select" th:field="${year}">
+            <select class="selects" id="select" th:if="${year!=null}">
+                <option  th:value="${year}" hidden disabled selected th:text="${year}"></option>
+                <option value="请选择年份">请选择年份</option>
+                <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
+            </select>
+            <select class="selects" id="select" th:if="${year==null}">
                 <option value="请选择年份" disabled selected>请选择年份</option>
-                <option class="selects" th:each="year:${allYear}" th:value="${year.getYearName()}" th:text="${year.getYearName()}"></option>
+                <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
             </select>
             <input type="button" id="daoru" value="导入" class="result" />
             <!--用于导出数据-->
@@ -127,9 +132,10 @@
             </script>
             <!--用于查询搜索-->
             <div class="searrch" style="position: absolute;top: 0;right: 0;">
-                <form th:action="@{/ts/search}" th:method="post">
-                    <input type="text" placeholder="请输入学院名称" th:value="${college}" name="collge" class="ipt">
-                    <input class="year" type="text" name="year" style="display: none">
+                <form th:action="@{/ts/search(year=${year})}" th:method="get">
+                    <input type="text" placeholder="请输入学院名称" th:value="${college}" name="college" class="ipt">
+                    <input class="year"  th:if="${year!=null}" th:value="${year}" type="text" name="year" style="display: none">
+                    <input class="year"  th:if="${year==null}" type="text" name="year" style="display: none">
                     <input type="submit" class="submit">
                 </form>
             </div>
@@ -180,11 +186,12 @@
             </table>
         </div>
     </div>
+    <!-- 分页 -->
     <div class="fenye" style="text-align:center" th:if="${pages > 0}">
         <ul class="pagination" th:if="${pages > 1}">
             <li th:if="${current == 1}"><a class="noclick" href="javascript:;">首页</a></li>
-            <li><a th:if="${current > 1}" th:href="@{/ts/search(pageNum=1)}">首页</a></li><!--//跳转至第一页-->
-            <li><a th:if="${current > 1}" th:href="@{/ts/search(pageNum=${current-1})}">上一页</a></li>
+            <li><a th:if="${current > 1}" th:href="@{/ts/search(pageNum=1+${pa})}">首页</a></li><!--//跳转至第一页-->
+            <li><a th:if="${current > 1}" th:href="@{/ts/search(pageNum=${current-1}+${pa})}">上一页</a></li>
             <!--//请求页数-1-->
             <li class="active" th:each="i:${#numbers.sequence(1,pages)}">
                 <!--//从1到总页数遍历，并赋值给i    TotalPages&ndash;&gt;总页数-->
@@ -193,16 +200,16 @@
                    th:text="${i}">#</a>
                 <!--//限制显示页数的条数  4到6个页数   而且等于当前页，不能点击-->
                 <a th:if="${i > current-5} and ${i < current+5} and ${i != current}"
-                   th:href="@{/ts/search(pageNum=${i})}" th:text="${i}"
+                   th:href="@{/ts/search(pageNum=${i}+${pa})}" th:text="${i}"
                    style="color: #000000;background-color: #fff;border: 1px solid #ddd;cursor: pointer;"
                    class="hoveras">#</a><!--//限制显示页数的条数  4到6个页数-->
             </li>
             <li th:if="${current != pages}"><a
-                    th:href="@{/ts/search(pageNum=${current+1})}">下一页</a></li><!--//请求页数+1-->
+                    th:href="@{/ts/search(pageNum=${current+1}+${pa})}">下一页</a></li><!--//请求页数+1-->
             <li th:if="${current == pages}"><a
                     class="noclick" href="javascript:;">尾页</a></li>
             <li th:if="${current != pages}"><a
-                    th:href="@{/ts/search(pageNum=${pages})}">尾页</a></li><!--//跳转至第Number页-->
+                    th:href="@{/ts/search(pageNum=${pages}+${pa})}">尾页</a></li><!--//跳转至第Number页-->
         </ul>
     </div>
 </section>
