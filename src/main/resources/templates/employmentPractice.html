@@ -57,13 +57,13 @@
         </li>
         <li>
             <a th:href="@{/employmentRate/findAll}">就业率指数</a>
-            <i class="fa fa-angle-double-right"></i>
         </li>
         <li>
             <a href="employment.html">用人单位满意度指数</a>
         </li>
-        <li>
+        <li class="active">
             <a th:href="@{/employmentPractice/findAll}">就业创业实践指数</a>
+            <i class="fa fa-angle-double-right"></i>
         </li>
     </ul>
 </aside>
@@ -125,19 +125,19 @@
                     <td th:text="${employmentPractice.getM11()}"></td>
                     <td th:text="${employmentPractice.getM12()}"></td>
                     <td th:text="${employmentPractice.getM13()}"></td>
-                    <td th:text="${employmentPractice.getPeopleNumber()}"></td>
+                    <td th:text="${employmentPractice.getPeopleNumber()}" style="font-weight: bold;"></td>
                     <td th:text="${employmentPractice.getM21()}"></td>
                     <td th:text="${employmentPractice.getM22()}"></td>
-                    <td th:text="${employmentPractice.getQuality()}"></td>
+                    <td th:text="${employmentPractice.getQuality()}" style="font-weight: bold;"></td>
                     <td th:text="${employmentPractice.getM31()}"></td>
-                    <td th:text="${employmentPractice.getProjectNumber()}"></td>
+                    <td th:text="${employmentPractice.getProjectNumber()}" style="font-weight: bold;"></td>
                     <td th:text="${employmentPractice.getM41()}"></td>
-                    <td th:text="${employmentPractice.getProjectQuality()}"></td>
+                    <td th:text="${employmentPractice.getProjectQuality()}" style="font-weight: bold;"></td>
 
-                    <td th:text="${employmentPractice.getParticipationStatus()}"></td>
-                    <td th:text="${employmentPractice.getVentureProject()}"></td>
-                    <td th:text="${employmentPractice.getFeaturedWork()}"></td>
-                    <td th:text="${employmentPractice.getPractice()}"></td>
+                    <td th:text="${employmentPractice.getParticipationStatus()}" style="font-weight: bold;"></td>
+                    <td th:text="${employmentPractice.getVentureProject()}" style="font-weight: bold;"></td>
+                    <td th:text="${employmentPractice.getFeaturedWork()}" style="font-weight: bold;"></td>
+                    <td th:text="${employmentPractice.getPractice()}" style="font-weight: bold;"></td>
                     <td th:text="${employmentPractice.getYear()}"></td>
                 </tr>
             </table>

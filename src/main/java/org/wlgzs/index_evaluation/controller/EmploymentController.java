@@ -14,7 +14,6 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.pojo.Employment;
 import org.wlgzs.index_evaluation.pojo.Query;
-import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.EmploymentService;
 import org.wlgzs.index_evaluation.service.YearService;

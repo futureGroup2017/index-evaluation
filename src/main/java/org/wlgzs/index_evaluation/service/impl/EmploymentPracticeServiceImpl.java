@@ -19,11 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,8 +50,9 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
         List<EmploymentPractice> employmentPractices = new ArrayList<>();
         try {
             InputStream in = file.getInputStream();
-            DecimalFormat decimalFormat = new DecimalFormat(".000");//构造方法的字符格式这里如果小数不足2位,会以0补足.
+            DecimalFormat decimalFormat = new DecimalFormat("#.000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
             listob = ExcelUtilTwo.getBankListByExcel(in,file.getOriginalFilename());
+            //decimalFormat.setRoundingMode(RoundingMode.HALF_UP);//四舍五入
             //参赛总人数
             double totalOne = 0;
             double totalTwo = 0;
@@ -84,7 +82,7 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 double v3 = Double.parseDouble(String.valueOf(objects1.get(10)));
                 if (v3 > quality) quality = v3;
             }
-            //遍历listob数据，把数据放到List中
+            //遍历listob数据，把数据放到List中    DOWN-->UP
             for (List<Object> objects : listob) {
                 EmploymentPractice employmentPractice = new EmploymentPractice();
                 //通过遍历实现把每一列封装成一个model中，再把所有的model用List集合装载
@@ -96,44 +94,44 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 //"参赛人数比2-省创业大赛总人数34人"
                 employmentPractice.setM13(Double.parseDouble(String.valueOf(objects.get(3))));
                 //处理数据——M1: 参赛人数比47.5
-                employmentPractice.setPeopleNumber(new BigDecimal(((employmentPractice.getM11() +
-                        employmentPractice.getM12()/totalOne + employmentPractice.getM13()/totalTwo)*0.475)).setScale(3, RoundingMode.UP).doubleValue());
+                employmentPractice.setPeopleNumber(Double.parseDouble(decimalFormat.format((employmentPractice.getM11() +
+                        employmentPractice.getM12()/totalOne + employmentPractice.getM13()/totalTwo)*0.475)));
                 //"获奖质量积分-1(生涯规划大赛"
                 employmentPractice.setM21(Double.parseDouble(String.valueOf(objects.get(5))));
                 //"获奖质量积分-1(创业大赛）"
                 employmentPractice.setM22(Double.parseDouble(String.valueOf(objects.get(6))));
                 //处理数据——M2: 获奖质量比52.5
-                employmentPractice.setQuality(new BigDecimal((employmentPractice.getM21()/quality1 +
-                        employmentPractice.getM22()/quality2)*0.525).setScale(3, RoundingMode.UP).doubleValue());
+                employmentPractice.setQuality(Double.parseDouble(decimalFormat.format((employmentPractice.getM21()/quality1 +
+                        employmentPractice.getM22()/quality2)*0.525)));
                 /*
                 处理数据——参赛状态39
                  */
-                employmentPractice.setParticipationStatus(new BigDecimal(((employmentPractice.getM11() +
+                employmentPractice.setParticipationStatus(Double.parseDouble(decimalFormat.format(((employmentPractice.getM11() +
                         employmentPractice.getM12()/totalOne + employmentPractice.getM13()/totalTwo)*0.475 +
-                        (employmentPractice.getM21()/quality1 + employmentPractice.getM22()/quality2)*0.525)*39).setScale(3, RoundingMode.UP).doubleValue());
+                        (employmentPractice.getM21()/quality1 + employmentPractice.getM22()/quality2)*0.525)*39)));
                 //项目数量
                 employmentPractice.setM31(Double.parseDouble(String.valueOf(objects.get(8))));
                 //处理数据——M3: 项目数量比47
-                employmentPractice.setProjectNumber(new BigDecimal((employmentPractice.getM31()/number)*0.47).setScale(3, RoundingMode.UP).doubleValue());
+                employmentPractice.setProjectNumber(Double.parseDouble(decimalFormat.format((employmentPractice.getM31()/number)*0.47)));
                 //项目质量
                 employmentPractice.setM41(Double.parseDouble(String.valueOf(Double.parseDouble(String.valueOf(objects.get(10))))));
                 //处理数据——M4: 项目质量比53
-                employmentPractice.setProjectQuality(new BigDecimal(((employmentPractice.getM41()/quality)*0.53)).setScale(3, RoundingMode.UP).doubleValue());
+                employmentPractice.setProjectQuality(Double.parseDouble(decimalFormat.format(((employmentPractice.getM41()/quality)*0.53))));
                 /*
                 处理数据——创业项目28.5
                  */
-                employmentPractice.setVentureProject(new BigDecimal((((employmentPractice.getM31()/number)*0.47 +
-                        (employmentPractice.getM41()/quality)*0.53)*28.5)).setScale(3, RoundingMode.UP).doubleValue());
+                employmentPractice.setVentureProject(Double.parseDouble(decimalFormat.format((((employmentPractice.getM31()/number)*0.47 +
+                        (employmentPractice.getM41()/quality)*0.53)*28.5))));
                 /*
                 处理数据——就业创业实践指数
                  */
-                employmentPractice.setPractice(new BigDecimal((((employmentPractice.getM11() +
+                employmentPractice.setPractice(Double.parseDouble(decimalFormat.format((((employmentPractice.getM11() +
                         employmentPractice.getM12()/totalOne + employmentPractice.getM13()/totalTwo)*0.475 +
                         (employmentPractice.getM21()/quality1 + employmentPractice.getM22()/quality2)*0.525)*39 +
-                        ((employmentPractice.getM31()/number)*0.47 + (employmentPractice.getM41()/quality)*0.53)*28.5)*0.1535).setScale(3, RoundingMode.UP).doubleValue());
+                        ((employmentPractice.getM31()/number)*0.47 + (employmentPractice.getM41()/quality)*0.53)*28.5)*0.1535)));
                 employmentPractice.setYear(year);
                 employmentPractices.add(employmentPractice);
-                employmentPracticeMapper.insert(employmentPractice);
+                //employmentPracticeMapper.insert(employmentPractice);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -144,7 +142,110 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
 
     @Override
     public void exportData(int year, HttpServletResponse response) throws IOException {
+        HSSFWorkbook workbook = new HSSFWorkbook();
+        HSSFSheet sheet = workbook.createSheet();
+        sheet.setDefaultRowHeightInPoints(20);
+        HSSFPrintSetup ps = sheet.getPrintSetup();
+        ps.setLandscape(false); // 打印方向，true：横向，false：纵向
+        ps.setPaperSize(HSSFPrintSetup.A4_PAPERSIZE); //纸张
+        sheet.setHorizontallyCenter(true);//设置打印页面为水平居中
 
+        //设置要导出的文件的名字
+        String fileName = year+"就业创业类实践指数.xls";
+        fileName = URLEncoder.encode(fileName, "UTF-8");
+        //新增数据行，并且设置单元格数据
+        int rowNum = 1;
+        String[] headers = {"学院", "参赛人数比47.5", "获奖质量比52.5", "参赛状态39",
+                "项目数量比47", "项目质量比53", "创业项目28.5", "特色工作32.5", "就业创业实践指数"};
+        //headers表示excel表中第一行的表头
+        HSSFRow row = sheet.createRow(0);
+        //设置行高
+        row.setHeightInPoints(30);
+        //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
+        sheet.setColumnWidth(0, 19 * 256);
+        sheet.setColumnWidth(1, 19 * 256);
+        sheet.setColumnWidth(2, 19 * 256);
+        sheet.setColumnWidth(3, 19 * 256);
+        sheet.setColumnWidth(4, 19 * 256);
+        sheet.setColumnWidth(5, 19 * 256);
+        sheet.setColumnWidth(6, 19 * 256);
+        sheet.setColumnWidth(7, 19 * 256);
+        sheet.setColumnWidth(8, 19 * 256);
+        //其他表样式
+        HSSFCellStyle style = workbook.createCellStyle();
+        style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        style.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        style.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+        HSSFFont font = workbook.createFont();
+        font.setFontName("宋体");
+        font.setFontHeightInPoints((short) 11);//设置字体大小
+        style.setAlignment(HSSFCellStyle.ALIGN_CENTER);//设置字体水平居中
+        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直居中
+        style.setFont(font);
+        //表头样式
+        HSSFCellStyle style2 = workbook.createCellStyle();
+        style2.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
+        style2.setBorderLeft(HSSFCellStyle.BORDER_THIN);//左边框
+        style2.setBorderTop(HSSFCellStyle.BORDER_THIN);//上边框
+        style2.setBorderRight(HSSFCellStyle.BORDER_THIN);//右边框
+        HSSFFont font2 = workbook.createFont();//其他字体样式
+        font2.setFontName("宋体");
+        font2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
+        font2.setFontHeightInPoints((short) 11);//设置字体大小
+        style2.setAlignment(HSSFCellStyle.ALIGN_CENTER);//设置字体水平居中
+        style2.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);//垂直居中
+        style2.setFont(font2);
+
+        //在excel表中添加表头
+        for (int i = 0; i < headers.length; i++) {
+            HSSFCell cell = row.createCell(i);
+            HSSFRichTextString text = new HSSFRichTextString(headers[i]);
+            cell.setCellStyle(style2);
+            cell.setCellValue(text);
+        }
+        QueryWrapper<EmploymentPractice> rateQueryWrapper = new QueryWrapper<>();
+        rateQueryWrapper.eq("year",year);
+        List<EmploymentPractice> employmentRateList = employmentPracticeMapper.selectList(rateQueryWrapper);
+        //在表中存放查询到的数据放入对应的列
+        HSSFCell cell;
+        for (EmploymentPractice employmentPractice : employmentRateList) {
+            HSSFRow row1 = sheet.createRow(rowNum);
+            //设置行高
+            row1.setHeightInPoints(25);
+            cell = row1.createCell(0);
+            cell.setCellValue(employmentPractice.getCollege());
+            cell.setCellStyle(style);
+            cell = row1.createCell(1);
+            cell.setCellValue(employmentPractice.getPeopleNumber());
+            cell.setCellStyle(style);
+            cell = row1.createCell(2);
+            cell.setCellValue(employmentPractice.getQuality());
+            cell.setCellStyle(style);
+            cell = row1.createCell(3);
+            cell.setCellValue(employmentPractice.getParticipationStatus());
+            cell.setCellStyle(style2);
+            cell = row1.createCell(4);
+            cell.setCellValue(employmentPractice.getProjectNumber());
+            cell.setCellStyle(style);
+            cell = row1.createCell(5);
+            cell.setCellValue(employmentPractice.getProjectQuality());
+            cell.setCellStyle(style);
+            cell = row1.createCell(6);
+            cell.setCellValue(employmentPractice.getVentureProject());
+            cell.setCellStyle(style2);
+            cell = row1.createCell(7);
+            cell.setCellValue(employmentPractice.getFeaturedWork());
+            cell.setCellStyle(style);
+            cell = row1.createCell(8);
+            cell.setCellValue(employmentPractice.getPractice());
+            cell.setCellStyle(style);
+            rowNum++;
+        }
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
     }
 
     @Override
