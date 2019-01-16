@@ -8,8 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.wlgzs.index_evaluation.dao.EmploymentPracticeMapper;
-import org.wlgzs.index_evaluation.enums.Result;
-import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.EmploymentPractice;
 import org.wlgzs.index_evaluation.service.EmploymentPracticeService;
 import org.wlgzs.index_evaluation.util.ExcelUtilTwo;
@@ -37,14 +35,12 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
     private EmploymentPracticeMapper employmentPracticeMapper;
 
     @Override
-    public Result importData(int year, HttpServletRequest request) {
+    public boolean importData(int year, HttpServletRequest request) {
         //获取上传的文件
         MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
         MultipartFile file = multipart.getFile("file");
         if(file==null || file.getOriginalFilename()==null || year==0){
-            Result result = new Result(ResultCodeEnum.UNSAVE);
-            result.setMsg("上传失败  ");
-            return result;
+            return false;
         }
         List<List<Object>> listob;
         List<EmploymentPractice> employmentPractices = new ArrayList<>();
@@ -131,13 +127,13 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                         ((employmentPractice.getM31()/number)*0.47 + (employmentPractice.getM41()/quality)*0.53)*28.5)*0.1535)));
                 employmentPractice.setYear(year);
                 employmentPractices.add(employmentPractice);
-                //employmentPracticeMapper.insert(employmentPractice);
+                employmentPracticeMapper.insert(employmentPractice);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         log.info("就业创业实践数据："+employmentPractices);
-        return new Result(ResultCodeEnum.SAVE,employmentPractices);
+        return true;
     }
 
     @Override
@@ -249,14 +245,14 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
     }
 
     @Override
-    public Result deleteYear(int year) {
-        if(year==0) return new Result(ResultCodeEnum.UNDELETE);
+    public boolean deleteYear(int year) {
+        if(year==0) return false;
         QueryWrapper<EmploymentPractice> practiceQueryWrapper = new QueryWrapper<>();
         practiceQueryWrapper.eq("year",year);
         List<EmploymentPractice> employmentPractices = employmentPracticeMapper.selectList(practiceQueryWrapper);
-        if(employmentPractices==null) return new Result(ResultCodeEnum.UNDELETE);
+        if(employmentPractices==null) return false;
         employmentPracticeMapper.delete(practiceQueryWrapper);
-        return new Result(ResultCodeEnum.DELETE,employmentPractices);
+        return true;
     }
 
 }
