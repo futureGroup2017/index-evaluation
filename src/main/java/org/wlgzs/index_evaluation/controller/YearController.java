@@ -23,23 +23,36 @@ public class YearController {
     @Autowired
     private YearService yearService;
 
+    @GetMapping("/to")
+    public ModelAndView to(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("yearAdministration");
+        modelAndView.addObject("allYear",yearService.findAllYear());
+        return modelAndView;
+    }
+
     //添加年份
     @PostMapping("add")
-    public void add(Year year){
+    @ResponseBody
+    public Integer add(Year year){
+        log.info(year);
         if (yearService.findByName(year.getYearName()) == null){
             Integer add = yearService.add(year);
-            log.info(add);
+            return add;
         }else {
             log.info("重复");
+            return 0;
         }
     }
 
     //删除年份
     @GetMapping("/delete")
-    public void delete(Integer id){
+    @ResponseBody
+    public Integer delete(Integer id){
         log.info(id);
         Integer delete = yearService.delete(id);
         log.info(delete);
+        return delete;
     }
 
     //修改年份
@@ -50,7 +63,7 @@ public class YearController {
     }
 
     //通过name查询
-    @RequestMapping("findByName")
+    @RequestMapping("/findByName")
     public void findName(Integer name){
         Year byName = yearService.findByName(name);
         log.info(byName);

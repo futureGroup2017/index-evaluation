@@ -69,9 +69,8 @@
         <li>
             <a href="Being-interviewed.html">生源质量指数</a>
         </li>
-        <li class="active">
+        <li>
             <a th:href="@{/ts/search}">师资结构指数</a>
-            <i class="fa fa-angle-double-right"></i>
         </li>
         <li>
             <a th:href="@{/em/search}">就业状态指数</a>
@@ -84,6 +83,10 @@
         </li>
         <li>
             <a th:href="@{/employmentPractice/findAll}">就业创业实践指数</a>
+        </li>
+        <li class="active">
+            <a th:href="@{/year/to}">年份管理</a>
+            <i class="fa fa-angle-double-right"></i>
         </li>
     </ul>
 </aside>
@@ -105,18 +108,24 @@
                         $("#addyear").css('padding-left','10px');
                     });
                     $("#daoru").click(function () {
-                        var vall = $('#addyear').val()
+                        var vall = $('#addyear').val();
                         if(vall != '') {
+                            vall = $('#addyear').val();
+                            console.log(vall)
                             $.ajax({
-                                type: "GET",
-                                url: "test.json",
+                                type: "post",
+                                url: "/year/add",
                                 data: {
-                                    'year': select
+                                    'yearName': vall
                                 },
                                 dataType: "json",
                                 success: function (msg) {
-                                    alert(msg);
-                                    location.href = '';
+                                    if(msg==1){
+                                        alert("添加成功！");
+                                        window.location.reload();
+                                    }else {
+                                        alert("添加失败，年份重复！");
+                                    }
                                 }
                             })
                         }
@@ -140,30 +149,35 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr>
-                    <td>1</td>
+                <tr th:each="year ,userStat: ${allYear}" >
+                    <td th:text="${userStat.index+1}">1</td>
                     <td>
                         <div class="changebotton">
-                            <span class="span" id="deleteyear">2018</span>
-                            <input class="changeipt" type="text" value="2018">
+                            <span class="span" id="deleteyear" th:text="${year.getYearName()}"></span>
+                            <input class="changeipt" type="text" th:value="${year.getYearName()}">
                         </div>
                     </td>
-                    <td><input type="button" value="删除" id="delete" class="result" /></td>
+                    <td th:text="${year.getYearId()}" style="display: none" id="yearid"></td>
+                    <td><input type="button" value="删除"  class="result delete" /></td>
                 </tr>
                 <!------------------------删除数据------------------->
                 <script>
-                    $('#delete').click(function () {
-                       var year = $('#deleteyear').text();
+                    $('.delete').click(function () {
+                       var year = $(this).parent().prev().text();
                         $.ajax({
                             type: "GET",
-                            url: "test.json",
+                            url: "/year/delete",
                             data: {
-                                'year': year
+                                'id': year
                             },
                             dataType: "json",
                             success: function (msg) {
-                                alert(msg);
-                                location.href = '';
+                                if(msg==1){
+                                    alert("删除成功！");
+                                    window.location.reload();
+                                }else {
+                                    alert("删除失败，请重试！");
+                                }
                             }
                         })
                     });

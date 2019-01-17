@@ -35,14 +35,14 @@
       vertical-align: middle; }
     .tables .resultform .table thead {
       background-color: #F3F3F3; }
-    .tables .resultform .table tbody tr td input {
+    .result{
       background-color: #19a97b;
       color: #fbeded;
       width: 70px;
       height: 30px;
       cursor: pointer;
       border-radius: 5px; }
-      .tables .resultform .table tbody tr td input:hover {
+      .result:hover {
         color: #fff;
         background-color: #18b985; }
 .searrch{
