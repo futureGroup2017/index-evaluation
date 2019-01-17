@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>大学生指数评价系统</title>
-    <link rel="shortcut icon" th:href="@{/images/favicon.ico" type="image/x-icon}" />
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon}" />
     <link rel="stylesheet" type="text/css" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/dist/css/txt.wav.css}">
@@ -67,7 +67,9 @@
             <h1 class="top-title">生 活 质 量 指 数</h1>
         </section>
         <section>
-            <!--用于导入文件-->
+            <!-------------------------------------------------------->
+            <!--------------------用于导入文件------------------------>
+            <!-------------------------------------------------------->
             <input type="file" id="import" value="导入" class="result" />
             <script>
                 var select = $("#select option:selected").val();
@@ -86,7 +88,9 @@
                     })
                 })
             </script>
-            <!--用于导出文件-->
+            <!-------------------------------------------------------->
+            <!--------------------用于导出文件------------------------>
+            <!-------------------------------------------------------->
             <input type="button" id="export" value="导出" class="result" />
             <script>
                 var select = $("#select option:selected").val();
@@ -113,7 +117,9 @@
                 <option class="selects" value="2016年">2016年</option>
                 <option class="selects" value="2015年">2015年</option>
             </select>
-            <!--删除相关年份的数据-->
+            <!-------------------------------------------------------->
+            <!--------------------用于删除文件------------------------>
+            <!-------------------------------------------------------->
             <input type="button" id="delete" value="删除" class="result" />
             <script>
                 var select = $("#select option:selected").val();
@@ -132,14 +138,9 @@
                     })
                 })
             </script>
-            <script>
-                window.onload=function () {
-                    $("#daoru").click(function () {
-                        $("#file").click();
-                    })
-                }
-            </script>
-            <!--用于搜索相关内容-->
+            <!-------------------------------------------------------->
+            <!--------------------用于搜索文件------------------------>
+            <!-------------------------------------------------------->
             <div class="searrch">
                 <input id="college" type="text" class="ipt">
                 <input type="botton" id="search" class="submit">
