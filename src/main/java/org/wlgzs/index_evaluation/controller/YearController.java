@@ -8,6 +8,8 @@ import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.YearService;
 
+import java.util.List;
+
 /**
  * @author zsh
  * @company wlgzs
@@ -23,51 +25,62 @@ public class YearController {
     @Autowired
     private YearService yearService;
 
+    @GetMapping("/to")
+    public ModelAndView to(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("yearAdministration");
+        modelAndView.addObject("allYear",yearService.findAllYear());
+        return modelAndView;
+    }
+
     //添加年份
     @PostMapping("add")
-    public void add(Year year){
+    @ResponseBody
+    public Integer add(Year year){
+        log.info(year);
         if (yearService.findByName(year.getYearName()) == null){
             Integer add = yearService.add(year);
-            log.info(add);
+            return add;
         }else {
             log.info("重复");
+            return 0;
         }
     }
 
     //删除年份
     @GetMapping("/delete")
-    public void delete(Integer id){
+    @ResponseBody
+    public Integer delete(Integer id){
         log.info(id);
         Integer delete = yearService.delete(id);
         log.info(delete);
+        return delete;
     }
 
     //修改年份
     @PostMapping("/update")
-    public void update(Year year){
-        Integer update = yearService.update(year);
+    @ResponseBody
+    public Integer update(Year year){
+        Integer update = 0;
+        if (yearService.findByName(year.getYearName()) == null){
+            update = yearService.update(year);
+        }
         log.info(update);
+        return update;
     }
 
     //通过name查询
-    @RequestMapping("findByName")
-    public void findName(Integer name){
-        Year byName = yearService.findByName(name);
-        log.info(byName);
-    }
-
-    /*//年份查询
-    @RequestMapping("all")
-    public ModelAndView selectAll(@RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                                  @RequestParam(name = "pageSize", defaultValue = "10") int pageSize){
+    @RequestMapping("/findByName")
+    public ModelAndView findName(Integer name){
         ModelAndView modelAndView = new ModelAndView();
-        IPage<Year> pageInfo = yearService.findAllYear(pageNum, pageSize);
-        modelAndView.addObject("Number", pageInfo.getCurrent());  //当前页数
-        modelAndView.addObject("TotalPages", pageInfo.getPages());      //总页数
-        modelAndView.addObject("years", pageInfo.getRecords());    //年份集合
-        modelAndView.setViewName("a");
-        log.info("所有年份信息为："+pageInfo.getRecords());
+        modelAndView.setViewName("yearAdministration");
+        if (name == null){
+            List<Year> allYear = yearService.findAllYear();
+            modelAndView.addObject("allYear",allYear);
+        }else {
+            Year byName = yearService.findByName(name);
+            modelAndView.addObject("allYear",byName);
+        }
         return modelAndView;
-    }*/
-
+    }
 }

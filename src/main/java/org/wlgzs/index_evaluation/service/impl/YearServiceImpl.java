@@ -30,7 +30,7 @@ public class YearServiceImpl extends ServiceImpl<YearDao,Year> implements YearSe
     public Year findByName(Integer name) {
         Year year = new Year();
         QueryWrapper<Year> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("yearName",name);
+        queryWrapper.eq("year_name",name);
         year = baseMapper.selectOne(queryWrapper);
         return year;
     }

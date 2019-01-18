@@ -1,69 +1,60 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>大学生指数评价系统</title>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="font-awesome-4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="dist/css/txt.wav.css">
-    <link rel="stylesheet" type="text/css" href="css/index.css" />
-    <link rel="stylesheet" type="text/css" href="css/result.css">
-
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/txt.wav.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/result.css}">
 </head>
-
 <body>
 <header>
     <h1>
-        <img src="images/top1.png"/>
+        <img th:src="@{images/top1.png}"/>
         <span class="txtwav bounce">河南科技学院</span>
     </h1>
     <ul class="rt_nav">
         <li>
-            <a href="" target="_blank" class="website_icon">
+            <a th:href="@{/toindex}" target="_blank" class="website_icon">
                 <i class="fa fa-fire"></i>
                 <span>站点首页</span>
             </a>
         </li>
         <li>
-            <a href="login.php" class="quit_icon">
+            <a th:href="@{/out}" class="quit_icon">
                 <i class="fa fa-send"></i>
                 <span>安全退出</span>
             </a>
         </li>
     </ul>
 </header>
-<!--aside nav-->
 <aside class="aside_nav">
-    <!--<h2><a href="">招新步骤</a></h2>-->
-
     <ul>
         <div class="closeche">
             <i class="fa fa-caret-right"></i>
         </div>
         <li>
-            <a href="index.html">欢迎登录</a>
-        </li>
-        <li>
-            <a href="Enrolment.html">就业竞争力指数</a>
-
+            <a th:href="@{/toindex}">欢迎登录</a>
         </li>
         <li  class="active">
-            <a href="Being-interviewed.html">生源质量指数</a>
+            <a th:href="@{/major/search}">生源质量指数</a>
             <i class="fa fa-angle-double-right"></i>
         </li>
         <li>
             <a th:href="@{/ts/to}">师资结构指数</a>
         </li>
         <li>
-            <a href="set.html">就业状态指数</a>
+            <a th:href="@{/em/search}">就业状态指数</a>
         </li>
         <li>
             <a th:href="@{/employmentRate/findAll}">就业率指数</a>
         </li>
         <li>
-            <a href="employment.html">用人单位满意度指数</a>
+            <a th:href="@{/es/search}">用人单位满意度指数</a>
         </li>
         <li>
             <a th:href="@{/employmentPractice/findAll}">就业创业实践指数</a>
@@ -76,30 +67,102 @@
             <h1 class="top-title">生 活 质 量 指 数</h1>
         </section>
         <section>
-            <a href=""><input type="button" id="daoru" value="导入" class="result" /></a>
-            <a href=""><input type="button" value="导出" class="result" /></a>
-            <select class="selects">
-                <option value="" disabled selected hidden>选择删除年份</option>
+            <!-------------------------------------------------------->
+            <!--------------------用于导入文件------------------------>
+            <!-------------------------------------------------------->
+            <input type="file" id="import" value="导入" class="result" />
+            <script>
+                var select = $("#select option:selected").val();
+                $('#import').change(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "test.json",
+                        data: {
+                            'year':select
+                        },
+                        dataType: "json",
+                        success: function(msg){
+                            alert(msg);
+                            location.href='';
+                        }
+                    })
+                })
+            </script>
+            <!-------------------------------------------------------->
+            <!--------------------用于导出文件------------------------>
+            <!-------------------------------------------------------->
+            <input type="button" id="export" value="导出" class="result" />
+            <script>
+                var select = $("#select option:selected").val();
+                $('#export').change(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "test.json",
+                        data: {
+                            'year':select
+                        },
+                        dataType: "json",
+                        success: function(msg){
+                            alert(msg);
+                            location.href='';
+                        }
+                    })
+                })
+            </script>
+            <select id="select" class="selects">
+                <option value="" >请选择年份</option>
                 <option class="selects" value ="2019年">2019年</option>
                 <option class="selects" value ="2018年">2018年</option>
                 <option class="selects" value ="2017年">2017年</option>
                 <option class="selects" value="2016年">2016年</option>
                 <option class="selects" value="2015年">2015年</option>
             </select>
-            <a href=""><input type="button" value="删除" class="result" /></a>
-            <input type="file" id="file" style="display: none">
+            <!-------------------------------------------------------->
+            <!--------------------用于删除文件------------------------>
+            <!-------------------------------------------------------->
+            <input type="button" id="delete" value="删除" class="result" />
             <script>
-                window.onload=function () {
-                    $("#daoru").click(function () {
-                        $("#file").click();
+                var select = $("#select option:selected").val();
+                $('#delete').change(function () {
+                    $.ajax({
+                        type: "GET",
+                        url: "test.json",
+                        data: {
+                            'year':select
+                        },
+                        dataType: "json",
+                        success: function(msg){
+                            alert(msg);
+                            location.href='';
+                        }
                     })
-                }
+                })
             </script>
+            <!-------------------------------------------------------->
+            <!--------------------用于搜索文件------------------------>
+            <!-------------------------------------------------------->
             <div class="searrch">
-                <form action="">
-                    <input type="text" class="ipt">
-                    <input type="submit" class="submit">
-                </form>
+                <input id="college" type="text" class="ipt">
+                <input type="botton" id="search" class="submit">
+                <script>
+                    var select = $("#select option:selected").val();
+                    var college = $('#college').val();
+                    $('#search').change(function () {
+                        $.ajax({
+                            type: "GET",
+                            url: "test.json",
+                            data: {
+                                'year': select,
+                                'college': college
+                            },
+                            dataType: "json",
+                            success: function(msg){
+                                alert(msg);
+                                location.href='';
+                            }
+                        })
+                    })
+                </script>
             </div>
         </section>
         <div class="resultform">
@@ -147,115 +210,14 @@
                     <td>男</td>
                     <td>物2</td>
                 </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
-                <tr>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物联172</td>
-                    <td>75</td>
-                    <td>4654</td>
-                    <td>张三</td>
-                    <td>男</td>
-                    <td>物2</td>
-                </tr>
             </table>
         </div>
-
     </div>
 </section>
 </body>
-<script src="js/jquery-2.1.0.js"></script>
-<script src="dist/js/txt.wav.min.js"></script>
-<script src="js/result.js"></script>
+<script th:src="@{/js/jquery-2.1.0.js}"></script>
+<script th:src="@{/dist/js/txt.wav.min.js}"></script>
+<script th:src="@{/js/result.js}"></script>
 <script type="text/javascript">
     $(function() {
         //确定文档高度
@@ -277,10 +239,7 @@
                     'margin-left': '258px'
                 })
             }
-
         })
-
     });
 </script>
-
 </html>

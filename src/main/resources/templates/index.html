@@ -53,30 +53,33 @@
 				<div class="closeche">
 					<i class="fa fa-caret-right"></i>
 				</div>
-				<li class="active onetop">
-					<a href="#">欢迎登录</a>
+				<li class="active">
+					<a th:href="@{/toindex}" th:target="_self">欢迎登录</a>
 					<i class="fa fa-angle-double-right"></i>
-				</li>
-				<li>
-					<a href="Enrolment.html">就业竞争力指数</a>
 				</li>
 				<li>
 					<a href="Being-interviewed.html">生源质量指数</a>
 				</li>
 				<li>
-					<a th:href="@{/ts/search}" th:target="_self">师资结构指数</a>
+					<a th:href="@{/ts/search}">师资结构指数</a>
 				</li>
 				<li>
-					<a th:href="@{/em/search}" th:target="_self">就业状态指数</a>
+					<a th:href="@{/em/search}">就业状态指数</a>
 				</li>
 				<li>
 					<a th:href="@{/employmentRate/findAll}">就业率指数</a>
 				</li>
 				<li>
-					<a href="employment.html">用人单位满意度指数</a>
+					<a th:href="@{/es/search}">用人单位满意度指数</a>
 				</li>
 				<li>
 					<a th:href="@{/employmentPractice/findAll}">就业创业实践指数</a>
+				</li>
+				<li>
+					<a th:href="@{/year/to}">年份管理</a>
+				</li>
+				<li>
+					<a th:href="@{/college/to}">学院管理</a>
 				</li>
 			</ul>
 		</aside>
