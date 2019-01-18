@@ -23,8 +23,10 @@ public class StudentQuality {
     @TableId(value = "quality_id", type = IdType.AUTO)
     private Integer qualityId;
     /**
-     * zhu
+     * 专业名字
      */
+    @TableField(value = "major_name")
+    private String majorName;
     /**
      * 专业1志愿报考人数
      */
@@ -48,10 +50,59 @@ public class StudentQuality {
     @TableField(value = "average_score")
     private Double averageScore;
 
+    /**
+     * 专业认可度
+
+     */
+    @TableField(value = "major_recognition")
+    private Double majorRecognition;
+    /**
+     * 高考成绩
+     */
+    @TableField(value = "college_entrance")
+    private  Double collegeEntrance;
+    /**
+     * 专业优势
+     */
+    @TableField(value = "major_advantage")
+    private Double majorAdvantage;
+    /**
+     * 年份
+     */
+    @TableField("year")
+    private Integer year;
+    public StudentQuality(String majorName, Integer fistVolunteerNum, Integer studentsNum, Integer afterVolunteerNum, Double averageScore, Double majorRecognition, Double collegeEntrance, Double majorAdvantage,Integer year) {
+        this.majorName = majorName;
+        this.fistVolunteerNum = fistVolunteerNum;
+        this.studentsNum = studentsNum;
+        this.afterVolunteerNum = afterVolunteerNum;
+        this.averageScore = averageScore;
+        this.majorRecognition = majorRecognition;
+        this.collegeEntrance = collegeEntrance;
+        this.majorAdvantage = majorAdvantage;
+        this.year = year;
+    }
+
+    public StudentQuality(String majorName, Double averageScore, Double majorRecognition, Double collegeEntrance, Double majorAdvantage, Integer year) {
+        this.majorName = majorName;
+        this.averageScore = averageScore;
+        this.majorRecognition = majorRecognition;
+        this.collegeEntrance = collegeEntrance;
+        this.majorAdvantage = majorAdvantage;
+        this.year = year;
+    }
 
 
-
-
-
-
+    @Override
+    public String toString() {
+        return "StudentQuality{"+" majorName='" + majorName + '\'' +
+                ", fistVolunteerNum=" + fistVolunteerNum +
+                ", studentsNum=" + studentsNum +
+                ", afterVolunteerNum=" + afterVolunteerNum +
+                ", averageScore=" + averageScore +
+                ", majorRecognition=" + majorRecognition +
+                ", collegeEntrance=" + collegeEntrance +
+                ", majorAdvantage=" + majorAdvantage +
+                '}';
+    }
 }

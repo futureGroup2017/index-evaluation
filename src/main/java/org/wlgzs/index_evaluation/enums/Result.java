@@ -9,6 +9,13 @@ public class Result<T> {
 
     //状态码
     private int code;
+
+    public Result(int code, String msg, Object data) {
+        this.code = code;
+        this.msg = msg;
+        this.data = data;
+    }
+
     //状态信息
     private String msg;
     //返回数据
@@ -22,5 +29,9 @@ public class Result<T> {
     public Result (ResultCodeEnum resultCodeEnum , Object data) {
         this(resultCodeEnum);
         this.data = data;
+    }
+    public  Result(int code,String msg){
+        this.code = code;
+        this.msg  = msg;
     }
 }
