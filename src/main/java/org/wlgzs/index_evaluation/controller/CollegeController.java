@@ -14,6 +14,7 @@ import org.wlgzs.index_evaluation.service.CollegeService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * <p>
@@ -30,6 +31,14 @@ public class CollegeController {
 
     @Resource
     private CollegeService collegeService;
+
+    @RequestMapping("/to")
+    public ModelAndView to(){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("collegeAdministration");
+        modelAndView.addObject("allCollege",collegeService.list(null));
+        return modelAndView;
+    }
 
     /**
      * 新增学院
@@ -63,6 +72,7 @@ public class CollegeController {
      */
     @PutMapping
     public Result updateById(College college){
+        System.out.println(college+"---");
         if(college == null) {
             return new Result(ResultCodeEnum.UNUPDATE);
         }
@@ -83,23 +93,20 @@ public class CollegeController {
     }
 
     /**
-     * 分页查询
+     * 查询
      * @param model
-     * @param pageNum
-     * @param pageSize
      */
     @GetMapping("/page")
-    public ModelAndView findAllPage(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                                    @RequestParam(name = "pageSize", defaultValue = "10") int pageSize){
-        Page<College> page = new Page<>(pageNum,pageSize);
+    public ModelAndView findAllPage(String keyword,Model model){
         QueryWrapper<College> wrapper = new QueryWrapper<>();
-        IPage<College> pageList = collegeService.page(page,wrapper);
-        model.addAttribute("current",pageList.getCurrent());  //当前页数
-        model.addAttribute("pages",pageList.getPages());   //总页数
-        model.addAttribute("college",pageList.getRecords());   //集合
+        if(keyword!=null && !keyword.equals("")){
+            wrapper.eq("college_name",keyword);
+        }
+        List<College> list = collegeService.list(wrapper);
+        model.addAttribute("allCollege",list);   //集合
         model.addAttribute("msg","查询成功");
-        log.info("查询成功:"+pageList.getRecords());
-        return new ModelAndView("test");
+        log.info("查询成功:"+list);
+        return new ModelAndView("collegeAdministration");
     }
 
     /**
