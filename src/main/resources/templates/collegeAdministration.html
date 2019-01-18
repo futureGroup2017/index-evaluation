@@ -208,6 +208,9 @@
                         $(this).children(":first").css('color','#ddd');
                         $(this).children().css('display','block');
                         $(this).children().focus();
+                        var text = $(this).children('input').val();
+                        $(this).children('input').val('');
+                        $(this).children('input').val(text);
                     })
                     $('.changeipt').blur(function(){
                         var ipt = $(this).val();
