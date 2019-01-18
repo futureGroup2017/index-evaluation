@@ -132,10 +132,11 @@
                     })
                  };
             </script>
+            <!------------------------搜索年份-------------------------------->
             <div class="searrch">
-                <form action="">
-                    <input type="text" class="ipt">
-                    <input type="submit" class="submit">
+                <form action="/year/findByName" th:method="post">
+                    <input type="text" name="name" class="ipt">
+                    <input type="submit" class="submit" value="搜索">
                 </form>
             </div>
         </section>
@@ -153,15 +154,42 @@
                     <td th:text="${userStat.index+1}">1</td>
                     <td>
                         <div class="changebotton">
-                            <span class="span" id="deleteyear" th:text="${year.getYearName()}"></span>
+                            <span class="span deleteyear" th:text="${year.getYearName()}"></span>
                             <input class="changeipt" type="text" th:value="${year.getYearName()}">
                         </div>
+                        <div th:text="${year.getYearId()}" style="display: none;"></div>
                     </td>
                     <td th:text="${year.getYearId()}" style="display: none" id="yearid"></td>
                     <td><input type="button" value="删除"  class="result delete" /></td>
                 </tr>
-                <!------------------------删除数据------------------->
                 <script>
+                    // ------------------修改数据-----------------------
+                    $('.changeipt').blur(function () {
+                        var year =$(this).val();
+                        var prev = $(this).prev().text();
+                        var yearid= $(this).parent().next().text();
+                        if (year != prev){
+                            $.ajax({
+                                type: "post",
+                                url: "/year/update",
+                                data: {
+                                    'yearId':yearid,
+                                    'yearName': year
+                                },
+                                dataType: "json",
+                                success: function (msg) {
+                                    if(msg==1){
+                                        alert("修改成功！");
+                                        window.location.reload();
+                                    }else {
+                                        alert("修改失败，年份重复！");
+                                        window.location.reload();
+                                    }
+                                }
+                            })
+                        }
+                    });
+                    // ------------------删除数据-----------------------
                     $('.delete').click(function () {
                        var year = $(this).parent().prev().text();
                         $.ajax({
@@ -226,9 +254,7 @@
                     'margin-left': '258px'
                 })
             }
-
         })
-
     });
 </script>
 </html>
