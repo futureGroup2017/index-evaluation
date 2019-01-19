@@ -10,7 +10,8 @@
 .tables section .result {
   background-color: #19a97b;
   color: #fbeded;
-  width: 70px;
+  width: auto;
+padding:0 21px;
   height: 30px;
   margin-right: 10px;
   cursor: pointer;
@@ -71,3 +72,13 @@
     border-radius: 5px;
 }
 /*# sourceMappingURL=result.css.map */
+.Corresponding{
+  width:180px;
+  height: 40px;
+  padding: 10px 25px;
+  position: absolute;
+  top:50%;
+  left:50%;
+  margin-top: -20px;
+  margin-left: -90px;
+}
