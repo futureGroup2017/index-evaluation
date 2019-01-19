@@ -1,10 +1,7 @@
 package org.wlgzs.index_evaluation.enums;
-
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class Result<T> {
 
     //状态码

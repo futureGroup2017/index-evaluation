@@ -6,11 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.Major;
 import org.wlgzs.index_evaluation.service.MajorService;
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -24,6 +26,12 @@ import java.util.List;
 public class MajorController {
     @Resource
     MajorService majorService;
+    //导入专业与学院关系表
+    @PostMapping("/import")
+    public Result importExcel(MultipartFile file) throws IOException {
+        boolean isTrue =  majorService.importExcel(file);
+        return new Result(1,"导入成功");
+    }
     //添加专业
     @PostMapping
     public Result add(Major major){

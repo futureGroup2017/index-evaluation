@@ -71,6 +71,23 @@ public class StudentQuality {
      */
     @TableField("year")
     private Integer year;
+
+    /**
+     * 学院专业优势
+     */
+
+    @TableField("colleage_advantage")
+    private double colleage_advantage;
+    /**
+     * 学院生源质量
+     */
+    @TableField("colleage_quality")
+    private double colleage_quality;
+    /**
+     * 报到率
+     */
+     @TableField("yield_rate")
+     private  double yieldRate;
     public StudentQuality(String majorName, Integer fistVolunteerNum, Integer studentsNum, Integer afterVolunteerNum, Double averageScore, Double majorRecognition, Double collegeEntrance, Double majorAdvantage,Integer year) {
         this.majorName = majorName;
         this.fistVolunteerNum = fistVolunteerNum;
@@ -91,8 +108,6 @@ public class StudentQuality {
         this.majorAdvantage = majorAdvantage;
         this.year = year;
     }
-
-
     @Override
     public String toString() {
         return "StudentQuality{"+" majorName='" + majorName + '\'' +
