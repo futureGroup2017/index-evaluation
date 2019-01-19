@@ -5,7 +5,6 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
@@ -21,6 +20,20 @@ public class Major {
 
     @TableId(value = "major_id", type = IdType.AUTO)
     private Integer majorId;
+    /**
+     * 专业名称
+     */
     @TableField("major_name")
     private String majorName;
+    /**
+     * 学院名字
+     */
+    @TableField("collage_name")
+    private  String collage_name;
+
+    public Major(String majorName, String collage_name) {
+        this.majorName = majorName;
+        this.collage_name = collage_name;
+
+    }
 }
