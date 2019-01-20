@@ -5,8 +5,8 @@
     <meta charset="utf-8"/>
     <title>大学生毕业指数系统</title>
     <meta name="author" content="DeathGhost"/>
-    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
-    <link rel="stylesheet" type="text/css" href="css/style1.css"/>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style1.css}"/>
     <style>
         body {
             height: 100%;
@@ -19,9 +19,9 @@
             position: absolute;
         }
     </style>
-    <script src="js/jquery.js"></script>
-    <script src="js/verificationNumbers.js"></script>
-    <script src="js/Particleground.js"></script>
+    <script th:src="@{/js/jquery.js}"></script>
+    <script th:src="@{/js/verificationNumbers.js}"></script>
+    <script th:src="@{/js/Particleground.js}"></script>
     <script>
         $(document).ready(function () {
             //粒子背景特效
