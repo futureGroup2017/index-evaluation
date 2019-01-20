@@ -101,6 +101,14 @@ public class StudentQualityController {
     }
     @GetMapping ("/export")
     public void importExcel(HttpServletResponse response, String year) throws IOException {
+        Result result;
+        result = new Result(-1,"导出失败");
+        try{
+        studentQualityService.exportData(Integer.parseInt(year),response);
+            }catch (Exception e){
+            result = new Result(-1,"导出失败");
+        }
+
 
     }
 
