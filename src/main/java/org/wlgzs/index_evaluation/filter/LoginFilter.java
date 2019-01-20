@@ -17,8 +17,6 @@ import java.io.IOException;
 @Log4j2
 public class LoginFilter implements Filter {
 
-    String NO_LOGIN = "您没有访问权限，请重新登录";
-
     String[] includeUrls = new String[]{"/login","/css","/js","/images","/out",".ico"};
 
     @Override
