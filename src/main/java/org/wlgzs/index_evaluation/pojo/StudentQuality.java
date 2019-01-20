@@ -76,12 +76,12 @@ public class StudentQuality {
      * 学院专业优势
      */
 
-    @TableField("colleage_advantage")
+    @TableField("collage_advantage")
     private double colleage_advantage;
     /**
      * 学院生源质量
      */
-    @TableField("colleage_quality")
+    @TableField("collage_quality")
     private double colleage_quality;
     /**
      * 报到率
