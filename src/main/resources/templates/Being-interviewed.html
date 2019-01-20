@@ -214,6 +214,33 @@
         </div>
     </div>
 </section>
+<section class="wrap ">
+    <input type="button" class="result Corresponding" value="导入学院专业对应表">
+    <input type="file" style="display: none" id="Correspondingfile">
+    <!------------------------------------------------------------------>
+    <!------------------用于提交专业学院对应关系表---------------------->
+    <!------------------------------------------------------------------>
+    <script>
+        $('.Corresponding').click(function () {
+            $('#Correspondingfile').click();
+        });
+        $('#Correspondingfile').change(function () {
+            $.ajax({
+                type: "GET",
+                url: "test.json",
+                data: {
+                    'year': select,
+                    'college': college
+                },
+                dataType: "json",
+                success: function(msg){
+                    alert(msg);
+                    location.href='';
+                }
+            })
+        })
+    </script>
+</section>
 </body>
 <script th:src="@{/js/jquery-2.1.0.js}"></script>
 <script th:src="@{/dist/js/txt.wav.min.js}"></script>
