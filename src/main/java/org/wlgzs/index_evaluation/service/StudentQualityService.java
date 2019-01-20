@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.pojo.StudentQuality;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -19,5 +20,6 @@ public interface StudentQualityService extends IService<StudentQuality> {
      void add(List<StudentQuality> studentQualityList);
      //删除一个年份的数据
      boolean delete( Integer year);
+     void exportData(int year,HttpServletResponse response)throws IOException;
 
 }

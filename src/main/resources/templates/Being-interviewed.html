@@ -69,12 +69,21 @@
         <section>
             <input type="button" id="import" value="导入" class="result" />
             <input type="file" style="display: none" id="importfile" enctype="multipart/form-data">
-            <input type="button" id="export" value="导出" class="result" />
+            <a id="link" href="#">
+                <input type="button" id="export" value="导出" class="result" />
+            </a>
             <script>
                 window.onload=function () {
                     var select='';
                     $('#select').change(function () {
                         select = $("#select option:selected").val();
+                        var link='/sq/export?year='+select;
+                        $('#link').attr('href',link);
+                    });
+                    $('#export').click(function () {
+                        if($('#link').attr('href') == '#'){
+                            alert('请选择年份');
+                        }
                     });
                     // 导入
                     $('#import').click(function () {
@@ -108,39 +117,27 @@
                             }
                         })
                     });
-                    // 导出
-                    $('#export').click(function () {
-                        $.ajax({
-                            type: "get",
-                            url: "/sq/export",
-                            data: {
-                                'year': select
-                            },
-                            dataType: "json",
-                            success: function (data) {
-                                if (data.code == 1) {
-                                    alert("导入成功");
-                                    window.location.reload();
-                                } else {
-                                    alert("导入失败，请重试！");
+                    $('#delete').click(function () {
+                        if(select == ''){
+                            alert('请选择年份!')
+                        }else{
+                            $.ajax({
+                                type: "get",
+                                url: "/sq/delete",
+                                data: {
+                                    'year': select
+                                },
+                                dataType: "json",
+                                success: function (data) {
+                                    if (data.code == 1) {
+                                        alert(data.msg);
+                                        window.location.reload();
+                                    } else {
+                                        alert("删除失败，请重试！");
+                                    }
                                 }
-                            }
-                        })
-                    });
-                    // 删除
-                    $('#delete').change(function () {
-                        $.ajax({
-                            type: "GET",
-                            url: "test.json",
-                            data: {
-                                'year': select
-                            },
-                            dataType: "json",
-                            success: function (msg) {
-                                alert(msg);
-                                location.href = '';
-                            }
-                        })
+                            })
+                        }
                     });
                     // 搜索
                     var college = $('#college').val();
@@ -186,6 +183,7 @@
                     <th>专业优势54.5</th>
                     <th>分学院优势</th>
                     <th>报到率45.5</th>
+                    <th>年份</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -194,8 +192,9 @@
                     <td th:text="${employ.majorRecognition}"></td>
                     <td th:text="${employ.collegeEntrance}"></td>
                     <td th:text="${employ.majorAdvantage}"></td>
-                    <td th:text="${employ.colleage_advantage}"></td>
+                    <td th:text="${employ.colleageAdvantage}"></td>
                     <td th:text="${employ.yieldRate}"></td>
+                    <td th:text="${employ.year}"></td>
                 </tr>
             </table>
         </div>

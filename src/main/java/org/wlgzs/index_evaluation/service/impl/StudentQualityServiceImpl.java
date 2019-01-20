@@ -275,9 +275,9 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
              result_average = result / majors.size();
              avrageMajorAdvantage = (result_average + yieldRate * 0.455) * 0.1008;
              for (StudentQuality studentQuality : studentQualitys) {
-                 studentQuality.setColleage_advantage(reserveDecimal(result_average,3));
+                 studentQuality.setColleageAdvantage(reserveDecimal(result_average,3));
                  studentQuality.setYieldRate(reserveDecimal(yieldRate,3));
-                 studentQuality.setColleage_quality(reserveDecimal(avrageMajorAdvantage,3));
+                 studentQuality.setColleageQuality(reserveDecimal(avrageMajorAdvantage,3));
                  baseMapper.updateById(studentQuality);
              }
          }
@@ -365,7 +365,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         return true;
     }
 
-    public boolean exportData(int year,HttpServletResponse response) throws UnsupportedEncodingException {
+    public void exportData(int year,HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("信息表1");
         //设置要导出的文件的名字
@@ -429,21 +429,100 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             List<Major> majorList  = majorService.list(majorQueryWrapper);
             for (Major major:majorList
                  ) {
-                HSSFRow row1 = sheet.createRow(rowNum);
-                row1.setHeightInPoints(25);
-               cell =  row1.createCell(1);
-               cell.setCellValue(major.getMajorName());
-               cell.setCellStyle(style);
                 QueryWrapper query = new QueryWrapper();
+            //    System.out.println(major.getMajorName()+"setfgesgersd"+year);
                 query.eq("major_name",major.getMajorName());
                 query.eq("year",year);
                 StudentQuality studentQuality = baseMapper.selectOne(query);
-
-
+                if (studentQuality==null){
+                    continue;
+                }
+                log.info(studentQuality.toString());
+                HSSFRow row1 = sheet.createRow(rowNum);
+                row1.setHeightInPoints(25);
+                cell =  row1.createCell(0);
+                cell.setCellValue(college.getCollegeName());
+                cell.setCellStyle(style);
+                cell =  row1.createCell(1);
+                cell.setCellValue(major.getMajorName());
+                cell.setCellStyle(style);
+                cell =  row1.createCell(2);
+                cell.setCellValue(studentQuality.getMajorRecognition());
+                cell.setCellStyle(style); cell =  row1.createCell(3);
+                cell.setCellValue(reserveDecimal(studentQuality.getMajorRecognition()*0.557,3));
+                cell.setCellStyle(style);
+                cell =  row1.createCell(4);
+                cell.setCellValue(reserveDecimal(studentQuality.getCollegeEntrance(),3));
+                cell.setCellStyle(style);
+                cell =  row1.createCell(5);
+                cell.setCellValue(reserveDecimal(studentQuality.getCollegeEntrance()*0.443,3));
+                cell.setCellStyle(style);
+                cell =  row1.createCell(6);
+                cell.setCellValue(studentQuality.getMajorAdvantage());
+                cell.setCellStyle(style);
+                cell =  row1.createCell(7);
+                System.out.println("sgdryherdy"+studentQuality.getColleageAdvantage());
+                cell.setCellValue(studentQuality.getColleageAdvantage());
+                cell.setCellStyle(style);
+                cell =  row1.createCell(8);
+                cell.setCellValue(studentQuality.getYieldRate());
+                cell.setCellStyle(style);
+                rowNum++;
             }
 
+
         }
-    return true;
+
+        HSSFSheet sheet1 = workbook.createSheet("生源质量指数");
+        int rowNum1 = 1;
+        String[] headers1 = {"学院", "专业优势54.5", "报到率45.5", "生源质量10.08"};
+        HSSFRow row1 = sheet1.createRow(0);
+        row.setHeightInPoints(42);
+        //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
+        sheet1.setColumnWidth(0, 17 * 256);
+        sheet1.setColumnWidth(1, 22 * 256);
+        sheet1.setColumnWidth(2, 22 * 256);
+        sheet1.setColumnWidth(3, 22 * 256);
+        for (int i = 0; i < headers1.length; i++) {
+            HSSFCell cell1 = row1.createCell(i);
+            HSSFRichTextString text = new HSSFRichTextString(headers1[i]);
+            cell1.setCellStyle(style2);
+            cell1.setCellValue(text);
+        }
+        HSSFCell cell1;
+        for (College college: colleges
+                ) {
+            QueryWrapper<Major> majorQueryWrapper = new QueryWrapper<>();
+            System.out.println("fhjksdhfklasdjgkn."+college.getCollegeName());
+            majorQueryWrapper.eq("collage_name",college.getCollegeName());
+            List<Major> majorList  = majorService.list(majorQueryWrapper);
+            Major major = majorList.get(0);
+            QueryWrapper query = new QueryWrapper();
+            query.eq("major_name",major.getMajorName());
+            query.eq("year",year);
+            StudentQuality studentQuality = baseMapper.selectOne(query);
+            if (studentQuality==null){
+                continue;
+            }
+            cell1 =  row1.createCell(0);
+            cell1.setCellValue(college.getCollegeName());
+            cell1.setCellStyle(style);
+            cell =  row1.createCell(1);
+            cell.setCellValue(studentQuality.getColleageAdvantage());
+            cell.setCellStyle(style);
+            cell =  row1.createCell(2);
+            cell.setCellValue(studentQuality.getYieldRate());
+            cell.setCellStyle(style);
+            cell =  row1.createCell(3);
+            cell.setCellValue(studentQuality.getColleageAdvantage());
+            cell.setCellStyle(style);
+            rowNum1++;
+        }
+        response.setContentType("application/octet-stream");
+        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+        response.flushBuffer();
+        workbook.write(response.getOutputStream());
+
 
     }
 }

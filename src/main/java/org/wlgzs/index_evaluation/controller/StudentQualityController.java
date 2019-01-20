@@ -113,6 +113,7 @@ public class StudentQualityController {
     }
     @GetMapping ("/export")
     public void importExcel(HttpServletResponse response, String year) throws IOException {
+        studentQualityService.exportData(Integer.parseInt(year),response);
 
     }
 }

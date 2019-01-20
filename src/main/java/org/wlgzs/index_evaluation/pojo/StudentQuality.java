@@ -69,25 +69,26 @@ public class StudentQuality {
     /**
      * 年份
      */
-    @TableField("year")
+    @TableField(value = "year")
     private Integer year;
 
     /**
      * 学院专业优势
      */
 
-    @TableField("collage_advantage")
-    private double colleage_advantage;
+
+    @TableField(value = "collage_advantage")
+    private Double colleageAdvantage;
     /**
      * 学院生源质量
      */
-    @TableField("collage_quality")
-    private double colleage_quality;
+    @TableField(value = "collage_quality")
+    private Double colleageQuality;
     /**
      * 报到率
      */
-     @TableField("yield_rate")
-     private  double yieldRate;
+     @TableField(value = "yield_rate")
+     private  Double yieldRate;
     public StudentQuality(String majorName, Integer fistVolunteerNum, Integer studentsNum, Integer afterVolunteerNum, Double averageScore, Double majorRecognition, Double collegeEntrance, Double majorAdvantage,Integer year) {
         this.majorName = majorName;
         this.fistVolunteerNum = fistVolunteerNum;
@@ -108,9 +109,12 @@ public class StudentQuality {
         this.majorAdvantage = majorAdvantage;
         this.year = year;
     }
+
     @Override
     public String toString() {
-        return "StudentQuality{"+" majorName='" + majorName + '\'' +
+        return "StudentQuality{" +
+                "qualityId=" + qualityId +
+                ", majorName='" + majorName + '\'' +
                 ", fistVolunteerNum=" + fistVolunteerNum +
                 ", studentsNum=" + studentsNum +
                 ", afterVolunteerNum=" + afterVolunteerNum +
@@ -118,6 +122,10 @@ public class StudentQuality {
                 ", majorRecognition=" + majorRecognition +
                 ", collegeEntrance=" + collegeEntrance +
                 ", majorAdvantage=" + majorAdvantage +
+                ", year=" + year +
+                ", colleage_advantage=" + colleageAdvantage +
+                ", colleage_quality=" + colleageQuality +
+                ", yieldRate=" + yieldRate +
                 '}';
     }
 }
