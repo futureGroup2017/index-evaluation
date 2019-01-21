@@ -38,6 +38,10 @@
 					<i class="fa fa-file-excel-o" style="font-size: 22px"></i><br/>
 					<span style="font-size: 12px">导出数据总表</span>
 				</li>
+                <li id="Template" style="color: white;cursor: pointer;">
+                    <i class="fa fa-download" style="font-size: 22px"></i><br/>
+                    <span style="font-size: 12px">模板文档下载</span>
+                </li>
 				<li style="color: white;cursor: pointer" id="change">
 						<i class="fa fa-fire" style="font-size: 22px"></i><br/>
 						<span style="font-size: 12px">修改密码</span>
@@ -133,6 +137,9 @@
         </div>
         <script>
             window.onload=function () {
+                $('#Template').click(function () {
+                   window.location.href='/sq/download';
+                });
                 var bool=true;
                 $('#export').click(function () {
                     if(bool==true){
