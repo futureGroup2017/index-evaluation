@@ -17,6 +17,7 @@ import org.wlgzs.index_evaluation.service.MajorService;
 import org.wlgzs.index_evaluation.service.StudentQualityService;
 import org.wlgzs.index_evaluation.service.YearService;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -45,6 +46,7 @@ public class StudentQualityController {
         QueryWrapper queryWrapper = new QueryWrapper();
         if (year!=null &&  !year.equals("")){
             queryWrapper.eq("year",Integer.parseInt(year));
+            queryWrapper.last("limit 2");
            List<StudentQuality> list =   studentQualityService.list(queryWrapper);
            if (list!=null && list.size()>0  ){
                return new Result(0,"导入数据重复");
