@@ -1,6 +1,7 @@
 package org.wlgzs.index_evaluation.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.log4j.Log4j2;
@@ -105,9 +106,10 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
              double majorAdvantage = 0;
              if (i < mark) {
                  //System.out.println(fist_volunteer_num+"gdrhgertdyh");
+                 //专业认可度 = 专业1志愿报考人数/
                  majorRecognition = (fist_volunteer_num / studentsNum) / (wmaxFistVolunteerNum / studentsNum) * 100 * 0.7 + (afterVolunteerNum / studentsNum) / (wmaxAfterVolunteerNum / studentsNum) * 100 * 0.3;
-                 collegeEntrance = (average_score / maxAverage) * 100;
-                 //专业优势 = 专业
+                 collegeEntrance = (average_score / maxAverage) * 100; //高考成绩与文科最高值之比
+                 //专业优势 = （专业认可度原始*0.557 + 高考成绩与最高值之比*0.433）*0.445
                  majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.445;
              } else if (i == mark) {
                  continue;
@@ -254,7 +256,6 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
              double yieldRate = row.getCell(1).getNumericCellValue();
              QueryWrapper queryWrapper = new QueryWrapper();
              queryWrapper.eq("collage_name", colleage);
-             System.out.println(colleage+"sdgdryhdrhjdrujhdrtuj");
              List<Major> majors = majorService.list(queryWrapper);
              List<StudentQuality> studentQualitys = new ArrayList<>();
              double result = 0;
@@ -427,16 +428,11 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         for (College college: colleges
              ) {
 
-            QueryWrapper<Major> majorQueryWrapper = new QueryWrapper<>();
-            majorQueryWrapper.eq("collage_name",college.getCollegeName());
-            List<Major> majorList  = majorService.list(majorQueryWrapper);
-            for (Major major:majorList
+            QueryWrapper<StudentQuality> wrapper = new QueryWrapper<>();
+            wrapper.eq("colleage_name",college.getCollegeName());
+            List<StudentQuality> list  = baseMapper.selectList(wrapper);
+            for (StudentQuality studentQuality : list
                  ) {
-                QueryWrapper query = new QueryWrapper();
-            //    System.out.println(major.getMajorName()+"setfgesgersd"+year);
-                query.eq("major_name",major.getMajorName());
-                query.eq("year",year);
-                StudentQuality studentQuality = baseMapper.selectOne(query);
                 if (studentQuality==null){
                     continue;
                 }
@@ -447,7 +443,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 cell.setCellValue(college.getCollegeName());
                 cell.setCellStyle(style);
                 cell =  row1.createCell(1);
-                cell.setCellValue(major.getMajorName());
+                cell.setCellValue(studentQuality.getMajorName());
                 cell.setCellStyle(style);
                 cell =  row1.createCell(2);
                 cell.setCellValue(studentQuality.getMajorRecognition());
@@ -464,7 +460,6 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 cell.setCellValue(studentQuality.getMajorAdvantage());
                 cell.setCellStyle(style);
                 cell =  row1.createCell(7);
-                System.out.println("sgdryherdy"+studentQuality.getColleageAdvantage());
                 cell.setCellValue(studentQuality.getColleageAdvantage());
                 cell.setCellStyle(style);
                 cell =  row1.createCell(8);
@@ -526,7 +521,22 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         response.setHeader("Content-disposition", "attachment;filename=" + fileName);
         response.flushBuffer();
         workbook.write(response.getOutputStream());
+    }
+    public List<StudentQuality> getQualityIndex(int year){
+        List<StudentQuality> list = new ArrayList<>();
+         QueryWrapper query = new QueryWrapper();
+         List<College> colleges = collegeMapper.selectList(query);
+        for (College collage:colleges
+             ) {
+            QueryWrapper queryWrapper = new QueryWrapper();
+            queryWrapper.eq("year",year);
+            queryWrapper.eq("colleage_name",collage.getCollegeName());
+            queryWrapper.last("limit 1");
+           List <StudentQuality> studentQualitys =  baseMapper.selectList(queryWrapper);
+            list.add(studentQualitys.get(0));
 
+        }
+        return  list;
 
     }
 }

@@ -20,6 +20,9 @@ public interface StudentQualityService extends IService<StudentQuality> {
      void add(List<StudentQuality> studentQualityList);
      //删除一个年份的数据
      boolean delete( Integer year);
+     //导出一个年份结果数据
      void exportData(int year,HttpServletResponse response)throws IOException;
+     //获取所有学院生源质量指数
+     List<StudentQuality> getQualityIndex(int year);
 
 }
