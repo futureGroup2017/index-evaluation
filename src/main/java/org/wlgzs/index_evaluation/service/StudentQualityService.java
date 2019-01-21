@@ -24,5 +24,6 @@ public interface StudentQualityService extends IService<StudentQuality> {
      void exportData(int year,HttpServletResponse response)throws IOException;
      //获取所有学院生源质量指数
      List<StudentQuality> getQualityIndex(int year);
+    void download(HttpServletResponse response);
 
 }
