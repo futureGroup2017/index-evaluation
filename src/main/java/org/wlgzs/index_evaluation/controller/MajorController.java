@@ -28,7 +28,16 @@ public class MajorController {
     MajorService majorService;
     //导入专业与学院关系表
     @PostMapping("/import")
-    public Result importExcel(MultipartFile file) throws IOException {
+    public Result importExcel(@RequestParam(value = "file",required = false) MultipartFile file) throws IOException {
+        QueryWrapper<Major> queryW = new QueryWrapper<>();
+        List<Major> majors =  majorService.list(queryW);
+        if (majors!=null &&  majors.size()>=0){
+            for (Major major:majors
+                 ) {
+                majorService.removeById(major.getMajorId());
+            }
+
+        }
         boolean isTrue =  majorService.importExcel(file);
         return new Result(1,"导入成功");
     }

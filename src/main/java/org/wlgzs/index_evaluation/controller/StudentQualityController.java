@@ -4,7 +4,6 @@ package org.wlgzs.index_evaluation.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import org.apache.xmlbeans.impl.xb.xsdschema.Public;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -110,10 +109,5 @@ public class StudentQualityController {
         model.addAttribute("employerSatisfactions",iPage.getRecords());//所有的数据集合
         model.addAttribute("query",query);
         return new ModelAndView("");
-    }
-    @GetMapping ("/export")
-    public void importExcel(HttpServletResponse response, String year) throws IOException {
-        studentQualityService.exportData(Integer.parseInt(year),response);
-
     }
 }
