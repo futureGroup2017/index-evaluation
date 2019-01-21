@@ -1,14 +1,15 @@
 <!DOCTYPE html>
-<html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:th="http://www.thymeleaf.org">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>404哟</title>
-	<link rel="stylesheet" type="text/css" href="css/error.css">
+	<link rel="stylesheet" type="text/css" th:href="@{css/error.css}">
 </head>
 <body>
 <div class="demo">
 	<p><span>5</span><span>0</span><span>0</span></p>
-	<p>该页面不存在(´･ω･`),<span id="time">5</span>秒后自动返回</p>
+	<p>服务器错误(´･ω･`),<span id="time">5</span>秒后自动返回</p>
 </div>
 <script>
     window.onload=function () {
