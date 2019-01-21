@@ -38,13 +38,27 @@ public class StudentQualityController {
     YearService yearService;
     @PostMapping("import")
     public Result importExcel(@RequestParam(value= "file",required = false) MultipartFile file, String year){
+       String fileName = file.getOriginalFilename();
+       boolean isContion  = fileName.contains("生源质量指数原始数据表");
+        if (!isContion){
+            return new Result(0,"导入文件错误");
+        }
+        QueryWrapper queryWrapper = new QueryWrapper();
+        if (year!=null &&  !year.equals("")){
+            queryWrapper.eq("year",Integer.parseInt(year));
+           List<StudentQuality> list =   studentQualityService.list(queryWrapper);
+           if (list!=null && list.size()>0  ){
+               return new Result(0,"导入数据重复");
+           }
+
+        }
         try {
           boolean isTrue =  studentQualityService.importExcel(file, year);
           if (isTrue){
               return new Result(1,"导入成功");
           }
           else {
-              return new Result(0,"导入失败");
+              return new Result(-1,"导入失败");
           }
         } catch (IOException e) {
             e.printStackTrace();
@@ -97,7 +111,7 @@ public class StudentQualityController {
         Page<StudentQuality> page = new Page<>(pageNum,pageSize);
         QueryWrapper queryWrapper = new QueryWrapper();
         if (query.getYear()!=null){
-            queryWrapper.eq("yaer",query.getYear());
+            queryWrapper.eq("year",query.getYear());
         }
         if (query.getMajorName()!=null){
             queryWrapper.eq("colleage_name",query.getMajorName());
@@ -109,6 +123,10 @@ public class StudentQualityController {
         model.addAttribute("pages",iPage.getPages());//总页数
         model.addAttribute("employerSatisfactions",iPage.getRecords());//所有的数据集合
         model.addAttribute("query",query);
-        return new ModelAndView("");
+        return new ModelAndView("Enrolment");
+    }
+    @GetMapping("export")
+    public void  exportExcell(@RequestParam("year")  String year,HttpServletResponse response) throws IOException {
+        studentQualityService.exportData(Integer.parseInt(year),response);
     }
 }

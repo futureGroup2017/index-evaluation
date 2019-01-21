@@ -41,7 +41,7 @@
             <a th:href="@{/toindex}">欢迎登录</a>
         </li>
         <li  class="active">
-            <a th:href="@{/major/search}">生源质量指数</a>
+            <a th:href="@{/sq/search}">生源质量指数</a>
             <i class="fa fa-angle-double-right"></i>
         </li>
         <li>
@@ -58,6 +58,12 @@
         </li>
         <li>
             <a th:href="@{/employmentPractice/findAll}">就业创业实践指数</a>
+        </li>
+        <li>
+            <a th:href="@{/year/to}">年份管理</a>
+        </li>
+        <li>
+            <a th:href="@{/college/to}">学院管理</a>
         </li>
     </ul>
 </aside>
@@ -110,10 +116,10 @@
                             dataType: "json",
                             success: function (data) {
                                 if (data.code == 1) {
-                                    alert("导入成功");
+                                    alert(data.msg);
                                     window.location.reload();
-                                } else {
-                                    alert("导入失败，请重试！");
+                                } else{
+                                    alert(data.msg);
                                 }
                             }
                         })
@@ -225,17 +231,23 @@
                 $('#Correspondingfile').click();
             });
             $('#Correspondingfile').change(function () {
+                var formData = new FormData();
+                formData.append('file',document.getElementById('Correspondingfile').files[0]);
                 $.ajax({
-                    type: "GET",
-                    url: "test.json",
-                    data: {
-                        'year': select,
-                        'college': college
-                    },
+                    type: "post",
+                    url: "/major/import",
+                    processData:false,
+                    data:formData,
+                    contentType:false,
+                    mimeType:"multipart/form-data",
                     dataType: "json",
-                    success: function(msg){
-                        alert(msg);
-                        location.href='';
+                    success: function (data) {
+                        if (data.code == 1) {
+                            alert("导入成功");
+                            window.location.reload();
+                        } else {
+                            alert("导入失败，请重试！");
+                        }
                     }
                 })
             })
