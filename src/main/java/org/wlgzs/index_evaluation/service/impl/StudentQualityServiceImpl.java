@@ -472,12 +472,11 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
 
 
         }
-
         HSSFSheet sheet1 = workbook.createSheet("生源质量指数");
         int rowNum1 = 1;
         String[] headers1 = {"学院", "专业优势54.5", "报到率45.5", "生源质量10.08"};
         HSSFRow row1 = sheet1.createRow(0);
-        row.setHeightInPoints(42);
+        row1.setHeightInPoints(42);
         //设置列宽，setColumnWidth的第二个参数要乘以256，这个参数的单位是1/256个字符宽度
         sheet1.setColumnWidth(0, 17 * 256);
         sheet1.setColumnWidth(1, 22 * 256);
@@ -492,6 +491,8 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         HSSFCell cell1;
         for (College college: colleges
                 ) {
+            row1 = sheet1.createRow(rowNum1);
+            row1.setHeightInPoints(42);
             QueryWrapper<Major> majorQueryWrapper = new QueryWrapper<>();
             System.out.println("fhjksdhfklasdjgkn."+college.getCollegeName());
             majorQueryWrapper.eq("collage_name",college.getCollegeName());
@@ -514,7 +515,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             cell.setCellValue(studentQuality.getYieldRate());
             cell.setCellStyle(style);
             cell =  row1.createCell(3);
-            cell.setCellValue(studentQuality.getColleageAdvantage());
+            cell.setCellValue(studentQuality.getColleageQuality());
             cell.setCellStyle(style);
             rowNum1++;
         }

@@ -9,9 +9,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
+import org.wlgzs.index_evaluation.pojo.Major;
 import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.pojo.StudentQuality;
 import org.wlgzs.index_evaluation.pojo.Year;
+import org.wlgzs.index_evaluation.service.MajorService;
 import org.wlgzs.index_evaluation.service.StudentQualityService;
 import org.wlgzs.index_evaluation.service.YearService;
 
@@ -31,9 +33,11 @@ public class StudentQualityController {
     @Resource
     StudentQualityService studentQualityService;
     @Resource
+    MajorService majorService;
+    @Resource
     YearService yearService;
     @PostMapping("import")
-    public Result importExcel(MultipartFile file, String year){
+    public Result importExcel(@RequestParam(value= "file",required = false) MultipartFile file, String year){
         try {
           boolean isTrue =  studentQualityService.importExcel(file, year);
           if (isTrue){
@@ -51,12 +55,20 @@ public class StudentQualityController {
     public ModelAndView search(Model model, Query query,
                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
                                @RequestParam(name = "pageSize", defaultValue = "16") int pageSize)  {
+        QueryWrapper<Major> queryW = new QueryWrapper<>();
+        List<Major> majors =  majorService.list(queryW);
+        if (majors==null || majors.size()<=0){
+            model.addAttribute("mark",-1);
+            return new ModelAndView("Being-interviewed");
+        }else {
+            model.addAttribute("mark",1);
+        }
         Page<StudentQuality> page = new Page<>(pageNum,pageSize);
         QueryWrapper queryWrapper = new QueryWrapper();
-        if (query.getYear()!=null){
-            queryWrapper.eq("yaer",query.getYear());
+        if (query.getYear()!=null && !query.getYear().equals("")){
+            queryWrapper.eq("year",query.getYear());
         }
-        if (query.getMajorName()!=null){
+        if (query.getMajorName()!=null && !query.getMajorName().equals("")){
             queryWrapper.eq("major_name",query.getMajorName());
         }
         List<Year> allYear = yearService.findAllYear();
@@ -66,7 +78,7 @@ public class StudentQualityController {
         model.addAttribute("pages",iPage.getPages());//总页数
         model.addAttribute("employerSatisfactions",iPage.getRecords());//所有的数据集合
         model.addAttribute("query",query);
-        return new ModelAndView("");
+        return new ModelAndView("Being-interviewed");
     }
     @GetMapping("/delete")
     public Result delete(Integer year){
@@ -99,17 +111,4 @@ public class StudentQualityController {
         model.addAttribute("query",query);
         return new ModelAndView("");
     }
-    @GetMapping ("/export")
-    public void importExcel(HttpServletResponse response, String year) throws IOException {
-        Result result;
-        result = new Result(-1,"导出失败");
-        try{
-        studentQualityService.exportData(Integer.parseInt(year),response);
-            }catch (Exception e){
-            result = new Result(-1,"导出失败");
-        }
-
-
-    }
-
 }

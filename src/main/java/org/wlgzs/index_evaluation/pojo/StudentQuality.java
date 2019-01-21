@@ -76,6 +76,7 @@ public class StudentQuality {
      * 学院专业优势
      */
 
+
     @TableField(value = "collage_advantage")
     private Double colleageAdvantage;
     /**
