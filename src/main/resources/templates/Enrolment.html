@@ -67,7 +67,7 @@
         </li>
     </ul>
 </aside>
-<section class="wrap " th:if="${mark == 1}">
+<section class="wrap">
     <div class="tables">
         <section>
             <h1 class="top-title">生 活 质 量 指 数</h1>
@@ -179,13 +179,11 @@
                 </thead>
                 <tbody>
                 <tr th:each="employ: ${employerSatisfactions}">
-                    <td th:text="${employ}"></td>
+                    <td th:text="${employ.colleageName}"></td>
                     <td th:text="${employ.colleageAdvantage}"></td>
-                    <td th:text="${employ}"></td>
-                    <td th:text="${employ}"></td>
-                    <td th:text="${employ}"></td>
-                    <td th:text="${employ}"></td>
-                    <td th:text="${employ}"></td>
+                    <td th:text="${employ.yieldRate}"></td>
+                    <td th:text="${employ.colleageQuality}"></td>
+                    <td th:text="${employ.year}"></td>
                 </tr>
             </table>
         </div>
@@ -216,38 +214,6 @@
                     th:href="@{/sq/search(pageNum=${pages},year=${query.getYear()},college=${query.getCollege()})}">尾页</a></li><!--//跳转至第Number页-->
         </ul>
     </div>
-</section>
-<section class="wrap " th:if="${mark == -1}">
-    <input type="button" class="result Corresponding" value="导入学院专业对应表">
-    <input type="file" style="display: none" id="Correspondingfile">
-    <script>
-        window.onload=function () {
-            $('.Corresponding').click(function () {
-                $('#Correspondingfile').click();
-            });
-            $('#Correspondingfile').change(function () {
-                var formData = new FormData();
-                formData.append('file',document.getElementById('Correspondingfile').files[0]);
-                $.ajax({
-                    type: "post",
-                    url: "/major/import",
-                    processData:false,
-                    data:formData,
-                    contentType:false,
-                    mimeType:"multipart/form-data",
-                    dataType: "json",
-                    success: function (data) {
-                        if (data.code == 1) {
-                            alert("导入成功");
-                            window.location.reload();
-                        } else {
-                            alert("导入失败，请重试！");
-                        }
-                    }
-                })
-            })
-        };
-    </script>
 </section>
 </body>
 <script th:src="@{/js/jquery-2.1.0.js}"></script>

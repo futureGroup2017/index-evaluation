@@ -146,6 +146,33 @@
                             })
                         }
                     })
+                    $('.reinport').click(function () {
+                        $('#Correspondingfile').click();
+                    });
+                    $('#Reimport').click(function () {
+                        $('#Correspondingfile').click();
+                    });
+                    $('#Correspondingfile').change(function () {
+                        var formData = new FormData();
+                        formData.append('file',document.getElementById('Correspondingfile').files[0]);
+                        $.ajax({
+                            type: "post",
+                            url: "/major/import",
+                            processData:false,
+                            data:formData,
+                            contentType:false,
+                            mimeType:"multipart/form-data",
+                            dataType: "json",
+                            success: function (data) {
+                                if (data.code == 1) {
+                                    alert("导入成功");
+                                    window.location.reload();
+                                } else {
+                                    alert("导入失败，请重试！");
+                                }
+                            }
+                        })
+                    })
                 }
             </script>
             <select class="selects" id="select" th:if="${query.getYear()!=null}">
@@ -158,6 +185,8 @@
                 <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
             </select>
             <input type="button" id="delete" value="删除" class="result" />
+            <input type="button" class="reinport result" value="重新导入学院专业对应表">
+            <input type="file" style="display: none" id="Correspondingfile">
             <div class="searrch">
                 <form th:action="@{/sq/search}" th:method="get">
                     <input id="college" type="text" class="ipt" name="majorName">
@@ -170,6 +199,7 @@
             <table class="table table-bordered table-hover">
                 <thead>
                 <tr>
+                    <th>学院</th>
                     <th>专业</th>
                     <th>专业认可度原始</th>
                     <th>高考成绩与最高值比</th>
@@ -181,6 +211,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="employ: ${employerSatisfactions}">
+                    <td th:text="${employ.colleageName}"></td>
                     <td th:text="${employ.majorName}"></td>
                     <td th:text="${employ.majorRecognition}"></td>
                     <td th:text="${employ.collegeEntrance}"></td>
@@ -228,6 +259,9 @@
     <script>
         window.onload=function () {
             $('.Corresponding').click(function () {
+                $('#Correspondingfile').click();
+            });
+            $('#Reimport').click(function () {
                 $('#Correspondingfile').click();
             });
             $('#Correspondingfile').change(function () {

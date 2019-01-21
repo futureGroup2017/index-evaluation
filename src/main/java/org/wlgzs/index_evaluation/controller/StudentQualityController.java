@@ -17,6 +17,7 @@ import org.wlgzs.index_evaluation.service.MajorService;
 import org.wlgzs.index_evaluation.service.StudentQualityService;
 import org.wlgzs.index_evaluation.service.YearService;
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
