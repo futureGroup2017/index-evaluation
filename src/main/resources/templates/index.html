@@ -150,11 +150,15 @@
                         bool=!bool;
                     }
                 });
-                var theref='lastExport?year=';
                 $('#bntyear').click(function () {
+					var theref='lastExport?year=';
                     var valu=$('#iptyear').val();
-                    theref+=valu;
-                    window.location.href=theref;
+                    if(valu==''){
+                    	alert('年份不能为空！')
+					}else{
+						theref+=valu;
+						window.location.href=theref;
+					}
                 });
                 document.getElementById("change").onclick=function () {
                     document.getElementsByClassName("window")[0].style.display="block";
