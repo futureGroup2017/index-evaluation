@@ -29,6 +29,10 @@ public class MajorController {
     //导入专业与学院关系表
     @PostMapping("/import")
     public Result importExcel(@RequestParam(value = "file",required = false) MultipartFile file) throws IOException {
+        String str = file.getOriginalFilename();//.equals("");
+        if (!str.contains("专业学院对应关系表")){
+            return new Result(0,"导入文件错误");
+        }
         QueryWrapper<Major> queryW = new QueryWrapper<>();
         List<Major> majors =  majorService.list(queryW);
         if (majors!=null &&  majors.size()>=0){
