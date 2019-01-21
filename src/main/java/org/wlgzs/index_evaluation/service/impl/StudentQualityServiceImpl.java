@@ -29,9 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author 武凯焱
@@ -523,20 +521,23 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         workbook.write(response.getOutputStream());
     }
     public List<StudentQuality> getQualityIndex(int year){
-        List<StudentQuality> list = new ArrayList<>();
-         QueryWrapper query = new QueryWrapper();
+         QueryWrapper<College> query = new QueryWrapper<College>();
          List<College> colleges = collegeMapper.selectList(query);
-        for (College collage:colleges
+            QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<StudentQuality>();
+            queryWrapper.eq("year", year);
+            List<StudentQuality> studentQualitys = baseMapper.selectList(queryWrapper);
+        Map<String ,StudentQuality> studentQualityMap = new HashMap<>();
+        for (StudentQuality studentQuality: studentQualitys
              ) {
-            QueryWrapper queryWrapper = new QueryWrapper();
-            queryWrapper.eq("year",year);
-            queryWrapper.eq("colleage_name",collage.getCollegeName());
-            queryWrapper.last("limit 1");
-           List <StudentQuality> studentQualitys =  baseMapper.selectList(queryWrapper);
-            list.add(studentQualitys.get(0));
-
+            studentQualityMap.put(studentQuality.getColleageName(),studentQuality);
         }
-        return  list;
+        List<StudentQuality> array = new ArrayList<>();
+        for (int i=0; i<colleges.size();i++){
+            College collage =colleges.get(i);
+            StudentQuality studentQuality = studentQualityMap.get(collage.getCollegeName());
+            array.add(i,studentQuality);
+        }
+        return  array;
 
     }
 }
