@@ -107,6 +107,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                  //System.out.println(fist_volunteer_num+"gdrhgertdyh");
                  majorRecognition = (fist_volunteer_num / studentsNum) / (wmaxFistVolunteerNum / studentsNum) * 100 * 0.7 + (afterVolunteerNum / studentsNum) / (wmaxAfterVolunteerNum / studentsNum) * 100 * 0.3;
                  collegeEntrance = (average_score / maxAverage) * 100;
+                 //专业优势 = 专业
                  majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.445;
              } else if (i == mark) {
                  continue;
@@ -278,6 +279,8 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                  studentQuality.setColleageAdvantage(reserveDecimal(result_average,3));
                  studentQuality.setYieldRate(reserveDecimal(yieldRate,3));
                  studentQuality.setColleageQuality(reserveDecimal(avrageMajorAdvantage,3));
+                 studentQuality.setColleageName(colleage);
+                 System.out.println(studentQuality.toString());
                  baseMapper.updateById(studentQuality);
              }
          }

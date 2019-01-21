@@ -16,9 +16,7 @@ import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.MajorService;
 import org.wlgzs.index_evaluation.service.StudentQualityService;
 import org.wlgzs.index_evaluation.service.YearService;
-
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
@@ -36,6 +34,7 @@ public class StudentQualityController {
     MajorService majorService;
     @Resource
     YearService yearService;
+    //导入生源质量原始数据表
     @PostMapping("import")
     public Result importExcel(@RequestParam(value= "file",required = false) MultipartFile file, String year){
         try {
@@ -51,10 +50,11 @@ public class StudentQualityController {
         }
         return new Result(1,"导入成功");
     }
+    //按照专业和年份来查询结果数据
     @GetMapping("/search")
     public ModelAndView search(Model model, Query query,
                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                               @RequestParam(name = "pageSize", defaultValue = "16") int pageSize)  {
+                               @RequestParam(name = "pageSize", defaultValue = "60") int pageSize)  {
         QueryWrapper<Major> queryW = new QueryWrapper<>();
         List<Major> majors =  majorService.list(queryW);
         if (majors==null || majors.size()<=0){
@@ -80,6 +80,7 @@ public class StudentQualityController {
         model.addAttribute("query",query);
         return new ModelAndView("Being-interviewed");
     }
+    //按照年份删除相应的结果数据
     @GetMapping("/delete")
     public Result delete(Integer year){
         boolean isDelete = studentQualityService.delete(year);
@@ -90,6 +91,7 @@ public class StudentQualityController {
             return  new Result(-1,"没有该年份数据");
         }
     }
+    //按照学院名字来查询结果数据
     @GetMapping("/searchColleage")
     public ModelAndView searchColleage(Model model, Query query,
                                @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
@@ -111,4 +113,6 @@ public class StudentQualityController {
         model.addAttribute("query",query);
         return new ModelAndView("");
     }
+
+
 }

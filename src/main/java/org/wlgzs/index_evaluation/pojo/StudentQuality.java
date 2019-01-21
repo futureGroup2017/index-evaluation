@@ -89,6 +89,10 @@ public class StudentQuality {
      */
      @TableField(value = "yield_rate")
      private  Double yieldRate;
+
+     @TableField(value = "colleage_name")
+     private String colleageName;
+
     public StudentQuality(String majorName, Integer fistVolunteerNum, Integer studentsNum, Integer afterVolunteerNum, Double averageScore, Double majorRecognition, Double collegeEntrance, Double majorAdvantage,Integer year) {
         this.majorName = majorName;
         this.fistVolunteerNum = fistVolunteerNum;
@@ -123,9 +127,10 @@ public class StudentQuality {
                 ", collegeEntrance=" + collegeEntrance +
                 ", majorAdvantage=" + majorAdvantage +
                 ", year=" + year +
-                ", colleage_advantage=" + colleageAdvantage +
-                ", colleage_quality=" + colleageQuality +
+                ", colleageAdvantage=" + colleageAdvantage +
+                ", colleageQuality=" + colleageQuality +
                 ", yieldRate=" + yieldRate +
+                ", colleageName='" + colleageName + '\'' +
                 '}';
     }
 }
