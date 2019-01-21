@@ -191,7 +191,6 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
              //找出1志愿比值的最高值
              //文科1志愿比值最高值
              double wmaxValue = findTheMax(2, mark1, sheet3);
-             System.out.println(wmaxValue + "fasdfsdfsdfsd");
              //理科1志愿比值最高值
              double lmaxValue = findTheMax(mark + 1, sheet3.getLastRowNum(), sheet3);
              List<StudentQuality> studentList = new ArrayList<>();
@@ -245,7 +244,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
 
          }
          Sheet sheet5 = wb.getSheetAt(5);
-         for (int i = 1; i < sheet5.getLastRowNum(); i++) {
+         for (int i = 1; i <= sheet5.getLastRowNum(); i++) {
              Row row = sheet5.getRow(i);
              if (row == null || row.getCell(0) == null || row.getCell(0).getStringCellValue().equals("")) {
                  continue;
@@ -255,6 +254,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
              double yieldRate = row.getCell(1).getNumericCellValue();
              QueryWrapper queryWrapper = new QueryWrapper();
              queryWrapper.eq("collage_name", colleage);
+             System.out.println(colleage+"sdgdryhdrhjdrujhdrtuj");
              List<Major> majors = majorService.list(queryWrapper);
              List<StudentQuality> studentQualitys = new ArrayList<>();
              double result = 0;
@@ -497,7 +497,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             row1 = sheet1.createRow(rowNum1);
             row1.setHeightInPoints(42);
             QueryWrapper<Major> majorQueryWrapper = new QueryWrapper<>();
-            System.out.println("fhjksdhfklasdjgkn."+college.getCollegeName());
+            //System.out.println("fhjksdhfklasdjgkn."+college.getCollegeName());
             majorQueryWrapper.eq("collage_name",college.getCollegeName());
             List<Major> majorList  = majorService.list(majorQueryWrapper);
             Major major = majorList.get(0);

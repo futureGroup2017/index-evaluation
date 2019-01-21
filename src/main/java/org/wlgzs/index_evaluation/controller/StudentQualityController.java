@@ -46,6 +46,7 @@ public class StudentQualityController {
         QueryWrapper queryWrapper = new QueryWrapper();
         if (year!=null &&  !year.equals("")){
             queryWrapper.eq("year",Integer.parseInt(year));
+            queryWrapper.last("limit 2");
            List<StudentQuality> list =   studentQualityService.list(queryWrapper);
            if (list!=null && list.size()>0  ){
                return new Result(0,"导入数据重复");
