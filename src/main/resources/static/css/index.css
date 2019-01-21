@@ -73,7 +73,6 @@ header .rt_nav li {
     text-align: center;
     border-right: 1px white solid;
 }
-
 header .rt_nav li:last-child {
     border: none;
 }

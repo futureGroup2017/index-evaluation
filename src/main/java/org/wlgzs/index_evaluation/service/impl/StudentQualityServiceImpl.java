@@ -21,8 +21,7 @@ import org.wlgzs.index_evaluation.service.StudentQualityService;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -258,8 +257,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             double result = 0;
             double result_average;
             double avrageMajorAdvantage;
-            for (Major major : majors
-            ) {
+            for (Major major : majors) {
                 QueryWrapper wrapper = new QueryWrapper();
                 wrapper.eq("year", year);
                 wrapper.eq("major_name", major.getMajorName());
@@ -358,8 +356,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             queryWrapper.eq("year", year);
             List<StudentQuality> studentQualityList = baseMapper.selectList(queryWrapper);
             if (studentQualityList != null) {
-                for (StudentQuality student : studentQualityList
-                ) {
+                for (StudentQuality student : studentQualityList) {
                     baseMapper.deleteById(student.getQualityId());
                 }
             } else {
@@ -427,7 +424,6 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         List<College> colleges = collegeMapper.selectList(queryWrapper);
         for (College college : colleges
         ) {
-
             QueryWrapper<StudentQuality> wrapper = new QueryWrapper<>();
             wrapper.eq("colleage_name", college.getCollegeName());
             List<StudentQuality> list = baseMapper.selectList(wrapper);
@@ -542,6 +538,40 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             array.add(i, studentQuality);
         }
         return array;
+    }
 
+    public void download(HttpServletResponse res) {
+        try {
+            String fileName = "就业工作考核数据分析系统模板.zip";
+            res.setHeader("content-type", "application/octet-stream;charset=UTF-8");
+            res.setContentType("application/octet-stream");
+            res.setCharacterEncoding("UTF-8");
+            res.setHeader("Content-Disposition", "attachment;filename=" + new String(fileName.getBytes(), "iso-8859-1"));
+            byte[] buff = new byte[1024];
+            BufferedInputStream bis = null;
+            OutputStream os = null;
+            try {
+                os = res.getOutputStream();
+                bis = new BufferedInputStream(new FileInputStream(new File(".//template//"+fileName)));
+                int i = bis.read(buff);
+                while (i != -1) {
+                    os.write(buff, 0, buff.length);
+                    os.flush();
+                    i = bis.read(buff);
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                if (bis != null) {
+                    try {
+                        bis.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 }

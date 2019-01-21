@@ -4,36 +4,44 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>就业工作考核数据分析系统</title>
-		<link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon" />
-		<link rel="stylesheet" type="text/css" href="font-awesome-4.7.0/css/font-awesome.min.css">
-		<link rel="stylesheet" href="css/bootstrap.css" type="text/css">
+		<link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon" />
+		<link rel="stylesheet" type="text/css" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
+		<link rel="stylesheet" th:href="@{/css/bootstrap.css}" type="text/css">
 		<!--<link rel="stylesheet" href="assets/css/magnific-popup.css" type="text/css">-->
-		<link rel="stylesheet" href="css/style.css" type="text/css">
-		<link rel="stylesheet" type="text/css" href="dist/css/txt.wav.css">
-		<link rel="stylesheet" type="text/css" href="css/index.css" />
-		<link rel="stylesheet" href="css/matter.css" />
+		<link rel="stylesheet" th:href="@{/css/style.css}" type="text/css">
+		<link rel="stylesheet" type="text/css" th:href="@{/dist/css/txt.wav.css}">
+		<link rel="stylesheet" type="text/css" th:href="@{css/index.css}" />
+		<link rel="stylesheet" th:href="@{/css/matter.css}" />
 		<script>
 			var colors = ['255,103,103', '97,223,255', '255,232,88', '141,255,139'];
 		</script>
-
 		<script th:inline="javascript">
-			/*<![CDATA[*/
 			var deleteMessages = [[${msg}]];
 			if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') {
 				alert(deleteMessages);
 			}
-			/*]]>*/
 		</script>
 	</head>
 
 	<body>
 		<header>
 			<h1>
-        <img src="images/top1.png"/>
+        <img th:src="@{/images/top1.png}"/>
         <span class="txtwav bounce">河南科技学院</span>
     </h1>
 			<ul class="rt_nav">
-
+                <li id="exportyear" style="display: none;">
+                    <input placeholder="请输入导出年份" id="iptyear" type="text" style="width: 200px;height: 30px;margin: 5px 0;background-color: white;padding: 0;padding-left: 5px;font-size: 14px">
+                    <input id="bntyear" type="button" value="导出" style="width: 60px;height: 30px;background-color: white;margin-left: -5px;">
+                </li>
+				<li id="export" style="color: white;cursor: pointer">
+					<i class="fa fa-file-excel-o" style="font-size: 22px"></i><br/>
+					<span style="font-size: 12px">导出数据总表</span>
+				</li>
+                <li id="Template" style="color: white;cursor: pointer;">
+                    <i class="fa fa-download" style="font-size: 22px"></i><br/>
+                    <span style="font-size: 12px">模板文档下载</span>
+                </li>
 				<li style="color: white;cursor: pointer" id="change">
 						<i class="fa fa-fire" style="font-size: 22px"></i><br/>
 						<span style="font-size: 12px">修改密码</span>
@@ -46,9 +54,7 @@
 				</li>
 			</ul>
 		</header>
-		<!--aside nav-->
 		<aside class="aside_nav">
-			<!--<h2><a href="">招新步骤</a></h2>-->
 			<ul>
 				<div class="closeche">
 					<i class="fa fa-caret-right"></i>
@@ -85,7 +91,7 @@
 		</aside>
 		<section class="wrap">
 			<div class="title">
-				毕业生就业竞争力指数评价体系
+				就业工作考核数据分析系统
 				<div style="width: 2px;height:400px;background-color: #283643;transform: rotateZ(70deg);position: absolute;top: -80px;left: -50px;"></div>
 				<div style="width: 2px;height:400px;background-color: #283643;transform: rotateZ(-70deg);position: absolute;top: -80px;right: -50px;"></div>
 				<div style="width: 2px;height: 280px;background-color: #283643;transform: rotateZ(60deg);position: absolute;top: -19px;left: 34px;"></div>
@@ -114,7 +120,6 @@
 					</div>
 				</div>
 		</div>
-
 		<div class="window">
             <div class="window-center">
                 <div class="close-window">×</div>
@@ -132,6 +137,25 @@
         </div>
         <script>
             window.onload=function () {
+                $('#Template').click(function () {
+                   window.location.href='/sq/download';
+                });
+                var bool=true;
+                $('#export').click(function () {
+                    if(bool==true){
+                        $('#exportyear').css('display','block');
+                        bool=!bool;
+                    }else {
+                        $('#exportyear').css('display','none');
+                        bool=!bool;
+                    }
+                });
+                var theref='lastExport?year=';
+                $('#bntyear').click(function () {
+                    var valu=$('#iptyear').val();
+                    theref+=valu;
+                    window.location.href=theref;
+                });
                 document.getElementById("change").onclick=function () {
                     document.getElementsByClassName("window")[0].style.display="block";
                 };
@@ -156,8 +180,8 @@
         </script>
 
 	</body>
-	<script src="js/jquery-2.1.0.js"></script>
-	<script type="text/javascript" src="js/index.js" ></script>
+	<script th:src="@{/js/jquery-2.1.0.js}"></script>
+	<script type="text/javascript" th:src="@{/js/index.js}" ></script>
 	<script type="text/javascript">
 		$(function() {
 			//确定文档高度
@@ -176,12 +200,12 @@
             })
 		});
 	</script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="dist/js/txt.wav.min.js"></script>
-	<script src="assets/js/TweenLite.min.js"></script>
-	<script src="assets/js/EasePack.min.js"></script>
-	<script src="assets/js/exploding-triangles.js"></script>
-	<script src="assets/js/custom.js"></script>
+	<script th:src="@{/js/bootstrap.min.js}"></script>
+	<script th:src="@{/dist/js/txt.wav.min.js}"></script>
+	<script th:src="@{/assets/js/TweenLite.min.js}"></script>
+	<script th:src="@{/assets/js/EasePack.min.js}"></script>
+	<script th:src="@{/assets/js/exploding-triangles.js}"></script>
+	<script th:src="@{/assets/js/custom.js}"></script>
 	<script>
 		var latitude = 34.038405;
 		var longitude = -117.946944;
