@@ -57,17 +57,18 @@ public class StudentQualityController {
                                @RequestParam(name = "pageSize", defaultValue = "16") int pageSize)  {
         QueryWrapper<Major> queryW = new QueryWrapper<>();
         List<Major> majors =  majorService.list(queryW);
-        if (majors==null || majors.size()<0){
+        if (majors==null || majors.size()<=0){
             model.addAttribute("mark",-1);
+            return new ModelAndView("Being-interviewed");
         }else {
             model.addAttribute("mark",1);
         }
         Page<StudentQuality> page = new Page<>(pageNum,pageSize);
         QueryWrapper queryWrapper = new QueryWrapper();
-        if (query.getYear()!=null){
-            queryWrapper.eq("yaer",query.getYear());
+        if (query.getYear()!=null && !query.getYear().equals("")){
+            queryWrapper.eq("year",query.getYear());
         }
-        if (query.getMajorName()!=null){
+        if (query.getMajorName()!=null && !query.getMajorName().equals("")){
             queryWrapper.eq("major_name",query.getMajorName());
         }
         List<Year> allYear = yearService.findAllYear();

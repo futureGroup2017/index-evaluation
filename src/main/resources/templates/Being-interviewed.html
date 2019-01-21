@@ -79,6 +79,7 @@
                         select = $("#select option:selected").val();
                         var link='/sq/export?year='+select;
                         $('#link').attr('href',link);
+                        $('#searchyear').val(select);
                     });
                     $('#export').click(function () {
                         if($('#link').attr('href') == '#'){
@@ -138,23 +139,6 @@
                                 }
                             })
                         }
-                    });
-                    // 搜索
-                    var college = $('#college').val();
-                    $('#search').change(function () {
-                        $.ajax({
-                            type: "GET",
-                            url: "test.json",
-                            data: {
-                                'year': select,
-                                'college': college
-                            },
-                            dataType: "json",
-                            success: function (msg) {
-                                alert(msg);
-                                location.href = '';
-                            }
-                        })
                     })
                 }
             </script>
@@ -169,8 +153,11 @@
             </select>
             <input type="button" id="delete" value="删除" class="result" />
             <div class="searrch">
-                <input id="college" type="text" class="ipt">
-                <input type="botton" id="search" class="submit">
+                <form th:action="@{/sq/search}" th:method="get">
+                    <input id="college" type="text" class="ipt" name="majorName">
+                    <input type="text" style="display: none" id="searchyear" name="year">
+                    <input type="submit" id="search" class="submit" value="搜索">
+                </form>
             </div>
         </section>
         <div class="resultform">
@@ -199,6 +186,32 @@
             </table>
         </div>
     </div>
+    <!-- 分页 -->
+    <div class="fenye" style="text-align:center" th:if="${pages > 0}">
+        <ul class="pagination" th:if="${pages > 1}">
+            <li th:if="${current == 1}"><a class="noclick" href="javascript:;">首页</a></li>
+            <li><a th:if="${current > 1}" th:href="@{/sq/search(pageNum=1,year=${query.getYear()},college=${query.getCollege()})}">首页</a></li><!--//跳转至第一页-->
+            <li><a th:if="${current > 1}" th:href="@{/sq/search(pageNum=${current-1},year=${query.getYear()},college=${query.getCollege()})}">上一页</a></li>
+            <!--//请求页数-1-->
+            <li class="active" th:each="i:${#numbers.sequence(1,pages)}">
+                <!--//从1到总页数遍历，并赋值给i    TotalPages&ndash;&gt;总页数-->
+                <a th:if="${i > current-5} and ${i < current+5} and ${i == current}" class="pageOne"
+                   style="background-color: #18b985;border: 1px solid #ddd;" href="javascript:void(0);"
+                   th:text="${i}">#</a>
+                <!--//限制显示页数的条数  4到6个页数   而且等于当前页，不能点击-->
+                <a th:if="${i > current-5} and ${i < current+5} and ${i != current}"
+                   th:href="@{/sq/search(pageNum=${i},year=${query.getYear()},college=${query.getCollege()})}" th:text="${i}"
+                   style="color: #000000;background-color: #fff;border: 1px solid #ddd;cursor: pointer;"
+                   class="hoveras">#</a><!--//限制显示页数的条数  4到6个页数-->
+            </li>
+            <li th:if="${current != pages}"><a
+                    th:href="@{/sq/search(pageNum=${current+1},year=${query.getYear()},college=${query.getCollege()})}">下一页</a></li><!--//请求页数+1-->
+            <li th:if="${current == pages}"><a
+                    class="noclick" href="javascript:;">尾页</a></li>
+            <li th:if="${current != pages}"><a
+                    th:href="@{/sq/search(pageNum=${pages},year=${query.getYear()},college=${query.getCollege()})}">尾页</a></li><!--//跳转至第Number页-->
+        </ul>
+    </div>
 </section>
 <section class="wrap " th:if="${mark == -1}">
     <input type="button" class="result Corresponding" value="导入学院专业对应表">
@@ -207,24 +220,26 @@
     <!------------------用于提交专业学院对应关系表---------------------->
     <!------------------------------------------------------------------>
     <script>
-        $('.Corresponding').click(function () {
-            $('#Correspondingfile').click();
-        });
-        $('#Correspondingfile').change(function () {
-            $.ajax({
-                type: "GET",
-                url: "test.json",
-                data: {
-                    'year': select,
-                    'college': college
-                },
-                dataType: "json",
-                success: function(msg){
-                    alert(msg);
-                    location.href='';
-                }
+        window.onload=function () {
+            $('.Corresponding').click(function () {
+                $('#Correspondingfile').click();
+            });
+            $('#Correspondingfile').change(function () {
+                $.ajax({
+                    type: "GET",
+                    url: "test.json",
+                    data: {
+                        'year': select,
+                        'college': college
+                    },
+                    dataType: "json",
+                    success: function(msg){
+                        alert(msg);
+                        location.href='';
+                    }
+                })
             })
-        })
+        };
     </script>
 </section>
 </body>
