@@ -25,7 +25,7 @@ public class MainsiteErrorController implements ErrorController {
             modelAndView.setViewName("404");
             return modelAndView;
         }else if(statusCode == 500){
-            modelAndView.setViewName("404");
+            modelAndView.setViewName("500");
             return modelAndView;
         }
         modelAndView.setViewName("login");

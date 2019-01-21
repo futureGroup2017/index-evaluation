@@ -1,14 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>404哟</title>
-<link rel="stylesheet" type="text/css" href="css/error.css">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>404哟</title>
+	<link rel="stylesheet" type="text/css" href="css/error.css">
 </head>
 <body>
 <div class="demo">
 	<p><span>5</span><span>0</span><span>0</span></p>
-	<p>服务器错误(´･ω･`)</p>
+	<p>该页面不存在(´･ω･`),<span id="time">5</span>秒后自动返回</p>
 </div>
+<script>
+    window.onload=function () {
+        var time=5;
+        setInterval(function () {
+            time-=1;
+            document.getElementById('time').innerText=time;
+        },1000);
+        setTimeout(function () {
+            window.history.go(-1);
+        },5000)
+    }
+</script>
 </body>
 </html>
