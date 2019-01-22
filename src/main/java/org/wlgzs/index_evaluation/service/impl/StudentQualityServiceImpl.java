@@ -102,7 +102,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             double majorAdvantage = 0;
             if (i < mark) {
                 //System.out.println(fist_volunteer_num+"gdrhgertdyh");
-                //专业认可度 = 专业1志愿报考人数/
+                //专业认可度 = (专业1志愿报考人数/总数)/(文科专业志愿报考人数最高值/总数)*100*0.7 + (2-5理科志愿报考人数/总数)/(文科志愿报考人数最高值/学生总数)*100*0.3
                 majorRecognition = (fist_volunteer_num / studentsNum) / (wmaxFistVolunteerNum / studentsNum) * 100 * 0.7 + (afterVolunteerNum / studentsNum) / (wmaxAfterVolunteerNum / studentsNum) * 100 * 0.3;
                 collegeEntrance = (average_score / maxAverage) * 100; //高考成绩与文科最高值之比
                 //专业优势 = （专业认可度原始*0.557 + 高考成绩与最高值之比*0.433）*0.445
@@ -120,62 +120,8 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             studentQualityList.add(studentQuality);
         }
         add(studentQualityList);
-
-        //开始处理对口本科数据表单
-        for (int k = 1; k <= 2; k++) {
-            Sheet sheet1 = wb.getSheetAt(k);
-            List<Double> list = new ArrayList<>();
-            //找出对口和专升本生本科的最高值
-            for (int i = 1; i <= sheet1.getLastRowNum(); i++) {
-                Row row = sheet1.getRow(i);
-                //  System.out.println(sheet1.getLastRowNum()+"dsgsdg");
-                if (row == null || row.getCell(1) == null) {
-                    continue;
-                }
-                row.getCell(2).setCellType(Cell.CELL_TYPE_NUMERIC);
-                row.getCell(3).setCellType(Cell.CELL_TYPE_NUMERIC);
-                double averageScore = row.getCell(2).getNumericCellValue();
-                double fullMark = row.getCell(3).getNumericCellValue();
-                list.add(averageScore / fullMark);
-            }
-            double maxNum = 0;
-            for (Double temp : list
-            ) {
-                if (maxNum < temp) {
-                    maxNum = temp;
-                }
-            }
-            for (int i = 1; i <= sheet1.getLastRowNum(); i++) {
-                Row row = sheet1.getRow(i);
-                if (row == null || row.getCell(1) == null) {
-                    continue;
-                }
-                String majorName = row.getCell(1).getStringCellValue();
-                if (majorName == null || majorName.equals("")) {
-                    continue;
-                }
-                QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("major_name", majorName);
-                queryWrapper.eq("year", year);
-                //查找是否存在与专升本相同的专业
-                List<StudentQuality> studentList = baseMapper.selectList(queryWrapper);
-                StudentQuality studentQuality = studentQualityList.get(0);
-                double score = (list.get(i - 1) / maxNum) * 100;
-                if (studentQuality != null) {
-                    double entrance = studentQuality.getCollegeEntrance();
-                    double result = (entrance + score) / 2;
-                    double majorRecognition = studentQuality.getMajorRecognition();
-                    double advantage = majorRecognition * 0.557 + result * 0.443;
-                    studentQuality.setCollegeEntrance(reserveDecimal(advantage, 3));
-                    studentQuality.setMajorAdvantage(reserveDecimal(majorRecognition, 3));
-                    baseMapper.updateById(studentQuality);
-                } else {
-                    continue;
-                }
-            }
-        }
         //处理艺术和体育类的表单
-        for (int l = 3; l <= 4; l++) {
+        for (int l = 1; l <= 2; l++) {
             Sheet sheet3 = wb.getSheetAt(l);
             //找出理科在哪一行
             int mark1 = 0;
@@ -188,10 +134,9 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             }
             //找出1志愿比值的最高值
             //文科1志愿比值最高值
-            double wmaxValue = findTheMax(2, mark1, sheet3);
+            double wmaxValue = findTheMax(2, mark1-1, sheet3);
             //理科1志愿比值最高值
-            double lmaxValue = findTheMax(mark + 1, sheet3.getLastRowNum(), sheet3);
-            List<StudentQuality> studentList = new ArrayList<>();
+            double lmaxValue = findTheMax(mark1 + 1, sheet3.getLastRowNum(), sheet3);
             for (int j = 2; j <= sheet3.getLastRowNum(); j++) {
                 Row row = sheet3.getRow(j);
                 if (row == null || row.getCell(1) == null || row.getCell(1).getNumericCellValue() == 0) {
@@ -205,6 +150,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 double nums = row.getCell(2).getNumericCellValue();
                 double average_score = row.getCell(3).getNumericCellValue();
                 double maxScore = row.getCell(4).getNumericCellValue();
+                //计算文科
                 if (j < mark1) {
                     String major = row.getCell(0).getStringCellValue();
                     double majorRecognition = ((num / nums) / wmaxValue) * 100;
@@ -212,17 +158,18 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     double majorAdvantage = majorRecognition * 0.557 + collegeEntrance * 0.443;
                     StudentQuality studentQuality = new StudentQuality(major, reserveDecimal(average_score, 3), reserveDecimal(majorRecognition, 3), reserveDecimal(collegeEntrance, 3), reserveDecimal(majorAdvantage, 3), Integer.parseInt(year));
                     baseMapper.insert(studentQuality);
-                } else if (j > mark1) {
+                }
+                //计算理科
+                else if (j > mark1) {
                     String major = row.getCell(0).getStringCellValue();
                     QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<>();
                     queryWrapper.eq("year", year);
                     queryWrapper.eq("major_name", major);
                     //查询是否与文科专业相同，若相同求平均值再更新数据，否则算好后直接写入
                     List<StudentQuality> list = baseMapper.selectList(queryWrapper);
-
                     if (list.size() != 0) {
                         StudentQuality studentQuality = list.get(0);
-                        double majorRecognition = (((num / nums) / wmaxValue) * 100 + studentQuality.getMajorRecognition()) / 2;
+                        double majorRecognition = (((num / nums) / lmaxValue) * 100 + studentQuality.getMajorRecognition()) / 2;
                         double collegeEntrance = ((average_score / maxScore) * 100 + studentQuality.getCollegeEntrance()) / 2;
                         double majorAdvantage = majorRecognition * 0.557 + collegeEntrance * 0.443;
                         studentQuality.setMajorAdvantage(reserveDecimal(majorAdvantage, 3));
@@ -241,7 +188,77 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             }
 
         }
+
+        //开始处理对口本科数据表单
+        for (int k = 3; k <= 4; k++) {
+            Sheet sheet1 = wb.getSheetAt(k);
+            List<Double> list = new ArrayList<>(); //存放平均值/满分 的集合
+            //找出对口和专升本生本科的最高值
+            for (int i = 1; i <= sheet1.getLastRowNum(); i++) {
+                Row row = sheet1.getRow(i);
+                //  System.out.println(sheet1.getLastRowNum()+"dsgsdg");
+                if (row == null || row.getCell(1) == null) {
+                    continue;
+                }
+                row.getCell(2).setCellType(Cell.CELL_TYPE_NUMERIC);
+                row.getCell(3).setCellType(Cell.CELL_TYPE_NUMERIC);
+                double averageScore = row.getCell(2).getNumericCellValue();
+                double fullMark = row.getCell(3).getNumericCellValue();
+                list.add(averageScore / fullMark);
+            }
+            double maxNum = 0;
+            //找出list集合最高值
+            for (Double temp : list
+                    ) {
+                if (maxNum < temp) {
+                    maxNum = temp;
+                }
+            }
+            for (int i = 1; i <= sheet1.getLastRowNum(); i++) {
+                Row row = sheet1.getRow(i);
+                if (row == null || row.getCell(1) == null) {
+                    continue;
+                }
+                String majorName = row.getCell(1).getStringCellValue();
+                if (majorName == null || majorName.equals("")) {
+                    continue;
+                }
+                QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<>();
+                queryWrapper.eq("major_name", majorName);
+                queryWrapper.eq("year", year);
+                System.out.println(majorName+"sdfsdfdsfdsf");
+                //查找是否存在与专升本相同的专业
+                List<StudentQuality> studentList = baseMapper.selectList(queryWrapper);
+                double score = (list.get(i - 1) / maxNum) * 100;
+                if (studentList==null || studentList.size()<=0){
+                    StudentQuality studentQuality = new StudentQuality();
+                    studentQuality.setMajorName(majorName);
+                    studentQuality.setCollegeEntrance(reserveDecimal(score,3));
+                    studentQuality.setMajorAdvantage(reserveDecimal(score*0.443,3));
+                    studentQuality.setYear(Integer.parseInt(year));
+                    baseMapper.insert(studentQuality);
+                }else {
+                    StudentQuality studentQuality = studentList.get(0);
+                    double entrance = studentQuality.getCollegeEntrance();
+                    double result = (entrance + score) / 2;
+                    double majorRecognition = studentQuality.getMajorRecognition();
+                    double advantage = majorRecognition * 0.557 + result * 0.443;
+                    studentQuality.setCollegeEntrance(reserveDecimal(result, 3));
+                    studentQuality.setMajorAdvantage(reserveDecimal(advantage, 3));
+                    baseMapper.updateById(studentQuality);
+
+                }
+            }
+        }
+
         Sheet sheet5 = wb.getSheetAt(5);
+        QueryWrapper<StudentQuality> wrapper = new QueryWrapper<StudentQuality>();
+        wrapper.eq("year", year);
+        List<StudentQuality> qualities = baseMapper.selectList(wrapper);
+        Map<String, StudentQuality> studentQualityMap = new HashMap<>();
+        for (StudentQuality studentQuality : qualities) {
+            studentQualityMap.put(studentQuality.getMajorName(), studentQuality);
+        }
         for (int i = 1; i <= sheet5.getLastRowNum(); i++) {
             Row row = sheet5.getRow(i);
             if (row == null || row.getCell(0) == null || row.getCell(0).getStringCellValue().equals("")) {
@@ -258,10 +275,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             double result_average;
             double avrageMajorAdvantage;
             for (Major major : majors) {
-                QueryWrapper wrapper = new QueryWrapper();
-                wrapper.eq("year", year);
-                wrapper.eq("major_name", major.getMajorName());
-                StudentQuality student = baseMapper.selectOne(wrapper);
+                StudentQuality student = studentQualityMap.get(major.getMajorName());
                 if (student != null) {
                     result += student.getMajorAdvantage();
                     studentQualitys.add(student);
@@ -315,7 +329,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
     //找出体育艺术的最高值
     public double findTheMax(int index, int end, Sheet sheet) {
         List<Double> arrayList = new ArrayList();
-        for (int j = index; j < end; j++) {
+        for (int j = index; j <= end; j++) {
             Row row1 = sheet.getRow(j);
             if (row1.getCell(0) == null) {
                 break;
@@ -326,7 +340,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         double maxValue = 0;
         for (double temp : arrayList
-        ) {
+                ) {
             if (maxValue < temp) {
                 maxValue = temp;
             }
@@ -336,7 +350,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
 
     public void add(List<StudentQuality> studentQualityList) {
         for (StudentQuality student : studentQualityList
-        ) {
+                ) {
             baseMapper.insert(student);
         }
     }
@@ -423,12 +437,12 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         QueryWrapper<College> queryWrapper = new QueryWrapper<>();
         List<College> colleges = collegeMapper.selectList(queryWrapper);
         for (College college : colleges
-        ) {
+                ) {
             QueryWrapper<StudentQuality> wrapper = new QueryWrapper<>();
             wrapper.eq("colleage_name", college.getCollegeName());
             List<StudentQuality> list = baseMapper.selectList(wrapper);
             for (StudentQuality studentQuality : list
-            ) {
+                    ) {
                 if (studentQuality == null) {
                     continue;
                 }
@@ -442,10 +456,14 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 cell.setCellValue(studentQuality.getMajorName());
                 cell.setCellStyle(style);
                 cell = row1.createCell(2);
-                cell.setCellValue(studentQuality.getMajorRecognition());
+                if (studentQuality.getMajorRecognition()!=null) {
+                    cell.setCellValue(studentQuality.getMajorRecognition());
+                }
                 cell.setCellStyle(style);
                 cell = row1.createCell(3);
-                cell.setCellValue(reserveDecimal(studentQuality.getMajorRecognition() * 0.557, 3));
+                if (studentQuality.getMajorRecognition()!=null) {
+                    cell.setCellValue(reserveDecimal(studentQuality.getMajorRecognition() * 0.557, 3));
+                }
                 cell.setCellStyle(style);
                 cell = row1.createCell(4);
                 cell.setCellValue(reserveDecimal(studentQuality.getCollegeEntrance(), 3));
@@ -485,7 +503,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         HSSFCell cell1;
         for (College college : colleges
-        ) {
+                ) {
             row1 = sheet1.createRow(rowNum1);
             row1.setHeightInPoints(42);
             QueryWrapper<Major> majorQueryWrapper = new QueryWrapper<>();
@@ -528,7 +546,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         List<StudentQuality> studentQualitys = baseMapper.selectList(queryWrapper);
         Map<String, StudentQuality> studentQualityMap = new HashMap<>();
         for (StudentQuality studentQuality : studentQualitys
-        ) {
+                ) {
             studentQualityMap.put(studentQuality.getColleageName(), studentQuality);
         }
         List<StudentQuality> array = new ArrayList<>();
@@ -552,7 +570,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             OutputStream os = null;
             try {
                 os = res.getOutputStream();
-                bis = new BufferedInputStream(new FileInputStream(new File(".//template//"+fileName)));
+                bis = new BufferedInputStream(new FileInputStream(new File(".//template//" + fileName)));
                 int i = bis.read(buff);
                 while (i != -1) {
                     os.write(buff, 0, buff.length);
