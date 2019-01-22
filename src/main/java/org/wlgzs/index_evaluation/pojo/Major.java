@@ -29,11 +29,9 @@ public class Major {
      * 学院名字
      */
     @TableField("collage_name")
-    private  String collage_name;
-
+    private String collage_name;
     public Major(String majorName, String collage_name) {
         this.majorName = majorName;
         this.collage_name = collage_name;
-
     }
 }

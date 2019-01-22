@@ -37,11 +37,12 @@ import java.util.List;
 public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfactionMapper, EmployerSatisfaction> implements EmployerSatisfactionService {
     @Resource
     EmployerSatisfactionMapper employerSatisfactionMapper;
+
     @Override
-    public List<EmployerSatisfaction> importExcel(MultipartFile file,String year) throws IOException {
+    public List<EmployerSatisfaction> importExcel(MultipartFile file, String year) throws IOException {
         int time = Integer.parseInt(year);
-        List<EmployerSatisfaction> employerSatisfactionList  = new ArrayList<>();
-        String fileName  = file.getOriginalFilename();
+        List<EmployerSatisfaction> employerSatisfactionList = new ArrayList<>();
+        String fileName = file.getOriginalFilename();
         if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
             return null;
         }
@@ -60,13 +61,13 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             if (row == null) {
                 continue;
             }
-            for (int j=0; j<row.getLastCellNum();j++) {
-            row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
-                String temp  = row.getCell(j).getStringCellValue();
-                if (temp == null || temp.equals("")){
+            for (int j = 0; j < row.getLastCellNum(); j++) {
+                row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
+                String temp = row.getCell(j).getStringCellValue();
+                if (temp == null || temp.equals("")) {
                     row.getCell(j).setCellValue("0");
                 }
-        }
+            }
             String college = row.getCell(0).getStringCellValue();
             //处理 毕业生的精神状态与工作水平的数据
             //毕业生的精神状态与工作水平指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.1895
@@ -75,32 +76,32 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             int level3 = Integer.parseInt(row.getCell(3).getStringCellValue());
             int level4 = Integer.parseInt(row.getCell(4).getStringCellValue());
             int level5 = Integer.parseInt(row.getCell(5).getStringCellValue());
-            int num =  level1+level2+level3+level4+level5;
-            double level  =(double) Math.round((level1+level2*0.8d+level3*0.6d+level4*0.4d+level5*0.2d)*100d/num*0.1895d*1000d)/1000d;
+            int num = level1 + level2 + level3 + level4 + level5;
+            double level = (double) Math.round((level1 + level2 * 0.8d + level3 * 0.6d + level4 * 0.4d + level5 * 0.2d) * 100d / num * 0.1895d * 1000d) / 1000d;
             //毕业生的综合素质能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.242
             int ability1 = Integer.parseInt(row.getCell(6).getStringCellValue());
             int ability2 = Integer.parseInt(row.getCell(7).getStringCellValue());
             int ability3 = Integer.parseInt(row.getCell(8).getStringCellValue());
             int ability4 = Integer.parseInt(row.getCell(9).getStringCellValue());
             int ability5 = Integer.parseInt(row.getCell(10).getStringCellValue());
-            int num1 =  ability1+ability2+ability3+ability4+ability5;
-            double ability  =(double) Math.round((ability1+ability2*0.8d+ability3*0.6d+ability4*0.4d+ability5*0.2d)*100d/num1*0.242d*1000d)/1000;
+            int num1 = ability1 + ability2 + ability3 + ability4 + ability5;
+            double ability = (double) Math.round((ability1 + ability2 * 0.8d + ability3 * 0.6d + ability4 * 0.4d + ability5 * 0.2d) * 100d / num1 * 0.242d * 1000d) / 1000;
             //毕业生的“能力-岗位”匹配度能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.2225
             int match1 = Integer.parseInt(row.getCell(11).getStringCellValue());
             int match2 = Integer.parseInt(row.getCell(12).getStringCellValue());
             int match3 = Integer.parseInt(row.getCell(13).getStringCellValue());
             int match4 = Integer.parseInt(row.getCell(14).getStringCellValue());
             int match5 = Integer.parseInt(row.getCell(15).getStringCellValue());
-            int num2 =  match1+match2+match3+match4+match5;
-            double match  =(double) Math.round((match1+match2*0.8d+match3*0.6d+match4*0.4d+match5*0.2d)*100d/num2*0.2225d*1000d)/1000d;
+            int num2 = match1 + match2 + match3 + match4 + match5;
+            double match = (double) Math.round((match1 + match2 * 0.8d + match3 * 0.6d + match4 * 0.4d + match5 * 0.2d) * 100d / num2 * 0.2225d * 1000d) / 1000d;
             //对毕业生的工作满意度能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.2
             int satisfaction1 = Integer.parseInt(row.getCell(16).getStringCellValue());
             int satisfaction2 = Integer.parseInt(row.getCell(17).getStringCellValue());
             int satisfaction3 = Integer.parseInt(row.getCell(18).getStringCellValue());
             int satisfaction4 = Integer.parseInt(row.getCell(19).getStringCellValue());
             int satisfaction5 = Integer.parseInt(row.getCell(20).getStringCellValue());
-            int num3 =  satisfaction1+satisfaction2+satisfaction3+satisfaction4+satisfaction5;
-            double satisfaction  =(double) Math.round((satisfaction1+satisfaction2*0.8d+satisfaction3*0.6d+satisfaction4*0.4d+satisfaction5*0.2d)*100d/num3*0.1945*1000d)/1000d;
+            int num3 = satisfaction1 + satisfaction2 + satisfaction3 + satisfaction4 + satisfaction5;
+            double satisfaction = (double) Math.round((satisfaction1 + satisfaction2 * 0.8d + satisfaction3 * 0.6d + satisfaction4 * 0.4d + satisfaction5 * 0.2d) * 100d / num3 * 0.1945 * 1000d) / 1000d;
            /* int sustain1 = Integer.parseInt(row.getCell(1).getStringCellValue());
             int sustain2 = Integer.parseInt(row.getCell(2).getStringCellValue());
             int sustain3 = Integer.parseInt(row.getCell(3).getStringCellValue());
@@ -108,35 +109,37 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             int sustain5 = Integer.parseInt(row.getCell(5).getStringCellValue());
             double num4 =  sustain1+sustain2+sustain3+sustain4+sustain5;
             double sustain  =(double) Math.round((sustain1+sustain2*0.8d+sustain3*0.6d+sustain4*0.4d+sustain5*0.2d)*100d/num4*0.1895*1000)/1000;*/
-           //用人单位满意度指数 =( 精神状态与工作水平指数 +综合素质能力指数+“能力-岗位”匹配度能力指数+工作满意度能力指数)*0.1325;
-           double  satisfactionIndex  = (double) Math.round((level+ability+match+satisfaction)*132.5)/1000;
-            EmployerSatisfaction em  = new EmployerSatisfaction(college,level,level1,level2,level3,level4,level5,
-                    ability,ability1,ability2,ability3,ability4,ability5,match,match1,match2,match3,match4,match5,
-                    satisfaction,satisfaction1,satisfaction2,satisfaction3,satisfaction4,satisfaction5,satisfactionIndex,time);
+            //用人单位满意度指数 =( 精神状态与工作水平指数 +综合素质能力指数+“能力-岗位”匹配度能力指数+工作满意度能力指数)*0.1325;
+            double satisfactionIndex = (double) Math.round((level + ability + match + satisfaction) * 132.5) / 1000;
+            EmployerSatisfaction em = new EmployerSatisfaction(college, level, level1, level2, level3, level4, level5,
+                    ability, ability1, ability2, ability3, ability4, ability5, match, match1, match2, match3, match4, match5,
+                    satisfaction, satisfaction1, satisfaction2, satisfaction3, satisfaction4, satisfaction5, satisfactionIndex, time);
             employerSatisfactionList.add(em);
         }
         return employerSatisfactionList;
 
     }
+
     @Override
-    public boolean add(List<EmployerSatisfaction> employerSatisfactions){
-        if (employerSatisfactions==null){
+    public boolean add(List<EmployerSatisfaction> employerSatisfactions) {
+        if (employerSatisfactions == null) {
             return false;
         }
-        for (EmployerSatisfaction e:
-             employerSatisfactions) {
+        for (EmployerSatisfaction e :
+                employerSatisfactions) {
             baseMapper.insert(e);
         }
         return true;
     }
-    public void exportData(int year, HttpServletResponse response) throws IOException{
+
+    public void exportData(int year, HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("信息表");
         //设置要导出的文件的名字
-        String fileName = year+"年用人单位满意度指数.xls";
+        String fileName = year + "年用人单位满意度指数.xls";
         fileName = URLEncoder.encode(fileName, "UTF-8");
         int rowNum = 1;
-        String[] headers = {"学院", "毕业生的精神状态与工作态度", "毕业生的综合素质能力", "毕业生的“能力-岗位”匹配度", "对毕业生的工作满意度", "用人单位满意度指数","平均值"};
+        String[] headers = {"学院", "毕业生的精神状态与工作态度", "毕业生的综合素质能力", "毕业生的“能力-岗位”匹配度", "对毕业生的工作满意度", "用人单位满意度指数", "平均值"};
         HSSFRow row = sheet.createRow(0);
         //设置行高
         row.setHeightInPoints(42);
@@ -182,14 +185,14 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             cell.setCellValue(text);
         }
         QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("year",year);
+        queryWrapper.eq("year", year);
         List<EmployerSatisfaction> employerSatisfactionList = employerSatisfactionMapper.selectList(queryWrapper);
 
         HSSFCell cell;
         double num = 0;
-        for (EmployerSatisfaction employerSatisfaction:
+        for (EmployerSatisfaction employerSatisfaction :
                 employerSatisfactionList) {
-            num+=employerSatisfaction.getSatisfactionIndex();
+            num += employerSatisfaction.getSatisfactionIndex();
             HSSFRow row1 = sheet.createRow(rowNum);
             row1.setHeightInPoints(25);
             //创建各列
@@ -221,7 +224,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         CellRangeAddress region = new CellRangeAddress(1, employerSatisfactionList.size(), 6, 6);// 下标从0开始 起始行号，终止行号， 起始列号，终止列号
         sheet.addMergedRegion(region);  //添加
         cell = sheet.getRow(1).getCell(6);
-        double arrage = num/employerSatisfactionList.size();
+        double arrage = num / employerSatisfactionList.size();
         DecimalFormat df = new DecimalFormat("#.000");
         cell.setCellValue(df.format(arrage));   //向合并的单元格设置值
         response.setContentType("application/octet-stream");
@@ -229,32 +232,31 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         response.flushBuffer();
         workbook.write(response.getOutputStream());
     }
-    public void delete(Model model,Integer year,int pageNum,int pageSize){
+
+    public void delete(Model model, Integer year, int pageNum, int pageSize) {
         QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<>();
-        Page<EmployerSatisfaction> page = new Page<>(pageNum,pageSize);
-        if (year!=null){
-            queryWrapper.eq("year",year);
+        Page<EmployerSatisfaction> page = new Page<>(pageNum, pageSize);
+        if (year != null) {
+            queryWrapper.eq("year", year);
             List<EmployerSatisfaction> employerSatisfactions = baseMapper.selectList(queryWrapper);
-            for (EmployerSatisfaction em:employerSatisfactions
-                    ) {
+            for (EmployerSatisfaction em : employerSatisfactions) {
                 baseMapper.deleteById(em.getEsId());
             }
             QueryWrapper<EmployerSatisfaction> wrapper = new QueryWrapper<>();
-            IPage<EmployerSatisfaction> iPage = baseMapper.selectPage(page,wrapper);
-            model.addAttribute("msg","删除成功");
-            model.addAttribute("current",iPage.getCurrent());//当前页数
-            model.addAttribute("pages",iPage.getPages());//总页数
-            model.addAttribute("query",new Query());
-            model.addAttribute("employerSatisfactions",iPage.getRecords());//所有的数据集合
+            IPage<EmployerSatisfaction> iPage = baseMapper.selectPage(page, wrapper);
+            model.addAttribute("msg", "删除成功");
+            model.addAttribute("current", iPage.getCurrent());//当前页数
+            model.addAttribute("pages", iPage.getPages());//总页数
+            model.addAttribute("query", new Query());
+            model.addAttribute("employerSatisfactions", iPage.getRecords());//所有的数据集合
 
-        }
-        else {
-            model.addAttribute("msg","删除失败");
-            IPage<EmployerSatisfaction> iPage = baseMapper.selectPage(page,queryWrapper);
-            model.addAttribute("msg","请选择年份");
-            model.addAttribute("current",iPage.getCurrent());//当前页数
-            model.addAttribute("pages",iPage.getPages());//总页数
-            model.addAttribute("employerSatisfactions",iPage.getRecords());//所有的数据集合
+        } else {
+            model.addAttribute("msg", "删除失败");
+            IPage<EmployerSatisfaction> iPage = baseMapper.selectPage(page, queryWrapper);
+            model.addAttribute("msg", "请选择年份");
+            model.addAttribute("current", iPage.getCurrent());//当前页数
+            model.addAttribute("pages", iPage.getPages());//总页数
+            model.addAttribute("employerSatisfactions", iPage.getRecords());//所有的数据集合
         }
 
     }
