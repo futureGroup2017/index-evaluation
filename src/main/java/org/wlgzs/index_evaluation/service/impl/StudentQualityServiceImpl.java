@@ -1,8 +1,6 @@
 package org.wlgzs.index_evaluation.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.hssf.usermodel.*;
@@ -12,12 +10,10 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.dao.CollegeMapper;
 import org.wlgzs.index_evaluation.dao.StudentQualityMapper;
 import org.wlgzs.index_evaluation.pojo.College;
-import org.wlgzs.index_evaluation.pojo.EmployerSatisfaction;
 import org.wlgzs.index_evaluation.pojo.Major;
 import org.wlgzs.index_evaluation.pojo.StudentQuality;
 import org.wlgzs.index_evaluation.service.MajorService;
@@ -27,7 +23,10 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author 武凯焱
@@ -141,7 +140,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             }
             double maxNum = 0;
             for (Double temp : list
-                    ) {
+            ) {
                 if (maxNum < temp) {
                     maxNum = temp;
                 }
@@ -258,8 +257,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             double result = 0;
             double result_average;
             double avrageMajorAdvantage;
-            for (Major major : majors
-                    ) {
+            for (Major major : majors) {
                 QueryWrapper wrapper = new QueryWrapper();
                 wrapper.eq("year", year);
                 wrapper.eq("major_name", major.getMajorName());
@@ -328,7 +326,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         double maxValue = 0;
         for (double temp : arrayList
-                ) {
+        ) {
             if (maxValue < temp) {
                 maxValue = temp;
             }
@@ -338,7 +336,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
 
     public void add(List<StudentQuality> studentQualityList) {
         for (StudentQuality student : studentQualityList
-                ) {
+        ) {
             baseMapper.insert(student);
         }
     }
@@ -358,8 +356,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             queryWrapper.eq("year", year);
             List<StudentQuality> studentQualityList = baseMapper.selectList(queryWrapper);
             if (studentQualityList != null) {
-                for (StudentQuality student : studentQualityList
-                        ) {
+                for (StudentQuality student : studentQualityList) {
                     baseMapper.deleteById(student.getQualityId());
                 }
             } else {
@@ -426,13 +423,12 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         QueryWrapper<College> queryWrapper = new QueryWrapper<>();
         List<College> colleges = collegeMapper.selectList(queryWrapper);
         for (College college : colleges
-                ) {
-
+        ) {
             QueryWrapper<StudentQuality> wrapper = new QueryWrapper<>();
             wrapper.eq("colleage_name", college.getCollegeName());
             List<StudentQuality> list = baseMapper.selectList(wrapper);
             for (StudentQuality studentQuality : list
-                    ) {
+            ) {
                 if (studentQuality == null) {
                     continue;
                 }
@@ -489,7 +485,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         HSSFCell cell1;
         for (College college : colleges
-                ) {
+        ) {
             row1 = sheet1.createRow(rowNum1);
             row1.setHeightInPoints(42);
             QueryWrapper<Major> majorQueryWrapper = new QueryWrapper<>();
@@ -532,7 +528,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         List<StudentQuality> studentQualitys = baseMapper.selectList(queryWrapper);
         Map<String, StudentQuality> studentQualityMap = new HashMap<>();
         for (StudentQuality studentQuality : studentQualitys
-                ) {
+        ) {
             studentQualityMap.put(studentQuality.getColleageName(), studentQuality);
         }
         List<StudentQuality> array = new ArrayList<>();
@@ -546,7 +542,6 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
 
     public void download(HttpServletResponse res) {
         try {
-
             String fileName = "就业工作考核数据分析系统模板.zip";
             res.setHeader("content-type", "application/octet-stream;charset=UTF-8");
             res.setContentType("application/octet-stream");

@@ -45,7 +45,7 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
         List<EmploymentRate> employmentRateList = new ArrayList<>();
         try {
             InputStream in = file.getInputStream();
-            DecimalFormat decimalFormat = new DecimalFormat(".000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
+            DecimalFormat decimalFormat = new DecimalFormat("###0.000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
             listob = ExcelUtil.getBankListByExcel(in,file.getOriginalFilename());
             //遍历listob数据，把数据放到List中
             for (List<Object> objects : listob) {
@@ -147,19 +147,19 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
             cell.setCellValue(employmentRate.getCollege());
             cell.setCellStyle(style);
             cell = row1.createCell(1);
-            cell.setCellValue(employmentRate.getFirstEmploymentRate());
+            cell.setCellValue(Double.parseDouble(employmentRate.getFirstEmploymentRate()));
             cell.setCellStyle(style);
             cell = row1.createCell(2);
-            cell.setCellValue(employmentRate.getLastEmploymentRate());
+            cell.setCellValue(Double.parseDouble(employmentRate.getLastEmploymentRate()));
             cell.setCellStyle(style);
             cell = row1.createCell(3);
-            cell.setCellValue(employmentRate.getFirstIndex());
+            cell.setCellValue(Double.parseDouble(employmentRate.getFirstIndex()));
             cell.setCellStyle(style);
             cell = row1.createCell(4);
-            cell.setCellValue(employmentRate.getLastIndex());
+            cell.setCellValue(Double.parseDouble(employmentRate.getLastIndex()));
             cell.setCellStyle(style);
             cell = row1.createCell(5);
-            cell.setCellValue(employmentRate.getEmploymentRateIndex());
+            cell.setCellValue(Double.parseDouble(employmentRate.getEmploymentRateIndex()));
             cell.setCellStyle(style);
             rowNum++;
         }

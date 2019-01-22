@@ -46,7 +46,7 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
         List<EmploymentPractice> employmentPractices = new ArrayList<>();
         try {
             InputStream in = file.getInputStream();
-            DecimalFormat decimalFormat = new DecimalFormat("#.000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
+            DecimalFormat decimalFormat = new DecimalFormat("###0.000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
             listob = ExcelUtilTwo.getBankListByExcel(in,file.getOriginalFilename());
             //decimalFormat.setRoundingMode(RoundingMode.HALF_UP);//四舍五入
             //参赛总人数
@@ -78,7 +78,7 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 double v3 = Double.parseDouble(String.valueOf(objects1.get(10)));
                 if (v3 > quality) quality = v3;
             }
-            //遍历listob数据，把数据放到List中    DOWN-->UP
+            //遍历listob数据，把数据放到List中
             for (List<Object> objects : listob) {
                 EmploymentPractice employmentPractice = new EmploymentPractice();
                 //通过遍历实现把每一列封装成一个model中，再把所有的model用List集合装载

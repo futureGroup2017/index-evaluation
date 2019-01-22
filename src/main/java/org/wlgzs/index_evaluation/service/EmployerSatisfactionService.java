@@ -1,6 +1,5 @@
 package org.wlgzs.index_evaluation.service;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.extension.service.IService;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
