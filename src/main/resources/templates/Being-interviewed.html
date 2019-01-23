@@ -10,6 +10,13 @@
     <link rel="stylesheet" type="text/css" th:href="@{/dist/css/txt.wav.css}">
     <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/result.css}">
+    <style>
+        @keyframes daoru
+        {
+            from {transform:scale(0.5)}
+            to {transform:scale(1)}
+        }
+    </style>
 </head>
 <body>
 <header>
@@ -75,7 +82,7 @@
         <section>
             <input type="button" id="import" value="导入" class="result" />
             <input type="file" style="display: none" id="importfile" enctype="multipart/form-data">
-            <a id="link" href="#">
+            <a id="link" href="#" style="text-decoration:none;">
                 <input type="button" id="export" value="导出" class="result" />
             </a>
             <script>
@@ -101,6 +108,7 @@
                         }
                     });
                     $('#importfile').change(function () {
+                        $('#window-black').css('display','block');
                         var file =document.getElementById('importfile').files[0];
                         var formData = new FormData();
                         formData.append('year',select);
@@ -116,7 +124,10 @@
                             dataType: "json",
                             success: function (data) {
                                 if (data.code == 1) {
-                                    alert(data.msg);
+                                    $('#window-Tips').text('导入成功');
+                                    setTimeout(function () {
+                                        $('#window-black').css('display','none');
+                                    },1000);
                                     window.location.reload();
                                 } else{
                                     alert(data.msg);
@@ -128,6 +139,8 @@
                         if(select == ''){
                             alert('请选择年份!')
                         }else{
+                            $('#window-black').css('display','block');
+                            $('#window-Tips').text('删除中，请稍后');
                             $.ajax({
                                 type: "get",
                                 url: "/sq/delete",
@@ -137,7 +150,10 @@
                                 dataType: "json",
                                 success: function (data) {
                                     if (data.code == 1) {
-                                        alert(data.msg);
+                                        $('#window-Tips').text('删除成功');
+                                        setTimeout(function () {
+                                            $('#window-black').css('display','none');
+                                        },1000);
                                         window.location.reload();
                                     } else {
                                         alert("删除失败，请重试！");
@@ -189,7 +205,7 @@
             <input type="file" style="display: none" id="Correspondingfile">
             <div class="searrch">
                 <form th:action="@{/sq/search}" th:method="get">
-                    <input id="college" type="text" class="ipt" name="majorName">
+                    <input id="college" placeholder="请输入学院或专业" type="text" class="ipt" name="majorName">
                     <input type="text" style="display: none" id="searchyear" name="year">
                     <input type="submit" id="search" class="submit" value="搜索">
                 </form>
@@ -288,6 +304,15 @@
         };
     </script>
 </section>
+<div id="window-black" style="display: none;width: 100%;height: 100%;background:rgba(0,0,0,0.5);position: fixed;z-index: 9;top: 0;left: 0;">
+    <div style="width: 240px;height: 30px;position: absolute;top: 50%;left: 50%;margin-top: -15px;margin-left: -120px;">
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0s infinite;"></div>
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0.1s infinite;"></div>
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0.2s infinite;"></div>
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0.3s infinite;"></div>
+    </div>
+    <div id="window-Tips" style="color: white;font-size: 30px;width: 300px;height: 40px;position: absolute;top: 50%;left: 50%;text-align: center;margin-left: -150px;margin-top: 50px;">导入中，请稍后</div>
+</div>
 </body>
 <script th:src="@{/js/jquery-2.1.0.js}"></script>
 <script th:src="@{/dist/js/txt.wav.min.js}"></script>
