@@ -31,9 +31,11 @@
     </h1>
 			<ul class="rt_nav">
                 <li id="exportyear" style="display: none;">
-                    <input placeholder="请输入导出年份" id="iptyear" type="text" style="width: 200px;height: 30px;margin: 5px 0;background-color: white;padding: 0;padding-left: 5px;font-size: 14px">
-                    <input id="bntyear" type="button" value="导出" style="width: 60px;height: 30px;background-color: white;margin-left: -5px;">
-                </li>
+					<select id="selectyear" style="height:25px;width: 150px;margin: 10px 0;outline: none;border: 0;">
+						<option value="">请选择年份</option>
+						<option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
+					</select>
+				</li>
 				<li id="export" style="color: white;cursor: pointer">
 					<i class="fa fa-file-excel-o" style="font-size: 22px"></i><br/>
 					<span style="font-size: 12px">导出数据总表</span>
@@ -150,11 +152,12 @@
                         bool=!bool;
                     }
                 });
-                $('#bntyear').click(function () {
+                // 导出数据总表
+                $('#selectyear').change(function () {
 					var theref='lastExport?year=';
-                    var valu=$('#iptyear').val();
+                    var valu=$("#selectyear option:selected").val();
                     if(valu==''){
-                    	alert('年份不能为空！')
+                    	//alert('年份不能为空！')
 					}else{
 						theref+=valu;
 						window.location.href=theref;

@@ -9,9 +9,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.pojo.User;
+import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.UserService;
+import org.wlgzs.index_evaluation.service.YearService;
 
 import javax.servlet.http.HttpSession;
+import java.util.List;
 
 /**
  * @author zsh
@@ -26,6 +29,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private YearService yearService;
+
     @GetMapping("/")
     private ModelAndView toLogin(){
         ModelAndView modelAndView = new ModelAndView();
@@ -36,6 +42,8 @@ public class UserController {
    @GetMapping("/toindex")
     private ModelAndView toindex(){
         ModelAndView modelAndView = new ModelAndView();
+        List<Year> allYear = yearService.findAllYear();
+        modelAndView.addObject("allYear",allYear);
         modelAndView.setViewName("index");
         return modelAndView;
     }
@@ -54,6 +62,8 @@ public class UserController {
                 log.info("登陆成功");
                 modelAndView.setViewName("index");
                 session.setAttribute("user",u);
+                List<Year> allYear = yearService.findAllYear();
+                modelAndView.addObject("allYear",allYear);
                 return modelAndView;
             }else {
                 log.info("用户名或密码错误");
