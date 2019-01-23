@@ -82,12 +82,12 @@ public class StudentQualityController {
             model.addAttribute("mark", 1);
         }
         Page<StudentQuality> page = new Page<>(pageNum, pageSize);
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<StudentQuality>();
         if (query.getYear() != null && !query.getYear().equals("")) {
             queryWrapper.eq("year", query.getYear());
         }
         if (query.getMajorName() != null && !query.getMajorName().equals("")) {
-            queryWrapper.eq("major_name", query.getMajorName());
+            queryWrapper.eq("major_name", query.getMajorName()).or().eq("colleage_name",query.getMajorName());
         }
         List<Year> allYear = yearService.findAllYear();
         model.addAttribute("allYear", allYear);
