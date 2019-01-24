@@ -48,9 +48,9 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
         if(file==null || file.getOriginalFilename()==null || year==0){
             return new Result(ResultCodeEnum.UNIMport);
         }
-        if(!file.getOriginalFilename().equals("6.就业创业类实践指数样表.xlsx")){
+        if(!file.getOriginalFilename().equals("6.就业创业实践指数样表.xlsx")){
             Result result = new Result(ResultCodeEnum.FAIL);
-            result.setMsg("导入样表错误");
+            result.setMsg("上传文件错误，请确认是<6.就业创业实践指数样表.xlsx>");
             return result;
         }
         List<List<Object>> listob;

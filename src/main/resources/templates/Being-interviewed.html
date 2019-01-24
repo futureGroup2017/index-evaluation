@@ -77,9 +77,18 @@
 <section class="wrap " th:if="${mark == 1}">
     <div class="tables">
         <section>
-            <h1 class="top-title">生 活 质 量 指 数</h1>
+            <h1 class="top-title">生 源 质 量 指 数</h1>
         </section>
         <section>
+            <select class="selects" id="select" th:if="${query.getYear()!=null}">
+                <option th:value="${query.getYear()}" hidden disabled selected th:text="${query.getYear()}"></option>
+                <option value="">请选择年份</option>
+                <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
+            </select>
+            <select class="selects" id="select" th:if="${query.getYear()==null}">
+                <option value="" selected>请选择年份</option>
+                <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
+            </select>
             <input type="button" id="import" value="导入" class="result" />
             <input type="file" style="display: none" id="importfile" enctype="multipart/form-data">
             <a id="link" href="#" style="text-decoration:none;">
@@ -87,17 +96,20 @@
             </a>
             <script>
                 window.onload=function () {
-                    //获取年份
+                    // 拿到所有操作的年份// 用于导出
                     var select='';
                     $('#select').change(function () {
                         select = $("#select option:selected").val();
-                        var link='/sq/export?year='+select;
-                        $('#link').attr('href',link);
-                        $('#searchyear').val(select);
+                        var Url = "/sq/export?year=";
+                        Url = Url+select;
+                        if(select == ''){
+                            Url='#';
+                        }
+                        $("#link").attr('href',Url);
                     });
-                    $('#export').click(function () {
-                        if($('#link').attr('href') == '#'){
-                            alert('请选择年份');
+                    $("#export").click(function () {
+                        if( $('#link').attr('href') == '#' ){
+                            alert("请选择年份！")
                         }
                     });
                     // 导入
@@ -181,15 +193,6 @@
                     })
                 }
             </script>
-            <select class="selects" id="select" th:if="${query.getYear()!=null}">
-                <option th:value="${query.getYear()}" hidden disabled selected th:text="${query.getYear()}"></option>
-                <option value="">请选择年份</option>
-                <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
-            </select>
-            <select class="selects" id="select" th:if="${query.getYear()==null}">
-                <option value="" selected>请选择年份</option>
-                <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
-            </select>
             <input type="button" id="delete" value="删除" class="result" />
             <input type="button" class="reinport result" value="重新导入学院专业对应表">
             <input type="file" style="display: none" id="Correspondingfile">

@@ -102,14 +102,22 @@
             <input type="submit" id="delete" value="删除" class="result"/>
             <input type="file" name="file" id="file" style="display: none">
             <script>
-                // 拿到所有操作的年份
+                // 拿到所有操作的年份// 用于导出
                 var select='';
                 $('#select').change(function () {
                     select = $("#select option:selected").val();
-                    var link='/sq/export?year='+select;
-                    $('#link').attr('href',link);
-                    $('#searchyear').val(select);
-                })
+                    var Url = "/es/export?year=";
+                    Url = Url+select;
+                    if(select == ''){
+                        Url='#';
+                    }
+                    $("#export").attr('href',Url);
+                });
+                $("#export-bot").click(function () {
+                    if( $('#export').attr('href') == '#' ){
+                        alert("请选择年份！")
+                    }
+                });
                 // 导入文件
                 $("#daoru").click(function () {
                     if ( select == ''){
@@ -165,21 +173,6 @@
                         })
                     }
                 });
-                //导出
-                $("#select").change(function () {
-                    var Url = "/es/export?year=";
-                    var years=$("#select option:selected").val();
-                    Url = Url+years;
-                    if(years == ''){
-                        Url='#';
-                    }
-                    $("#export").attr('href',Url);
-                });
-                $("#export-bot").click(function () {
-                    if( $('#export').attr('href') == '#' ){
-                        alert("请选择年份！")
-                    }
-                })
                 <!--用于查询搜索-->
             </script>
             <div class="searrch" style="position: absolute;top: 0;right: 0;">
