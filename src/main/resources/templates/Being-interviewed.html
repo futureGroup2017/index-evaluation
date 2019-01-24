@@ -87,6 +87,7 @@
             </a>
             <script>
                 window.onload=function () {
+                    //获取年份
                     var select='';
                     $('#select').change(function () {
                         select = $("#select option:selected").val();
@@ -127,7 +128,7 @@
                                 setTimeout(function () {
                                     $('#window-black').css('display','none');
                                 },1000);
-                                window.location.reload();
+                                window.location.href='/sq/search';
                             }
                         })
                     });
@@ -145,15 +146,11 @@
                                 },
                                 dataType: "json",
                                 success: function (data) {
-                                    if (data.code == 1) {
-                                        $('#window-Tips').text('删除成功');
-                                        setTimeout(function () {
-                                            $('#window-black').css('display','none');
-                                        },1000);
-                                        window.location.href="/sq/search";
-                                    } else {
-                                        alert("删除失败，请重试！");
-                                    }
+                                    $('#window-Tips').text(data.msg);
+                                    setTimeout(function () {
+                                        $('#window-black').css('display','none');
+                                    },1000);
+                                    window.location.href='/sq/search';
                                 }
                             })
                         }
@@ -161,10 +158,8 @@
                     $('.reinport').click(function () {
                         $('#Correspondingfile').click();
                     });
-                    $('#Reimport').click(function () {
-                        $('#Correspondingfile').click();
-                    });
                     $('#Correspondingfile').change(function () {
+                        $('#window-black').css('display','block');
                         var formData = new FormData();
                         formData.append('file',document.getElementById('Correspondingfile').files[0]);
                         $.ajax({
@@ -176,12 +171,11 @@
                             mimeType:"multipart/form-data",
                             dataType: "json",
                             success: function (data) {
-                                if (data.code == 1) {
-                                    alert("导入成功");
-                                    window.location.reload();
-                                } else {
-                                    alert("导入失败，请重试！");
-                                }
+                                $('#window-Tips').text(data.msg);
+                                setTimeout(function () {
+                                    $('#window-black').css('display','none');
+                                },1000);
+                                window.location.href='/sq/search';
                             }
                         })
                     })
@@ -265,40 +259,6 @@
 <section class="wrap " th:if="${mark == -1}">
     <input type="button" class="result Corresponding" value="导入学院专业对应表">
     <input type="file" style="display: none" id="Correspondingfile">
-    <!------------------------------------------------------------------>
-    <!------------------用于提交专业学院对应关系表---------------------->
-    <!------------------------------------------------------------------>
-    <script>
-        window.onload=function () {
-            $('.Corresponding').click(function () {
-                $('#Correspondingfile').click();
-            });
-            $('#Reimport').click(function () {
-                $('#Correspondingfile').click();
-            });
-            $('#Correspondingfile').change(function () {
-                var formData = new FormData();
-                formData.append('file',document.getElementById('Correspondingfile').files[0]);
-                $.ajax({
-                    type: "post",
-                    url: "/major/import",
-                    processData:false,
-                    data:formData,
-                    contentType:false,
-                    mimeType:"multipart/form-data",
-                    dataType: "json",
-                    success: function (data) {
-                        if (data.code == 1) {
-                            alert("导入成功");
-                            window.location.reload();
-                        } else {
-                            alert("导入失败，请重试！");
-                        }
-                    }
-                })
-            })
-        };
-    </script>
 </section>
 <div id="window-black" style="display: none;width: 100%;height: 100%;background:rgba(0,0,0,0.5);position: fixed;z-index: 9;top: 0;left: 0;">
     <div style="width: 240px;height: 30px;position: absolute;top: 50%;left: 50%;margin-top: -15px;margin-left: -120px;">
