@@ -46,7 +46,7 @@ public class EmployerSatisfactionController {
     public Result importExcel(@RequestParam("file") MultipartFile multipartFile, String year) throws IOException {
         if (multipartFile != null) {
             String string = multipartFile.getOriginalFilename();
-            if (!string.contains("5.用人单位满意度样表.xlsx")) {
+            if (!string.contains("5.用人单位满意度指数样表.xlsx")) {
                 return new Result(-1, "请确认文件名是否为--<5.用人单位满意度样表.xlsx>");
             }
         }
