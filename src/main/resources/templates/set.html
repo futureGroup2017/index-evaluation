@@ -11,7 +11,15 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/result.css}">
     <script th:src="@{/js/jquery.js}"></script>
-    <style>form{display: inline-block;}
+    <style>
+        form{
+            display: inline-block;
+        }
+        @keyframes daoru
+        {
+            from {transform:scale(0.5)}
+            to {transform:scale(1)}
+        }
     </style>
     <script th:inline="javascript">var deleteMessages = [[${msg}]];if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') {alert(deleteMessages);}</script>
 </head>
@@ -57,7 +65,7 @@
         <li>
             <a th:href="@{/employmentRate/findAll}">就业率指数</a>
         </li>
-        <li>
+        <li style="white-space : nowrap;">
             <a th:href="@{/es/search}">用人单位满意度指数</a>
         </li>
         <li>
@@ -91,39 +99,81 @@
             <a id="export" th:if="${query.getYear()!=null}" th:href="@{/em/export(year=${query.getYear()})}"><input type="button" id="export-bot" value="导出" class="result" /></a>
             <a id="export" th:if="${query.getYear()==null}" href="#"><input type="button" id="export-bot" value="导出" class="result" /></a>
             <!--用于删除-->
-            <form th:action="@{/em/delete}" th:method="get">
-                <input type="text"  id="delete-year" name="year" class="year" style="display: none">
+            <!--<form th:action="@{/em/delete}" th:method="get">-->
+                <!--<input type="text"  id="delete-year" name="year" class="year" style="display: none">-->
                 <input type="submit" id="delete" value="删除" class="result"/>
-            </form>
+            <!--</form>-->
             <!--用于文件上传   导入-->
-            <form th:action="@{/em/import}" th:method="post" enctype="multipart/form-data">
-                <input class="year" id="import-year" type="text" name="year" style="display: none">
-                <input type="file" name="upfile" id="file" style="display: none">
-                <input type="submit" id="import" style="display: none">
-            </form>
+            <!--<form th:action="@{/em/import}" th:method="post" enctype="multipart/form-data">-->
+                <!--<input class="year" id="import-year" type="text" name="year" style="display: none">-->
+                <input type="file"  id="file" style="display: none">
+                <!--<input type="submit" id="import" style="display: none">-->
+            <!--</form>-->
             <script>
-                document.getElementById("daoru").onclick=function () {
-                    document.getElementById("file").click();
-                };
-                $("#file").change(function () {
-                    $("#import").click();
+                // 拿到所有操作的年份
+                var select='';
+                $('#select').change(function () {
+                    select = $("#select option:selected").val();
+                    var link='/sq/export?year='+select;
+                    $('#link').attr('href',link);
+                    $('#searchyear').val(select);
                 });
-                $("#select").change(function () {
-                    var years=$("#select option:selected").val();
-                    $(".year").val(years);
-                    $("#delete").attr("type","submit");
-                    $("#import").attr("type","submit");
+                // 导入文件
+                $("#daoru").click(function () {
+                    if ( select == ''){
+                        alert('请选择年份!');
+                    }else{
+                        document.getElementById("file").click();
+                    }
+                });
+                $('#file').change(function () {
+                    $('#window-black').css('display','block');
+                    var file =document.getElementById('file').files[0];
+                    var formData = new FormData();
+                    formData.append('year',select);
+                    formData.append('file',file);
+                    $.ajax({
+                        type: "post",
+                        url: "/em/import",
+                        processData:false,
+                        data:formData,
+                        contentType:false,
+                        mimeType:"multipart/form-data",
+                        dataType: "json",
+                        success: function (data) {
+                            $('#window-Tips').text(data.msg);
+                            setTimeout(function () {
+                                $('#window-black').css('display','none');
+                                window.location.href='/em/search';
+                            },1000);
+                        }
+                    })
                 });
                 // 删除
-                $("#delete").click(function () {
-                    var values=$("#delete-year").val();if ( values == ''){
-                        console.log('请选择年份!');}
-                });
-                // 导入
-                $("#import").click(function () {
-                    var values=$("#import-year").val();if ( values == ''){
-                        console.log('请选择年份!');}
-                });
+                $('#delete').click(function () {
+                    if(select == ''){
+                        alert('请选择年份!')
+                    }else{
+                        $('#window-black').css('display','block');
+                        $('#window-Tips').text('删除中，请稍后');
+                        $.ajax({
+                            type: "get",
+                            url: "/em/delete",
+                            data: {
+                                'year': select
+                            },
+                            dataType: "json",
+                            success: function (data) {
+                                $('#window-Tips').text(data.msg);
+                                setTimeout(function () {
+                                    $('#window-black').css('display','none');
+                                    window.location.href='/em/search';
+                                },1000);
+                            }
+                        })
+                    }
+                })
+                //导出
                 $("#select").change(function () {
                     var Url = "/em/export?year=";
                     var years=$("#select option:selected").val();
@@ -212,6 +262,15 @@
         </ul>
     </div>
 </section>
+<div id="window-black" style="display: none;width: 100%;height: 100%;background:rgba(0,0,0,0.5);position: fixed;z-index: 9;top: 0;left: 0;">
+    <div style="width: 240px;height: 30px;position: absolute;top: 50%;left: 50%;margin-top: -15px;margin-left: -120px;">
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0s infinite;"></div>
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0.1s infinite;"></div>
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0.2s infinite;"></div>
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0.3s infinite;"></div>
+    </div>
+    <div id="window-Tips" style="color: white;font-size: 30px;width: 300px;height: 40px;position: absolute;top: 50%;left: 50%;text-align: center;margin-left: -150px;margin-top: 50px;">导入中，请稍后</div>
+</div>
 </body>
 <script th:src="@{/js/jquery-2.1.0.js}"></script>
 <script th:src="@{/dist/js/txt.wav.min.js}"></script>

@@ -5,13 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.pojo.Year;
@@ -43,83 +41,29 @@ public class TeachersStructureController {
     private YearService yearService;
 
     @GetMapping("/delete")
-    public ModelAndView delete(Integer year,
-                               @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                               @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("result");
-        List<Year> allYear = yearService.findAllYear();
-        modelAndView.addObject("allYear",allYear);
-        List<TeachersStructure> byYear = teachersStructureService.findByYear(year);
-        List<TeachersStructure> allTeachersStructure;
+    @ResponseBody
+    public Result delete(Integer year){
         if (year == null){
-            modelAndView.addObject("msg","请选择年份后重试！");
-            Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-            QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-            IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-            modelAndView.addObject("current",iPage.getCurrent());//当前页数
-            modelAndView.addObject("pages",iPage.getPages());//总页数
-            modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
-            modelAndView.addObject("query",new Query());
-            return modelAndView;
+            return new Result(0,"请选择年份后重试！");
         }
+        List<TeachersStructure> byYear = teachersStructureService.findByYear(year);
         for (TeachersStructure t :byYear){
                 if (teachersStructureService.delete(t) == 0){
-                modelAndView.addObject("msg","删除出错，请重试！");
-                Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-                QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-                IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-                modelAndView.addObject("current",iPage.getCurrent());//当前页数
-                modelAndView.addObject("pages",iPage.getPages());//总页数
-                modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
-                modelAndView.addObject("query",new Query());
-                return modelAndView;
+                    return new Result(0,"删除出错，请重试！");
             }
         }
-        modelAndView.addObject("msg","删除成功");
-        Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-        QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-        IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-        modelAndView.addObject("current",iPage.getCurrent());//当前页数
-        modelAndView.addObject("pages",iPage.getPages());//总页数
-        modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
-        modelAndView.addObject("query",new Query());
-        return modelAndView;
+        return new Result(1,"删除成功");
     }
 
     @RequestMapping("/import")
-    public ModelAndView impor(HttpServletRequest request, Integer year,
-                              @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                              @RequestParam(name = "pageSize", defaultValue = "16") int pageSize) throws IOException {
-        ModelAndView modelAndView = new ModelAndView();
-        List<Year> allYear = yearService.findAllYear();
-        modelAndView.addObject("allYear",allYear);
-        modelAndView.setViewName("result");
+    public Result impor(@RequestParam(value = "file", required = false) MultipartFile file,Integer year) throws IOException {
         if (year == null){
-            Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-            QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-            IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-            modelAndView.addObject("current",iPage.getCurrent());//当前页数
-            modelAndView.addObject("pages",iPage.getPages());//总页数
-            modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
-            modelAndView.addObject("msg","请选择年份");
-            modelAndView.addObject("query",new Query());
-            return modelAndView;
+            return new Result(0,"请选择年份");
         }
         //获取上传的文件
-        MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
-        MultipartFile file = multipart.getFile("upfile");
         InputStream in = file.getInputStream();
         if (!file.getOriginalFilename().equals("师资结构指数样表.xlsx")){
-            modelAndView.addObject("msg","上传文件错误，请确认是师资结构指数样表.xlsx！");
-            Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-            QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-            IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-            modelAndView.addObject("current",iPage.getCurrent());//当前页数
-            modelAndView.addObject("pages",iPage.getPages());//总页数
-            modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
-            modelAndView.addObject("query",new Query());
-            return modelAndView;
+            return new Result(0,"上传文件错误，请确认是师资结构指数样表.xlsx！");
         }
         List<TeachersStructure> teachersStructures = teachersStructureService.importExcelInfo(in, file);
         DecimalFormat df2 = new DecimalFormat("#.00");
@@ -178,15 +122,7 @@ public class TeachersStructureController {
             t.setA2(Double.parseDouble(df2.format((t.getM1()*33.7+t.getGraNum()/t.getTeaNum()/max0*32.9+t.getSenNum()/t.getTeaNum()/max1*33.9)*0.1107)));
             teachersStructureService.update(t);
         }
-        modelAndView.addObject("msg","上传文件成功！");
-        Page<TeachersStructure> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-        QueryWrapper<TeachersStructure> queryWrapper = new QueryWrapper<>();
-        IPage<TeachersStructure> iPage = teachersStructureService.page(practiceQueryWrapper,queryWrapper);
-        modelAndView.addObject("current",iPage.getCurrent());//当前页数
-        modelAndView.addObject("pages",iPage.getPages());//总页数
-        modelAndView.addObject("allTeachersStructure",iPage.getRecords());//所有的数据集合
-        modelAndView.addObject("query",new Query());
-        return modelAndView;
+        return new Result(1,"上传文件成功！");
     }
 
     @RequestMapping("/export")
