@@ -12,11 +12,9 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.dao.EmployerSatisfactionMapper;
 import org.wlgzs.index_evaluation.pojo.EmployerSatisfaction;
-import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.service.EmployerSatisfactionService;
 
 import javax.annotation.Resource;
@@ -233,31 +231,21 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         workbook.write(response.getOutputStream());
     }
 
-    public void delete(Model model, Integer year, int pageNum, int pageSize) {
+    public boolean delete(String year) {
         QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<>();
-        Page<EmployerSatisfaction> page = new Page<>(pageNum, pageSize);
-        if (year != null) {
-            queryWrapper.eq("year", year);
+        if (year != null && !year.equals("")) {
+            queryWrapper.eq("year", Integer.parseInt(year));
             List<EmployerSatisfaction> employerSatisfactions = baseMapper.selectList(queryWrapper);
-            for (EmployerSatisfaction em : employerSatisfactions) {
-                baseMapper.deleteById(em.getEsId());
+            if (employerSatisfactions != null && employerSatisfactions.size() > 0) {
+                for (EmployerSatisfaction em : employerSatisfactions) {
+                    baseMapper.deleteById(em.getEsId());
+                }
+                return true;
+            } else {
+                return false;
             }
-            QueryWrapper<EmployerSatisfaction> wrapper = new QueryWrapper<>();
-            IPage<EmployerSatisfaction> iPage = baseMapper.selectPage(page, wrapper);
-            model.addAttribute("msg", "删除成功");
-            model.addAttribute("current", iPage.getCurrent());//当前页数
-            model.addAttribute("pages", iPage.getPages());//总页数
-            model.addAttribute("query", new Query());
-            model.addAttribute("employerSatisfactions", iPage.getRecords());//所有的数据集合
-
         } else {
-            model.addAttribute("msg", "删除失败");
-            IPage<EmployerSatisfaction> iPage = baseMapper.selectPage(page, queryWrapper);
-            model.addAttribute("msg", "请选择年份");
-            model.addAttribute("current", iPage.getCurrent());//当前页数
-            model.addAttribute("pages", iPage.getPages());//总页数
-            model.addAttribute("employerSatisfactions", iPage.getRecords());//所有的数据集合
+            return false;
         }
-
     }
 }
