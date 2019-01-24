@@ -14,14 +14,9 @@ public class IndexEvaluationApplicationTests {
 
     @Test
     public void contextLoads() {
-        Scanner scanner  = new Scanner(System.in);
-        while (scanner.hasNext()){
-            System.out.println("asdfawf");
-            String str = scanner.next();
-            System.out.println(str);
+
 
         }
-    }
 
 }
 
