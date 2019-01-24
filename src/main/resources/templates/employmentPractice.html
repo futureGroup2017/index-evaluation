@@ -116,9 +116,21 @@
                 var select='';
                 $('#select').change(function () {
                     select = $("#select option:selected").val();
-                    var link='/sq/export?year='+select;
-                    $('#link').attr('href',link);
-                    $('#searchyear').val(select);
+                });
+                //导出
+                $("#select").change(function () {
+                    var Url = "/employmentPractice/exportData?year=";
+                    var years = $("#select option:selected").val();
+                    Url = Url+years;
+                    if(years == ''){
+                        Url='#';
+                    }
+                    $("#export").attr('href',Url);
+                });
+                $("#export").click(function () {
+                    if( $('#export').attr('href') == '#' ){
+                        alert("请选择年份！")
+                    }
                 });
                 // 导入文件
                 $("#daoru").click(function () {
@@ -146,7 +158,7 @@
                             $('#window-Tips').text(data.msg);
                             setTimeout(function () {
                                 $('#window-black').css('display','none');
-                                window.location.href='/es/search';
+                                window.location.href='/employmentPractice/findAll';
                             },1000);
                         }
                     })
@@ -169,27 +181,12 @@
                                 $('#window-Tips').text(data.msg);
                                 setTimeout(function () {
                                     $('#window-black').css('display','none');
-                                    window.location.href='/es/search';
+                                    window.location.href='/employmentPractice/findAll';
                                 },1000);
                             }
                         })
                     }
                 });
-                //导出
-                $("#select").change(function () {
-                    var Url = "/employmentPractice/exportData?year=";
-                    var years = $("#select option:selected").val();
-                    Url = Url+years;
-                    if(years == ''){
-                        Url='#';
-                    }
-                    $("#export").attr('href',Url);
-                });
-                $("#export").click(function () {
-                    if( $('#export').attr('href') == '#' ){
-                        alert("请选择年份！")
-                    }
-                })
             </script>
             <!--用于查询搜索-->
             <div class="searrch" style="position: absolute;top: 0;right: 0;">
