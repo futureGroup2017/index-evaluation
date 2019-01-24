@@ -25,6 +25,6 @@ public interface EmployerSatisfactionService extends IService<EmployerSatisfacti
     //导出excel表
     void exportData(int year, HttpServletResponse response) throws IOException;
     //删除数据
-    void delete(Model model, Integer year, int pageNum, int pageSize);
+    boolean delete(String year);
 
 }
