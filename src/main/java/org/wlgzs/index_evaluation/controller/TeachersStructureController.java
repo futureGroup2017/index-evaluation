@@ -62,8 +62,8 @@ public class TeachersStructureController {
         }
         //获取上传的文件
         InputStream in = file.getInputStream();
-        if (!file.getOriginalFilename().equals("师资结构指数样表.xlsx")){
-            return new Result(0,"上传文件错误，请确认是师资结构指数样表.xlsx！");
+        if (!file.getOriginalFilename().equals("2.师资结构指数样表.xlsx")){
+            return new Result(0,"上传文件错误，请确认是<2.师资结构指数样表.xlsx>");
         }
         List<TeachersStructure> teachersStructures = teachersStructureService.importExcelInfo(in, file);
         DecimalFormat df2 = new DecimalFormat("#.00");
