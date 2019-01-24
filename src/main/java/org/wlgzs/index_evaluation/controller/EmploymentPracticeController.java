@@ -43,20 +43,7 @@ public class EmploymentPracticeController {
      */
     @PostMapping("/importData")
     public Result importData(Integer year, HttpServletRequest request){
-        Result result;
-        if(year==null){
-            result = new Result(ResultCodeEnum.SELECTYEAR);
-            log.info("请选择年份");
-            return result;
-        }
-        if(employmentPracticeService.importData(year, request)){
-            result = new Result(ResultCodeEnum.IMport);
-            log.info("导入成功");
-        } else {
-            result = new Result(ResultCodeEnum.UNIMport);
-            log.info("导入失败");
-        }
-        return result;
+        return employmentPracticeService.importData(year, request);
     }
 
     /**
