@@ -123,15 +123,11 @@
                             mimeType:"multipart/form-data",
                             dataType: "json",
                             success: function (data) {
-                                if (data.code == 1) {
-                                    $('#window-Tips').text('导入成功');
-                                    setTimeout(function () {
-                                        $('#window-black').css('display','none');
-                                    },1000);
-                                    window.location.reload();
-                                } else{
-                                    alert(data.msg);
-                                }
+                                $('#window-Tips').text(data.msg);
+                                setTimeout(function () {
+                                    $('#window-black').css('display','none');
+                                },1000);
+                                window.location.reload();
                             }
                         })
                     });

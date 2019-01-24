@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.wlgzs.index_evaluation.dao.EmploymentPracticeMapper;
+import org.wlgzs.index_evaluation.enums.Result;
+import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.EmploymentPractice;
 import org.wlgzs.index_evaluation.service.EmploymentPracticeService;
 import org.wlgzs.index_evaluation.util.ExcelUtilTwo;
@@ -35,12 +37,21 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
     private EmploymentPracticeMapper employmentPracticeMapper;
 
     @Override
-    public boolean importData(int year, HttpServletRequest request) {
+    public Result importData(Integer year, HttpServletRequest request) {
+        if(year==null){
+            log.info("请选择年份");
+            return new Result(ResultCodeEnum.SELECTYEAR);
+        }
         //获取上传的文件
         MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
         MultipartFile file = multipart.getFile("file");
         if(file==null || file.getOriginalFilename()==null || year==0){
-            return false;
+            return new Result(ResultCodeEnum.UNIMport);
+        }
+        if(!file.getOriginalFilename().equals("6.就业创业类实践指数样表.xlsx")){
+            Result result = new Result(ResultCodeEnum.FAIL);
+            result.setMsg("导入样表错误");
+            return result;
         }
         List<List<Object>> listob;
         List<EmploymentPractice> employmentPractices = new ArrayList<>();
@@ -133,7 +144,7 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
             e.printStackTrace();
         }
         log.info("就业创业实践数据："+employmentPractices);
-        return true;
+        return new Result(ResultCodeEnum.IMport);
     }
 
     @Override

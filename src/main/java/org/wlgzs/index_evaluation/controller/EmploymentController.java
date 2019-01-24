@@ -73,8 +73,8 @@ public class EmploymentController {
         }
         //获取上传的文件
         InputStream in = file.getInputStream();
-        if (!file.getOriginalFilename().equals("就业状态指数样表.xlsx")){
-            return new Result(0,"上传文件错误，请确认是就业状态指数样表.xlsx！");
+        if (!file.getOriginalFilename().equals("3.就业状态指数样表.xlsx")){
+            return new Result(0,"上传文件错误，请确认是<3.就业状态指数样表.xlsx>");
         }
         DecimalFormat df3 = new DecimalFormat("#.000");
         List<Employment> employments = employmentService.importExcelInfo(in, file);

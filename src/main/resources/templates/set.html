@@ -98,17 +98,8 @@
             <!--用于导出数据-->
             <a id="export" th:if="${query.getYear()!=null}" th:href="@{/em/export(year=${query.getYear()})}"><input type="button" id="export-bot" value="导出" class="result" /></a>
             <a id="export" th:if="${query.getYear()==null}" href="#"><input type="button" id="export-bot" value="导出" class="result" /></a>
-            <!--用于删除-->
-            <!--<form th:action="@{/em/delete}" th:method="get">-->
-                <!--<input type="text"  id="delete-year" name="year" class="year" style="display: none">-->
                 <input type="submit" id="delete" value="删除" class="result"/>
-            <!--</form>-->
-            <!--用于文件上传   导入-->
-            <!--<form th:action="@{/em/import}" th:method="post" enctype="multipart/form-data">-->
-                <!--<input class="year" id="import-year" type="text" name="year" style="display: none">-->
                 <input type="file"  id="file" style="display: none">
-                <!--<input type="submit" id="import" style="display: none">-->
-            <!--</form>-->
             <script>
                 // 拿到所有操作的年份
                 var select='';
