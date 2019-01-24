@@ -185,46 +185,47 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("year", year);
         List<EmployerSatisfaction> employerSatisfactionList = employerSatisfactionMapper.selectList(queryWrapper);
-
         HSSFCell cell;
         double num = 0;
-        for (EmployerSatisfaction employerSatisfaction :
-                employerSatisfactionList) {
-            num += employerSatisfaction.getSatisfactionIndex();
-            HSSFRow row1 = sheet.createRow(rowNum);
-            row1.setHeightInPoints(25);
-            //创建各列
-            cell = row1.createCell(0);
-            cell.setCellValue(employerSatisfaction.getCollege());
-            style.setAlignment(HSSFCellStyle.ALIGN_LEFT);
-            cell.setCellStyle(style);
-            cell = row1.createCell(1);
-            style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
-            cell.setCellValue(employerSatisfaction.getLevel());
-            cell.setCellStyle(style);
-            cell = row1.createCell(2);
-            cell.setCellValue(employerSatisfaction.getAbility());
-            cell.setCellStyle(style);
-            cell = row1.createCell(3);
-            cell.setCellValue(employerSatisfaction.getMatched());
-            cell.setCellStyle(style);
-            cell = row1.createCell(4);
-            cell.setCellValue(employerSatisfaction.getSatisfaction());
-            cell.setCellStyle(style);
-            cell = row1.createCell(5);
-            cell.setCellValue(employerSatisfaction.getSatisfactionIndex());
-            cell.setCellStyle(style);
-            cell = row1.createCell(6);
-            cell.setCellStyle(style);
-            rowNum++;
+        if(employerSatisfactionList !=null && employerSatisfactionList.size()>0) {
+            for (EmployerSatisfaction employerSatisfaction :
+                    employerSatisfactionList) {
+                num += employerSatisfaction.getSatisfactionIndex();
+                HSSFRow row1 = sheet.createRow(rowNum);
+                row1.setHeightInPoints(25);
+                //创建各列
+                cell = row1.createCell(0);
+                cell.setCellValue(employerSatisfaction.getCollege());
+                style.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+                cell.setCellStyle(style);
+                cell = row1.createCell(1);
+                style.setAlignment(HSSFCellStyle.ALIGN_CENTER);
+                cell.setCellValue(employerSatisfaction.getLevel());
+                cell.setCellStyle(style);
+                cell = row1.createCell(2);
+                cell.setCellValue(employerSatisfaction.getAbility());
+                cell.setCellStyle(style);
+                cell = row1.createCell(3);
+                cell.setCellValue(employerSatisfaction.getMatched());
+                cell.setCellStyle(style);
+                cell = row1.createCell(4);
+                cell.setCellValue(employerSatisfaction.getSatisfaction());
+                cell.setCellStyle(style);
+                cell = row1.createCell(5);
+                cell.setCellValue(employerSatisfaction.getSatisfactionIndex());
+                cell.setCellStyle(style);
+                cell = row1.createCell(6);
+                cell.setCellStyle(style);
+                rowNum++;
+            }
+            //创建合并单元格  ---begin
+            CellRangeAddress region = new CellRangeAddress(1, employerSatisfactionList.size(), 6, 6);// 下标从0开始 起始行号，终止行号， 起始列号，终止列号
+            sheet.addMergedRegion(region);  //添加
+            cell = sheet.getRow(1).getCell(6);
+            double arrage = num / employerSatisfactionList.size();
+            DecimalFormat df = new DecimalFormat("#.000");
+            cell.setCellValue(df.format(arrage));   //向合并的单元格设置值
         }
-        //创建合并单元格  ---begin
-        CellRangeAddress region = new CellRangeAddress(1, employerSatisfactionList.size(), 6, 6);// 下标从0开始 起始行号，终止行号， 起始列号，终止列号
-        sheet.addMergedRegion(region);  //添加
-        cell = sheet.getRow(1).getCell(6);
-        double arrage = num / employerSatisfactionList.size();
-        DecimalFormat df = new DecimalFormat("#.000");
-        cell.setCellValue(df.format(arrage));   //向合并的单元格设置值
         response.setContentType("application/octet-stream");
         response.setHeader("Content-disposition", "attachment;filename=" + fileName);
         response.flushBuffer();

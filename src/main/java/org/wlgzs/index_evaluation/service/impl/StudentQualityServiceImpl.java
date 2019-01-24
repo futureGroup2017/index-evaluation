@@ -440,6 +440,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 ) {
             QueryWrapper<StudentQuality> wrapper = new QueryWrapper<>();
             wrapper.eq("colleage_name", college.getCollegeName());
+            wrapper.eq("year",year);
             List<StudentQuality> list = baseMapper.selectList(wrapper);
             for (StudentQuality studentQuality : list
                     ) {
