@@ -138,9 +138,9 @@ public class LastController {
         for (Last last : lastList) {
             if(last.getCollege()!=null && last.getStudentQuality()!=null && last.getTeachersStructure()!=null && last.getEmployment()!=null
                     && last.getEmploymentRate()!=null && last.getEmployerSatisfaction()!=null && last.getEmploymentPractice()!=null){
-                index = Double.parseDouble(last.getStudentQuality()) * 10.08 / 100 + Double.parseDouble(last.getTeachersStructure()) * 11.07 / 100
-                        + Double.parseDouble(last.getEmployment()) * 25.3 / 100 + Double.parseDouble(last.getEmploymentRate()) * 24.95 / 100
-                        + Double.parseDouble(last.getEmployerSatisfaction()) * 13.25 / 100 + Double.parseDouble(last.getEmploymentPractice()) * 15.35 / 100;
+                index = Double.parseDouble(last.getStudentQuality())+ Double.parseDouble(last.getTeachersStructure())
+                        + Double.parseDouble(last.getEmployment()) + Double.parseDouble(last.getEmploymentRate())
+                        + Double.parseDouble(last.getEmployerSatisfaction()) + Double.parseDouble(last.getEmploymentPractice());
                 last.setLastEmployment(decimalFormat.format(new BigDecimal(String.valueOf(index))));
             }
         }
