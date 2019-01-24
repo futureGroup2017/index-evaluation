@@ -44,6 +44,22 @@ public class EmployerSatisfactionController {
      */
     @PostMapping("/import")
     public Result importExcel(@RequestParam("file") MultipartFile multipartFile, String year) throws IOException {
+        if (multipartFile != null) {
+            String string = multipartFile.getOriginalFilename();
+            if (!string.contains("5.用人单位满意度样表.xlsx")) {
+                return new Result(-1, "请确认文件名是否为--<5.用人单位满意度样表.xlsx>");
+            }
+        }
+        QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<EmployerSatisfaction>();
+        if (year != null && !year.equals("")) {
+            queryWrapper.eq("year", Integer.parseInt(year));
+            queryWrapper.last("limit 2");
+            List<EmployerSatisfaction> list = empService.list(queryWrapper);
+            if (list != null && list.size() > 0) {
+                return new Result(0, "导入数据重复");
+            }
+
+        }
         List<EmployerSatisfaction> list = empService.importExcel(multipartFile, year);
         boolean isTrue = empService.add(list);
         if (isTrue) {
@@ -88,6 +104,7 @@ public class EmployerSatisfactionController {
         model.addAttribute("query", query);
         return new ModelAndView("employment");
     }
+
     @GetMapping("/delete")
     public Result delete(String year) {
         boolean isDelete = empService.delete(year);

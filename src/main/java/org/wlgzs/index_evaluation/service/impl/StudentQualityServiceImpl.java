@@ -580,9 +580,20 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             } catch (IOException e) {
                 e.printStackTrace();
             } finally {
-                if (bis != null) {
+                if (bis != null ) {
                     try {
+
                         bis.close();
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (os!=null){
+                    try {
+
+                        os.close();
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
