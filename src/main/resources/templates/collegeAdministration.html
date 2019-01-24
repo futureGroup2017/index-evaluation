@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>就业工作考核数据分析系统</title>
+    <link rel="shortcut icon" th:href="@{/images/favicon.ico}" type="image/x-icon" />
+    <link rel="stylesheet" type="text/css" th:href="@{/font-awesome-4.7.0/css/font-awesome.min.css}">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/dist/css/txt.wav.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/result.css}">
+    <script th:src="@{/js/jquery.js}"></script>
+    <style>
+        .changebotton{
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        .changeipt{
+            background-color: #19a97b00;
+            color: #000000;
+            cursor: auto;
+            border-radius: 0;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;left: 0;
+            display: none;
+            text-align: center;
+            border:0;
+        }
+        #addyear{
+            width: 0;
+            transition: 1s;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>
+        <img th:src="@{/images/top1.png}"/>
+        <span class="txtwav bounce">河南科技学院</span>
+    </h1>
+    <ul class="rt_nav">
+        <li>
+            <a href="index.html" target="_blank" class="website_icon">
+                <i class="fa fa-fire"></i>
+                <span>站点首页</span>
+            </a>
+        </li>
+        <li>
+            <a href="login.html" class="quit_icon">
+                <i class="fa fa-send"></i>
+                <span>安全退出</span>
+            </a>
+        </li>
+    </ul>
+</header>
+<aside class="aside_nav">
+    <ul>
+        <div class="closeche">
+            <i class="fa fa-caret-right"></i>
+        </div>
+        <li>
+            <a th:href="@{/toindex}" th:target="_self">欢迎登录</a>
+        </li>
+        <li>
+            <a th:href="@{/sq/search}">生源质量指数</a>
+        </li>
+        <li>
+            <a th:href="@{/ts/search}">师资结构指数</a>
+        </li>
+        <li>
+            <a th:href="@{/em/search}">就业状态指数</a>
+        </li>
+        <li>
+            <a th:href="@{/employmentRate/findAll}">就业率指数</a>
+        </li>
+        <li  style="white-space : nowrap;">
+            <a th:href="@{/es/search}">用人单位满意度指数</a>
+        </li>
+        <li>
+            <a th:href="@{/employmentPractice/findAll}">就业创业实践指数</a>
+        </li>
+        <li>
+            <a th:href="@{/year/to}">年份管理</a>
+        </li>
+        <li class="active">
+            <a th:href="@{/college/to}">学院管理</a>
+            <i class="fa fa-angle-double-right"></i>
+        </li>
+    </ul>
+</aside>
+<section class="wrap ">
+    <div class="tables">
+        <section>
+            <h1 class="top-title">学 院 管 理</h1>
+        </section>
+        <section>
+            <!---------------------------添加学院------------------------>
+            <input type="text" id="addyear">
+            <input type="button" id="daoru" value="添加" class="result" />
+            <script>
+                window.onload=function(){
+                    $('#daoru').click(function(){
+                        $(this).attr('type','submit');
+                        $("#addyear").css('width','200px');
+                        $("#addyear").css('border','solid 2px #19a97b');
+                        $("#addyear").css('padding-left','10px');
+                    });
+                    $("#daoru").click(function () {
+                        var vall = $('#addyear').val();
+                        if(vall != '') {
+                            vall = $('#addyear').val();
+                            console.log(vall);
+                            $.ajax({
+                                type: "post",
+                                url: "/college",
+                                data: {
+                                    'collegeName': vall
+                                },
+                                dataType: "json",
+                                success: function () {
+                                    alert('添加成功');
+                                    window.location.reload();
+                                }
+                            })
+                        }
+                    })
+                };
+            </script>
+            <!------------------------搜索年份-------------------------------->
+            <div class="searrch">
+                <form th:action="@{/college/page}" th:method="get">
+                    <input type="text" placeholder="请输入学院名称" name="keyword" class="ipt">
+                    <input type="submit" class="submit" value="搜索">
+                </form>
+            </div>
+        </section>
+        <div class="resultform">
+            <table class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>年份</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="colle ,userStat: ${allCollege}" >
+                    <td th:text="${userStat.index+1}">1</td>
+                    <td>
+                        <div class="changebotton">
+                            <span class="span deleteyear" th:text="${colle.getCollegeName()}"></span>
+                            <input class="changeipt" type="text" th:value="${colle.getCollegeName()}">
+                        </div>
+                        <div th:text="${colle.getCollegeId()}" style="display: none;"></div>
+                    </td>
+                    <td th:text="${colle.getCollegeId()}" style="display: none" id="yearid"></td>
+                    <td><input type="button" value="删除"  class="result delete" /></td>
+                </tr>
+                <script>
+                    // ------------------修改数据-----------------------
+                    $('.changeipt').blur(function () {
+                        var year =$(this).val();
+                        var prev = $(this).prev().text();
+                        var yearid= $(this).parent().next().text();
+                        if (year != prev){
+                            $.ajax({
+                                type: "put",
+                                url: "/college",
+                                data: {
+                                    'collegeId':yearid,
+                                    'collegeName': year
+                                },
+                                dataType: "json",
+                                success: function () {
+                                    alert("修改成功！");
+                                    window.location.reload();
+                                }
+                            })
+                        }
+                    });
+                    // ------------------删除数据-----------------------
+                    $('.delete').click(function () {
+                        var year = $(this).parent().prev().text();
+                        console.log(year);
+                        $.ajax({
+                            type: "delete",
+                            url: "/college/"+year,
+                           /* data: {
+                                'collegeId': year
+                            },*/
+                            dataType: "json",
+                            success: function () {
+                                alert("删除成功！");
+                                window.location.reload();
+                            }
+                        })
+                    });
+                </script>
+            </table>
+            <script>
+                $(document).ready(function(){
+                    $('.changebotton').click(function(){
+                        $(this).children(":first").css('color','#ddd');
+                        $(this).children().css('display','block');
+                        $(this).children().focus();
+                        var text = $(this).children('input').val();
+                        $(this).children('input').val('');
+                        $(this).children('input').val(text);
+                    })
+                    $('.changeipt').blur(function(){
+                        var ipt = $(this).val();
+                        $(this).prev().text(ipt);
+                        $(this).prev().css('color','#333');
+                        $('.changeipt').css('display','none');
+                    });
+                })
+            </script>
+        </div>
+    </div>
+</section>
+</body>
+<script th:src="@{/js/jquery-2.1.0.js}"></script>
+<script th:src="@{/dist/js/txt.wav.min.js}"></script>
+<script th:src="@{/js/result.js}"></script>
+<script type="text/javascript">
+    $(function() {
+        //确定文档高度
+        var winheight = $(window).height();
+        winheight -= 70;
+        $('.wrap').css('height', winheight);
+        //点击缩回
+        $('.closeche').on('click', function() {
+            if($('.aside_nav').css('left') == '0px') {
+                $('.aside_nav').css('left', '-210px');
+                $('.wrap').css({
+                    'width': '95%',
+                    'margin-left': '40px'
+                });
+            } else {
+                $('.aside_nav').css('left', '0px');
+                $('.wrap').css({
+                    'width': '',
+                    'margin-left': '258px'
+                })
+            }
+        })
+    });
+</script>
+</html>
