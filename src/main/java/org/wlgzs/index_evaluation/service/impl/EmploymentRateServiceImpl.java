@@ -49,7 +49,7 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
         }
         if(!file.getOriginalFilename().equals("4.就业率指数样表.xlsx")){
             Result result = new Result(ResultCodeEnum.FAIL);
-            result.setMsg("导入样表错误");
+            result.setMsg("上传文件错误，请确认是<4.就业率指数样表.xlsx>");
             return result;
         }
         List<List<Object>> listob;
