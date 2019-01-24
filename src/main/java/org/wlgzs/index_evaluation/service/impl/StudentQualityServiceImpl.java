@@ -226,7 +226,6 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<>();
                 queryWrapper.eq("major_name", majorName);
                 queryWrapper.eq("year", year);
-                System.out.println(majorName+"sdfsdfdsfdsf");
                 //查找是否存在与专升本相同的专业
                 List<StudentQuality> studentList = baseMapper.selectList(queryWrapper);
                 double score = (list.get(i - 1) / maxNum) * 100;
@@ -289,7 +288,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 studentQuality.setColleageAdvantage(reserveDecimal(result_average, 3));
                 studentQuality.setYieldRate(reserveDecimal(yieldRate, 3));
                 studentQuality.setColleageQuality(reserveDecimal(avrageMajorAdvantage, 3));
-                studentQuality.setColleageName(colleage);
+                studentQuality.setColleageName(colleage.trim());
                 System.out.println(studentQuality.toString());
                 baseMapper.updateById(studentQuality);
             }
