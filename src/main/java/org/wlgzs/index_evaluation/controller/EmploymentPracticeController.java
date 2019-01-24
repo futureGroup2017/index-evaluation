@@ -7,6 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.wlgzs.index_evaluation.enums.Result;
+import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.EmploymentPractice;
 import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.pojo.Year;
@@ -40,41 +42,21 @@ public class EmploymentPracticeController {
      * @param request
      */
     @PostMapping("/importData")
-    public ModelAndView importData(Query query,Integer year,Model model, HttpServletRequest request,
-                                   @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                                   @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
-        Page<EmploymentPractice> practicePage = new Page<>(pageNum,pageSize);
-        QueryWrapper<EmploymentPractice> practiceQueryWrapper = new QueryWrapper<>();
-        if (query.getYear() != null){
-            practiceQueryWrapper.eq("year",query.getYear());
-        }
-        if (query.getCollege() != "" && query.getCollege() != null){
-            practiceQueryWrapper.eq("college",query.getCollege());
-        }
-        IPage<EmploymentPractice> page = employmentPracticeService.page(practicePage, practiceQueryWrapper);
-        model.addAttribute("current",page.getCurrent());//当前页数
-        model.addAttribute("pages",page.getPages());   //总页数
-        model.addAttribute("lists",page.getRecords()); //集合
-        List<Year> allYear = yearService.findAllYear();
-        model.addAttribute("query",query);
-        model.addAttribute("allYear",allYear);//年份
+    public Result importData(Integer year, HttpServletRequest request){
+        Result result;
         if(year==null){
-            model.addAttribute("msg","请选择年份");
+            result = new Result(ResultCodeEnum.SELECTYEAR);
             log.info("请选择年份");
-            return new ModelAndView("employmentPractice");
+            return result;
         }
         if(employmentPracticeService.importData(year, request)){
-            model.addAttribute("msg","导入成功");
+            result = new Result(ResultCodeEnum.IMport);
             log.info("导入成功");
         } else {
-            model.addAttribute("msg","导入失败");
+            result = new Result(ResultCodeEnum.UNIMport);
             log.info("导入失败");
         }
-        page = employmentPracticeService.page(practicePage, practiceQueryWrapper);
-        model.addAttribute("current",page.getCurrent());//当前页数
-        model.addAttribute("pages",page.getPages());   //总页数
-        model.addAttribute("lists",page.getRecords()); //集合
-        return new ModelAndView("employmentPractice");
+        return result;
     }
 
     /**
@@ -122,41 +104,28 @@ public class EmploymentPracticeController {
      * @param year
      */
     @DeleteMapping("/deleteYear")
-    public ModelAndView deleteYear(Query query,Integer year,Model model,
-                                   @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                                   @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
-        Page<EmploymentPractice> practicePage = new Page<>(pageNum,pageSize);
-        QueryWrapper<EmploymentPractice> practiceQueryWrapper = new QueryWrapper<>();
-        IPage<EmploymentPractice> page = employmentPracticeService.page(practicePage, practiceQueryWrapper);
-        model.addAttribute("current",page.getCurrent());//当前页数
-        model.addAttribute("pages",page.getPages());   //总页数
-        model.addAttribute("lists",page.getRecords()); //集合
-        List<Year> allYear = yearService.findAllYear();
-        model.addAttribute("query",query);
-        model.addAttribute("allYear",allYear);//年份
+    public Result deleteYear(Integer year){
+        Result result;
         if(year==null){
-            model.addAttribute("msg","请选择年份");
+            result = new Result(ResultCodeEnum.SELECTYEAR);
             log.info("请选择年份");
-            return new ModelAndView("employmentPractice");
+            return result;
         }
+        QueryWrapper<EmploymentPractice> practiceQueryWrapper = new QueryWrapper<>();
         practiceQueryWrapper.eq("year",year);
         if(employmentPracticeService.list(practiceQueryWrapper).size()==0){
-            model.addAttribute("msg","该年份数据不存在");
+            result = new Result(ResultCodeEnum.UNEXIST);
             log.info("该年份数据不存在");
-            return new ModelAndView("employmentPractice");
+            return result;
         }
         if(employmentPracticeService.deleteYear(year)){
-            model.addAttribute("msg","删除成功");
+            result = new Result(ResultCodeEnum.DELETE);
             log.info("删除成功");
         } else {
-            model.addAttribute("msg","删除失败");
+            result = new Result(ResultCodeEnum.UNDELETE);
             log.info("删除失败");
         }
-        page = employmentPracticeService.page(practicePage, practiceQueryWrapper);
-        model.addAttribute("current",page.getCurrent());//当前页数
-        model.addAttribute("pages",page.getPages());   //总页数
-        model.addAttribute("lists",page.getRecords()); //集合
-        return new ModelAndView("employmentPractice");
+        return result;
     }
 
 }

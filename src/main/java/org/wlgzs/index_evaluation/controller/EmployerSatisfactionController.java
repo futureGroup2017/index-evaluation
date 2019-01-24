@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
+import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.EmployerSatisfaction;
 import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.pojo.Year;
@@ -42,23 +43,15 @@ public class EmployerSatisfactionController {
      * @throws IOException
      */
     @PostMapping("/import")
-    public ModelAndView importExcel(Model model, @RequestParam("file") MultipartFile multipartFile, String year) throws IOException {
-        Page<EmployerSatisfaction> employerSatisfactionPage = new Page<>(1, 16);
+    public Result importExcel(@RequestParam("file") MultipartFile multipartFile, String year) throws IOException {
         List<EmployerSatisfaction> list = empService.importExcel(multipartFile, year);
         boolean isTrue = empService.add(list);
         if (isTrue) {
-            List<Year> allYear = yearService.findAllYear();
-            model.addAttribute("allYear", allYear);
-            QueryWrapper<EmployerSatisfaction> employerSatisfactionQueryWrapper = new QueryWrapper<>();
-            IPage<EmployerSatisfaction> iPage = empService.page(employerSatisfactionPage, employerSatisfactionQueryWrapper);
-            model.addAttribute("current", iPage.getCurrent());//当前页数
-            model.addAttribute("pages", iPage.getPages());//总页数
-            model.addAttribute("employerSatisfactions", iPage.getRecords());//所有的数据集合
-            model.addAttribute("query", new Query());
-            model.addAttribute("msg", "导入成功");
-        } else
-            model.addAttribute("msg", "导入失败");
-        return new ModelAndView("employment");
+            return new Result(1, "导入成功");
+        } else {
+            return new Result(-1, "导入失败");
+        }
+
     }
 
     /**
@@ -95,15 +88,13 @@ public class EmployerSatisfactionController {
         model.addAttribute("query", query);
         return new ModelAndView("employment");
     }
-
     @GetMapping("/delete")
-    public ModelAndView delete(Model model, Integer year,
-                               @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                               @RequestParam(name = "pageSize", defaultValue = "16") int pageSize) {
-        List<Year> allYear = yearService.findAllYear();
-        model.addAttribute("allYear", allYear);
-        empService.delete(model, year, pageNum, pageSize);
-        return new ModelAndView("employment");
+    public Result delete(String year) {
+        boolean isDelete = empService.delete(year);
+        if (isDelete) {
+            return new Result(1, "删除成功");
+        } else {
+            return new Result(-1, "没有该年份数据");
+        }
     }
-
 }
