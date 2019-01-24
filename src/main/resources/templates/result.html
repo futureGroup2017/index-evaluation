@@ -104,20 +104,13 @@
                 <input type="submit" id="delete" value="删除" class="result"/>
                 <input type="file" name="upfile" id="file" style="display: none">
             <script>
-                // 拿到所有操作的年份
+                // 拿到所有操作的年份// 用于导出
                 var select='';
                 $('#select').change(function () {
                     select = $("#select option:selected").val();
-                    var link='/sq/export?year='+select;
-                    $('#link').attr('href',link);
-                    $('#searchyear').val(select);
-                });
-                // 用于导出
-                $("#select").change(function () {
                     var Url = "/ts/export?year=";
-                    var years=$("#select option:selected").val();
-                    Url = Url+years;
-                    if(years == ''){
+                    Url = Url+select;
+                    if(select == ''){
                         Url='#';
                     }
                     $("#export").attr('href',Url);
