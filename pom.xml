@@ -2,17 +2,20 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.wlgzs</groupId>
+    <artifactId>index_evaluation</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <name>index_evaluation</name>
+    <description>Demo project for Spring Boot</description>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
         <version>2.1.1.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>org.wlgzs</groupId>
-    <artifactId>index_evaluation</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-    <name>index_evaluation</name>
-    <description>Demo project for Spring Boot</description>
 
     <repositories>
         <!--阿里云仓库-->
@@ -82,14 +85,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jetty</artifactId>
         </dependency>
-        <!--&lt;!&ndash; mybatis plus &ndash;&gt;-->
-        <!--<dependency>-->
-            <!--<groupId>com.baomidou</groupId>-->
-            <!--<artifactId>mybatis-plus</artifactId>-->
-            <!--<version>3.0.6</version>-->
-        <!--</dependency>-->
         <!-- 使用lombok简化代码 -->
-
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>

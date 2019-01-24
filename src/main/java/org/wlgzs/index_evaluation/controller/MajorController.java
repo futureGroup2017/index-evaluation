@@ -11,6 +11,7 @@ import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.Major;
 import org.wlgzs.index_evaluation.service.MajorService;
+
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
@@ -26,60 +27,64 @@ import java.util.List;
 public class MajorController {
     @Resource
     MajorService majorService;
+
     //导入专业与学院关系表
     @PostMapping("/import")
-    public Result importExcel(@RequestParam(value = "file",required = false) MultipartFile file) throws IOException {
+    public Result importExcel(@RequestParam(value = "file", required = false) MultipartFile file) throws IOException {
         String str = file.getOriginalFilename();//.equals("");
-        if (!str.contains("专业学院对应关系表")){
-            return new Result(0,"导入文件错误");
+        if (!str.equals("1.专业学院对应关系样表.xlsx")) {
+            return new Result(-1, "请确认文件名是否为--<1.专业学院对应关系样表.xlsx>");
         }
         QueryWrapper<Major> queryW = new QueryWrapper<>();
-        List<Major> majors =  majorService.list(queryW);
-        if (majors!=null &&  majors.size()>=0){
-            for (Major major:majors
-                 ) {
+        List<Major> majors = majorService.list(queryW);
+        if (majors != null && majors.size() >= 0) {
+            for (Major major : majors
+                    ) {
                 majorService.removeById(major.getMajorId());
             }
 
         }
-        boolean isTrue =  majorService.importExcel(file);
-        return new Result(1,"导入成功");
+        boolean isTrue = majorService.importExcel(file);
+        return new Result(1, "导入成功");
     }
+
     //添加专业
     @PostMapping
-    public Result add(Major major){
-        if (major!=null){
-         majorService.save(major);
-         return new Result(ResultCodeEnum.SAVE);
-        }else {
+    public Result add(Major major) {
+        if (major != null) {
+            majorService.save(major);
+            return new Result(ResultCodeEnum.SAVE);
+        } else {
             return new Result(ResultCodeEnum.UNSAVE);
         }
     }
+
     //删除专业
     @DeleteMapping("/{majorId}")
-    public Result delete(@PathVariable("majorId") int majorId ){
-        if (majorId!=0){
+    public Result delete(@PathVariable("majorId") int majorId) {
+        if (majorId != 0) {
             majorService.removeById(majorId);
             return new Result(ResultCodeEnum.DELETE);
-        }
-        else
+        } else
             return new Result(ResultCodeEnum.UNDELETE);
     }
+
     //修改专业
     @PutMapping()
-    public Result update(Major major){
-        if (major!=null){
+    public Result update(Major major) {
+        if (major != null) {
             majorService.save(major);
             return new Result(ResultCodeEnum.UPDATE);
-        }else
+        } else
             return new Result(ResultCodeEnum.UNUPDATE);
     }
+
     //查询全部专业
     @GetMapping()
-    public List<Major> findAll(Model model, @RequestParam(name="pageNum",defaultValue = "1") int pageNum, @RequestParam(name="pageSize",defaultValue = "10") int pageSize){
-        Page<Major> page  = new Page<>(pageNum,pageSize);
-        QueryWrapper<Major>  wrapper = new QueryWrapper<>();
-        IPage<Major> pageList = majorService.page(page,wrapper);
+    public List<Major> findAll(Model model, @RequestParam(name = "pageNum", defaultValue = "1") int pageNum, @RequestParam(name = "pageSize", defaultValue = "10") int pageSize) {
+        Page<Major> page = new Page<>(pageNum, pageSize);
+        QueryWrapper<Major> wrapper = new QueryWrapper<>();
+        IPage<Major> pageList = majorService.page(page, wrapper);
         return pageList.getRecords();
     }
 }

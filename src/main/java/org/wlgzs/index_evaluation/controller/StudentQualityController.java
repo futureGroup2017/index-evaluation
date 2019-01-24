@@ -41,9 +41,9 @@ public class StudentQualityController {
     @PostMapping("import")
     public Result importExcel(@RequestParam(value = "file", required = false) MultipartFile file, String year) {
         String fileName = file.getOriginalFilename();
-        boolean isContion = fileName.contains("生源质量指数原始数据表");
+        boolean isContion = fileName.equals("1.生源质量指数样表.xlsx");
         if (!isContion) {
-            return new Result(0, "导入文件错误");
+            return new Result(-1, "请确认文件名是否为--<1.生源质量指数样表.xlsx>");
         }
         QueryWrapper queryWrapper = new QueryWrapper();
         if (year != null && !year.equals("")) {
@@ -87,7 +87,7 @@ public class StudentQualityController {
             queryWrapper.eq("year", query.getYear());
         }
         if (query.getMajorName() != null && !query.getMajorName().equals("")) {
-            queryWrapper.eq("major_name", query.getMajorName()).or().eq("colleage_name",query.getMajorName());
+            queryWrapper.eq("major_name", query.getMajorName()).or().eq("colleage_name", query.getMajorName());
         }
         List<Year> allYear = yearService.findAllYear();
         model.addAttribute("allYear", allYear);
@@ -138,15 +138,15 @@ public class StudentQualityController {
         studentQualityService.exportData(Integer.parseInt(year), response);
     }
 
-/*
+    /*
 
-    @GetMapping("test")
-    public List<StudentQuality> test(@RequestParam("year") int year) {
-        return studentQualityService.getQualityIndex(year);
-    }
-*/
+        @GetMapping("test")
+        public List<StudentQuality> test(@RequestParam("year") int year) {
+            return studentQualityService.getQualityIndex(year);
+        }
+    */
     @GetMapping("/download")
-    public void  download(HttpServletResponse response){
+    public void download(HttpServletResponse response) {
         studentQualityService.download(response);
     }
 
