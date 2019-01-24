@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.wlgzs.index_evaluation.dao.EmploymentRateMapper;
+import org.wlgzs.index_evaluation.enums.Result;
+import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.EmploymentRate;
 import org.wlgzs.index_evaluation.service.EmploymentRateService;
 import org.wlgzs.index_evaluation.util.ExcelUtil;
@@ -34,12 +36,21 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
     private EmploymentRateMapper employmentRateMapper;
 
     @Override
-    public boolean importData(int year, HttpServletRequest request) {
+    public Result importData(Integer year, HttpServletRequest request) {
+        if(year==null){
+            log.info("请选择年份");
+            return new Result(ResultCodeEnum.SELECTYEAR);
+        }
         //获取上传的文件
         MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
         MultipartFile file = multipart.getFile("file");
         if(file==null || file.getOriginalFilename()==null || year==0){
-            return false;
+            return new Result(ResultCodeEnum.UNIMport);
+        }
+        if(!file.getOriginalFilename().equals("4.就业率指数样表.xlsx")){
+            Result result = new Result(ResultCodeEnum.FAIL);
+            result.setMsg("导入样表错误");
+            return result;
         }
         List<List<Object>> listob;
         List<EmploymentRate> employmentRateList = new ArrayList<>();
@@ -71,7 +82,7 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
             e.printStackTrace();
         }
         log.info("就业率数据："+employmentRateList);
-        return true;
+        return new Result(ResultCodeEnum.IMport);
     }
 
     @Override

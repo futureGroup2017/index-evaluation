@@ -1,6 +1,7 @@
 package org.wlgzs.index_evaluation.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.EmploymentPractice;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +15,7 @@ import java.io.IOException;
  */
 public interface EmploymentPracticeService extends IService<EmploymentPractice> {
 
-    boolean importData(int year, HttpServletRequest request);
+    Result importData(Integer year, HttpServletRequest request);
 
     boolean deleteYear(int year);
 

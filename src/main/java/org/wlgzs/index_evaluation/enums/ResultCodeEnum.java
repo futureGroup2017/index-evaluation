@@ -15,6 +15,10 @@ public enum ResultCodeEnum {
     UNFIND(-1,"查询失败"),
     DELETE(1,"删除成功"),
     UNDELETE(-1,"删除失败"),
+    SELECTYEAR(-1,"请选择年份"),
+    UNEXIST(-1,"该年份数据不存在"),
+    IMport(1,"导入成功"),
+    UNIMport(-1,"导入失败"),
     ;
 
     @Getter
