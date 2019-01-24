@@ -11,7 +11,15 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/index.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/result.css}">
     <script th:src="@{/js/jquery.js}"></script>
-    <style>form{display: inline-block;}
+    <style>
+        form{
+            display: inline-block;
+        }
+        @keyframes daoru
+        {
+            from {transform:scale(0.5)}
+            to {transform:scale(1)}
+        }
     </style>
     <script th:inline="javascript">var deleteMessages = [[${msg}]];if (deleteMessages !== null && deleteMessages !== undefined && deleteMessages !== '') { }</script>
 </head>
@@ -223,6 +231,15 @@
         </ul>
     </div>
 </section>
+<div id="window-black" style="display: none;width: 100%;height: 100%;background:rgba(0,0,0,0.5);position: fixed;z-index: 9;top: 0;left: 0;">
+    <div style="width: 240px;height: 30px;position: absolute;top: 50%;left: 50%;margin-top: -15px;margin-left: -120px;">
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0s infinite;"></div>
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0.1s infinite;"></div>
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0.2s infinite;"></div>
+        <div style="width: 25px;height: 25px;background-color: white;border-radius: 100%;margin: 0 15px;float: left;animation: daoru 1s 0.3s infinite;"></div>
+    </div>
+    <div id="window-Tips" style="color: white;font-size: 30px;width: 300px;height: 40px;position: absolute;top: 50%;left: 50%;text-align: center;margin-left: -150px;margin-top: 50px;">导入中，请稍后</div>
+</div>
 </body>
 <script th:src="@{/js/jquery-2.1.0.js}"></script>
 <script th:src="@{/dist/js/txt.wav.min.js}"></script>
