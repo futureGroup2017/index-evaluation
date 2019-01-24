@@ -5,13 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
+import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.Employment;
 import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.pojo.TeachersStructure;
@@ -68,38 +66,15 @@ public class EmploymentController {
     }
 
     @RequestMapping("/import")
-    public ModelAndView impor(HttpServletRequest request, Integer year,
-                              @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                              @RequestParam(name = "pageSize", defaultValue = "16") int pageSize) throws IOException {
-        ModelAndView modelAndView = new ModelAndView();
-        List<Year> allYear = yearService.findAllYear();
-        modelAndView.addObject("allYear", allYear);
-        modelAndView.setViewName("set");
+    @ResponseBody
+    public Result impor(@RequestParam(value = "file", required = false) MultipartFile file,Integer year) throws IOException {
         if (year == null) {
-            Page<Employment> practiceQueryWrapper = new Page<>(pageNum, pageSize);
-            QueryWrapper<Employment> queryWrapper = new QueryWrapper<>();
-            IPage<Employment> iPage = employmentService.page(practiceQueryWrapper, queryWrapper);
-            modelAndView.addObject("current", iPage.getCurrent());//当前页数
-            modelAndView.addObject("pages", iPage.getPages());//总页数
-            modelAndView.addObject("allEmployment", iPage.getRecords());//所有的数据集合
-            modelAndView.addObject("msg", "请选择年份");
-            modelAndView.addObject("query", new Query());
-            return modelAndView;
+            return new Result(0,"请选择年份");
         }
         //获取上传的文件
-        MultipartHttpServletRequest multipart = (MultipartHttpServletRequest) request;
-        MultipartFile file = multipart.getFile("upfile");
         InputStream in = file.getInputStream();
         if (!file.getOriginalFilename().equals("就业状态指数样表.xlsx")){
-            modelAndView.addObject("msg","上传文件错误，请确认是就业状态指数样表.xlsx！");
-            Page<Employment> practiceQueryWrapper = new Page<>(pageNum, pageSize);
-            QueryWrapper<Employment> queryWrapper = new QueryWrapper<>();
-            IPage<Employment> iPage = employmentService.page(practiceQueryWrapper, queryWrapper);
-            modelAndView.addObject("current", iPage.getCurrent());//当前页数
-            modelAndView.addObject("pages", iPage.getPages());//总页数
-            modelAndView.addObject("allEmployment", iPage.getRecords());//所有的数据集合
-            modelAndView.addObject("query", new Query());
-            return modelAndView;
+            return new Result(0,"上传文件错误，请确认是就业状态指数样表.xlsx！");
         }
         DecimalFormat df3 = new DecimalFormat("#.000");
         List<Employment> employments = employmentService.importExcelInfo(in, file);
@@ -227,18 +202,10 @@ public class EmploymentController {
             )));
             employmentService.add(e);
         }
-        modelAndView.addObject("msg","上传文件成功！");
-        Page<Employment> practiceQueryWrapper = new Page<>(pageNum, pageSize);
-        QueryWrapper<Employment> queryWrapper = new QueryWrapper<>();
-        IPage<Employment> iPage = employmentService.page(practiceQueryWrapper, queryWrapper);
-        modelAndView.addObject("current", iPage.getCurrent());//当前页数
-        modelAndView.addObject("pages", iPage.getPages());//总页数
-        modelAndView.addObject("allEmployment", iPage.getRecords());//所有的数据集合
-        modelAndView.addObject("query", new Query());
-        return modelAndView;
+        return new Result(1,"上传文件成功！");
     }
 
-    @RequestMapping("export")
+    @RequestMapping("/export")
     public void export(Integer year, HttpServletResponse response){
         log.info("正在导出数据");
         try {
@@ -251,46 +218,17 @@ public class EmploymentController {
     }
 
     @GetMapping("/delete")
-    public ModelAndView delete(Integer year,
-                               @RequestParam(name = "pageNum", defaultValue = "1") int pageNum,
-                               @RequestParam(name = "pageSize", defaultValue = "16") int pageSize){
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("set");
-        List<Year> allYear = yearService.findAllYear();
-        modelAndView.addObject("allYear",allYear);
-        List<Employment> byYear = employmentService.findByYear(year);
+    @ResponseBody
+    public Result delete(Integer year){
         if (year == null){
-            modelAndView.addObject("msg","请选择年份后重试！");
-            Page<Employment> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-            QueryWrapper<Employment> queryWrapper = new QueryWrapper<>();
-            IPage<Employment> iPage = employmentService.page(practiceQueryWrapper,queryWrapper);
-            modelAndView.addObject("current",iPage.getCurrent());//当前页数
-            modelAndView.addObject("pages",iPage.getPages());//总页数
-            modelAndView.addObject("allEmployment",iPage.getRecords());//所有的数据集合
-            modelAndView.addObject("query",new Query());
-            return modelAndView;
+            return new Result(0,"请选择年份后重试！");
         }
+        List<Employment> byYear = employmentService.findByYear(year);
         for (Employment t :byYear){
             if (employmentService.delete(t) == 0){
-                modelAndView.addObject("msg","删除出错，请重试！");
-                Page<Employment> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-                QueryWrapper<Employment> queryWrapper = new QueryWrapper<>();
-                IPage<Employment> iPage = employmentService.page(practiceQueryWrapper,queryWrapper);
-                modelAndView.addObject("current",iPage.getCurrent());//当前页数
-                modelAndView.addObject("pages",iPage.getPages());//总页数
-                modelAndView.addObject("allEmployment",iPage.getRecords());//所有的数据集合
-                modelAndView.addObject("query",new Query());
-                return modelAndView;
+                return new Result(0,"删除出错，请重试！");
             }
         }
-        modelAndView.addObject("msg","删除成功");
-        Page<Employment> practiceQueryWrapper = new Page<>(pageNum,pageSize);
-        QueryWrapper<Employment> queryWrapper = new QueryWrapper<>();
-        IPage<Employment> iPage = employmentService.page(practiceQueryWrapper,queryWrapper);
-        modelAndView.addObject("current",iPage.getCurrent());//当前页数
-        modelAndView.addObject("pages",iPage.getPages());//总页数
-        modelAndView.addObject("allEmployment",iPage.getRecords());//所有的数据集合
-        modelAndView.addObject("query",new Query());
-        return modelAndView;
+        return new Result(1,"删除成功");
     }
 }

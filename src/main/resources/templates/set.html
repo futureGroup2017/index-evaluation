@@ -119,9 +119,9 @@
                     $('#searchyear').val(select);
                 });
                 // 导入文件
-                $("#import").click(function () {
-                    if ( values == ''){
-                        console.log('请选择年份!');
+                $("#daoru").click(function () {
+                    if ( select == ''){
+                        alert('请选择年份!');
                     }else{
                         document.getElementById("file").click();
                     }
@@ -144,7 +144,7 @@
                             $('#window-Tips').text(data.msg);
                             setTimeout(function () {
                                 $('#window-black').css('display','none');
-                                window.location.reload();
+                                window.location.href='/em/search';
                             },1000);
                         }
                     })
@@ -167,7 +167,7 @@
                                 $('#window-Tips').text(data.msg);
                                 setTimeout(function () {
                                     $('#window-black').css('display','none');
-                                    window.location.reload();
+                                    window.location.href='/em/search';
                                 },1000);
                             }
                         })
