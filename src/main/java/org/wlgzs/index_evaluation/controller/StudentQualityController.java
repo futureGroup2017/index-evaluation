@@ -45,7 +45,7 @@ public class StudentQualityController {
         if (!isContion) {
             return new Result(-1, "请确认文件名是否为--<1.生源质量指数样表.xlsx>");
         }
-        QueryWrapper queryWrapper = new QueryWrapper();
+        QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<>();
         if (year != null && !year.equals("")) {
             queryWrapper.eq("year", Integer.parseInt(year));
             queryWrapper.last("limit 2");
@@ -53,7 +53,6 @@ public class StudentQualityController {
             if (list != null && list.size() > 0) {
                 return new Result(0, "导入数据重复");
             }
-
         }
         try {
             boolean isTrue = studentQualityService.importExcel(file, year);

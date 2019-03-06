@@ -50,6 +50,15 @@ public class EmployerSatisfactionController {
                 return new Result(-1, "请确认文件名是否为--<5.用人单位满意度样表.xlsx>");
             }
         }
+        QueryWrapper<EmployerSatisfaction> queryWrappers = new QueryWrapper<>();
+        if (year != null && !year.equals("")) {
+            queryWrappers.eq("year", Integer.parseInt(year));
+            queryWrappers.last("limit 2");
+            List<EmployerSatisfaction> list = empService.list(queryWrappers);
+            if (list != null && list.size() > 0) {
+                return new Result(0, "导入数据重复");
+            }
+        }
         QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<EmployerSatisfaction>();
         if (year != null && !year.equals("")) {
             queryWrapper.eq("year", Integer.parseInt(year));

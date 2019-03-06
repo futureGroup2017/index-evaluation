@@ -53,6 +53,13 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
             result.setMsg("上传文件错误，请确认是<6.就业创业实践指数样表.xlsx>");
             return result;
         }
+        QueryWrapper<EmploymentPractice> queryWrappers = new QueryWrapper<>();
+        queryWrappers.eq("year", year);
+        queryWrappers.last("limit 2");
+        List<EmploymentPractice> list = employmentPracticeMapper.selectList(queryWrappers);
+        if (list != null && list.size() > 0) {
+            return new Result(0, "导入数据重复");
+        }
         List<List<Object>> listob;
         List<EmploymentPractice> employmentPractices = new ArrayList<>();
         try {

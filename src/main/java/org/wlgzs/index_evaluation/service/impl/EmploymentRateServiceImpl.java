@@ -52,6 +52,13 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
             result.setMsg("上传文件错误，请确认是<4.就业率指数样表.xlsx>");
             return result;
         }
+        QueryWrapper<EmploymentRate> queryWrappers = new QueryWrapper<>();
+        queryWrappers.eq("year", year);
+        queryWrappers.last("limit 2");
+        List<EmploymentRate> list = employmentRateMapper.selectList(queryWrappers);
+        if (list != null && list.size() > 0) {
+            return new Result(0, "导入数据重复");
+        }
         List<List<Object>> listob;
         List<EmploymentRate> employmentRateList = new ArrayList<>();
         try {
