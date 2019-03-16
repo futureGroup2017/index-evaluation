@@ -13,7 +13,9 @@ import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import org.wlgzs.index_evaluation.dao.CollegeMapper;
 import org.wlgzs.index_evaluation.dao.EmployerSatisfactionMapper;
+import org.wlgzs.index_evaluation.pojo.College;
 import org.wlgzs.index_evaluation.pojo.EmployerSatisfaction;
 import org.wlgzs.index_evaluation.service.EmployerSatisfactionService;
 
@@ -31,11 +33,13 @@ import java.util.List;
  * @date 2019/1/14 8:10
  * @Description:
  */
+@SuppressWarnings( "all")
 @Service
 public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfactionMapper, EmployerSatisfaction> implements EmployerSatisfactionService {
     @Resource
     EmployerSatisfactionMapper employerSatisfactionMapper;
-
+    @Resource
+    private CollegeMapper collegeMapper;
     @Override
     public List<EmployerSatisfaction> importExcel(MultipartFile file, String year) throws IOException {
         int time = Integer.parseInt(year);
@@ -100,7 +104,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             int satisfaction5 = Integer.parseInt(row.getCell(20).getStringCellValue());
             int num3 = satisfaction1 + satisfaction2 + satisfaction3 + satisfaction4 + satisfaction5;
             double satisfaction = (double) Math.round((satisfaction1 + satisfaction2 * 0.8d + satisfaction3 * 0.6d + satisfaction4 * 0.4d + satisfaction5 * 0.2d) * 100d / num3 * 0.1945 * 1000d) / 1000d;
-           /* int sustain1 = Integer.parseInt(row.getCell(1).getStringCellValue());
+           /* int sustaiint ability1n1 = Integer.parseInt(row.getCell(1).getStringCellValue());
             int sustain2 = Integer.parseInt(row.getCell(2).getStringCellValue());
             int sustain3 = Integer.parseInt(row.getCell(3).getStringCellValue());
             int sustain4 = Integer.parseInt(row.getCell(4).getStringCellValue());
@@ -187,7 +191,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         List<EmployerSatisfaction> employerSatisfactionList = employerSatisfactionMapper.selectList(queryWrapper);
         HSSFCell cell;
         double num = 0;
-        if(employerSatisfactionList !=null && employerSatisfactionList.size()>0) {
+        if (employerSatisfactionList != null && employerSatisfactionList.size() > 0) {
             for (EmployerSatisfaction employerSatisfaction :
                     employerSatisfactionList) {
                 num += employerSatisfaction.getSatisfactionIndex();
@@ -248,5 +252,167 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         } else {
             return false;
         }
+    }
+
+    public boolean NewImportExcel(MultipartFile file, String year) throws IOException {
+       //统计总数
+        int level1 = 0;
+        double level = 0; //毕业生的精神状态与工作水平
+        int level2 = 0;
+        int level3 = 0;
+        int level4 = 0;
+        int level5 = 0;
+        int num = 0;
+        double match = 0; // 毕业生的“能力-岗位”匹配度
+        int match1 = 0;
+        int match2 = 0;
+        int match3 = 0;
+        int match4 = 0;
+        int match5 = 0;
+        int num2 = 0;
+        double ablity = 0;  // 毕业生的综合素质能力
+        int ablity1 = 0;
+        int ablity2 = 0;
+        int ablity3 = 0;
+        int ablity4 = 0;
+        int ablity5 = 0;
+        int num1 = 0;
+        double statisfaction = 0; //对毕业生的工作满意度
+        int satisfaction1 = 0;
+        int satisfaction2 = 0;
+        int satisfaction3 = 0;
+        int satisfaction4 = 0;
+        int satisfaction5 = 0;
+        int num3 = 0;
+        int time = Integer.parseInt(year);
+        List<EmployerSatisfaction> employerSatisfactionList = new ArrayList<>();
+        String fileName = file.getOriginalFilename();
+        if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            return false;
+        }
+        InputStream is = file.getInputStream();
+        Workbook wb = null;
+        if (fileName.matches("^.+\\.(?i)(xlsx)$")) {
+            wb = new XSSFWorkbook(is);
+        } else {
+            wb = new HSSFWorkbook(is);
+        }
+        Sheet sheet = wb.getSheetAt(0);
+        Row row = sheet.getRow(0);
+        int mark = 0;
+        for (int j = 0; j < row.getLastCellNum(); j++) {
+            row.getCell(j).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
+            String temp = row.getCell(j).getStringCellValue();
+            if (temp == null || temp.equals("")) {
+                continue;
+            } else if (temp.contains("毕业生的精神状态工作态度")) {
+                mark = j;  //获取毕业生的精神状态工作态度所在列的下标
+                break;
+            }
+        }
+        for (int j = 1; j <= sheet.getLastRowNum(); j++) {
+            row = sheet.getRow(j);
+            row.getCell(mark).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
+            row.getCell(mark+1).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
+            row.getCell(mark+2).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
+            row.getCell(mark+3).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
+            String tempLevel = row.getCell(mark).getStringCellValue();
+            String tempAblity = row.getCell(mark+1).getStringCellValue();
+            String tempMatch = row.getCell(mark+2).getStringCellValue();
+            String tempStatisfaction = row.getCell(mark+3).getStringCellValue();
+            if (tempLevel.equals("非常满意")){
+                level1++;
+            }
+            else if (tempLevel.equals("满意")){
+                level2++;
+            }
+            else if (tempLevel.equals("一般")){
+                level3++;
+            }
+            else if (tempLevel.equals("不满意")){
+                level4++;
+            }
+            else if (tempLevel.equals("非常不满意")){
+                level5++;
+            }
+            if (tempAblity.equals("非常满意")){
+                ablity1++;
+            }
+            else if (tempAblity.equals("满意")){
+                ablity2++;
+            }
+            else if (tempAblity.equals("一般")){
+                ablity3++;
+            }
+            else if (tempAblity.equals("不满意")){
+                ablity4++;
+            }
+            else if (tempAblity.equals("非常不满意")){
+                ablity5++;
+            }
+            if (tempMatch.equals("非常满意")){
+                match1++;
+            }
+            else if (tempMatch.equals("满意")){
+                match2++;
+            }
+            else if (tempMatch.equals("一般")){
+                match3++;
+            }
+            else if (tempMatch.equals("不满意")){
+                match4++;
+            }
+            else if (tempMatch.equals("非常不满意")){
+                match5++;
+            }
+            if (tempStatisfaction.equals("非常满意")){
+                satisfaction1++;
+            }
+            else if (tempStatisfaction.equals("满意")){
+                satisfaction2++;
+            }
+            else if (tempStatisfaction.equals("一般")){
+                satisfaction3++;
+            }
+            else if (tempStatisfaction.equals("不满意")){
+                satisfaction4++;
+            }
+            else if (tempStatisfaction.equals("非常不满意")){
+                satisfaction5++;
+            }
+        }
+
+        num = level1 + level2 + level3 + level4 + level5;
+        num1 = ablity1 + ablity2 + ablity3 + ablity4 + ablity5;
+        num2 = match1 + match2 + match3 + match4 + match5;
+        num3 = satisfaction1 + satisfaction2 + satisfaction3 + satisfaction4 + satisfaction5;
+        //处理 毕业生的精神状态与工作水平的数据
+        //毕业生的精神状态与工作水平指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.1895
+        level = (double) Math.round((level1 + level2 * 0.8d + level3 * 0.6d + level4 * 0.4d + level5 * 0.2d) * 100d / num * 0.1895d * 1000d) / 1000d;
+        //毕业生的综合素质能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.242
+        ablity = (double) Math.round((ablity1 + ablity2 * 0.8d + ablity3 * 0.6d + ablity4 * 0.4d + ablity5 * 0.2d) * 100d / num1 * 0.242d * 1000d) / 1000;
+        //毕业生的“能力-岗位”匹配度能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.2225
+        match = (double) Math.round((match1 + match2 * 0.8d + match3 * 0.6d + match4 * 0.4d + match5 * 0.2d) * 100d / num2 * 0.2225d * 1000d) / 1000d;
+        //用人单位满意度指数 =( 精神状态与工作水平指数 +综合素质能力指数+“能力-岗位”匹配度能力指数+工作满意度能力指数)*0.1325;
+        statisfaction = (double) Math.round((satisfaction1 + satisfaction2 * 0.8d + satisfaction3 * 0.6d + satisfaction4 * 0.4d + satisfaction5 * 0.2d) * 100d / num3 * 0.1945 * 1000d) / 1000d;
+        double satisfactionIndex = (double) Math.round((level + ablity + match + statisfaction) * 132.5) / 1000;
+        System.out.println(level1 +" "+ level2 +" "+ level3+" "+ level4+" "+ level5);
+        System.out.println(ablity1+" "+ablity2+"  "+ablity3 +"  "+ablity4+"  "+  ablity5);
+        System.out.println(match1 +" "+ match2 +" "+ match3 +" "+ match4 +" "+ match5);
+        System.out.println(satisfaction1 +" "+ satisfaction2 +" "+ satisfaction3 +" "+ satisfaction4 +" "+ satisfaction5);
+        System.out.println(statisfaction+"*********");
+        EmployerSatisfaction em = new EmployerSatisfaction("", level, level1, level2, level3, level4, level5,
+                ablity, ablity1, ablity2, ablity3, ablity4, ablity5, match, match1, match2, match3, match4, match5,
+                statisfaction, satisfaction1, satisfaction2, satisfaction3, satisfaction4, satisfaction5, satisfactionIndex, time);
+        QueryWrapper<College> query = new QueryWrapper<College>();
+        List<College> colleges = collegeMapper.selectList(query);
+
+        for (College colleage: colleges
+             ) {
+            em.setCollege(colleage.getCollegeName());
+            employerSatisfactionMapper.insert(em);
+        }
+
+        return true;
     }
 }

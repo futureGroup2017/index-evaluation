@@ -31,4 +31,5 @@ public interface StudentQualityService extends IService<StudentQuality> {
      List<StudentQuality> getQualityIndex(int year);
     void download(HttpServletResponse response);
 
+
 }

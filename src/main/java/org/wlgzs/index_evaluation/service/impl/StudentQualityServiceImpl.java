@@ -570,7 +570,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             OutputStream os = null;
             try {
                 os = res.getOutputStream();
-                    bis = new BufferedInputStream(new FileInputStream(new File(".//template//" + fileName)));
+                bis = new BufferedInputStream(new FileInputStream(new File("./template/" + fileName)));
                 int i = bis.read(buff);
                 while (i != -1) {
                     os.write(buff, 0, buff.length);

@@ -47,10 +47,11 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <!-- mysql 数据驱动 -->
+        <!-- https://mvnrepository.com/artifact/mysql/mysql-connector-java -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <scope>runtime</scope>
+            <version>5.1.37</version>
         </dependency>
         <!-- alibaba的druid数据库连接池 -->
         <dependency>

@@ -25,6 +25,8 @@ public interface EmployerSatisfactionService extends IService<EmployerSatisfacti
     //导出excel表
     void exportData(int year, HttpServletResponse response) throws IOException;
     //删除数据
-    boolean delete(String year);
+    boolean delete(String year); @Transactional
+        //导入excel表
+    boolean NewImportExcel(MultipartFile file,String year)throws IOException;
 
 }

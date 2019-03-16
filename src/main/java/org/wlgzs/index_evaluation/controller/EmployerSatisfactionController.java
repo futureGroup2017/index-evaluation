@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
+import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.EmployerSatisfaction;
 import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.pojo.Year;
@@ -36,14 +37,14 @@ public class EmployerSatisfactionController {
     private YearService yearService;
 
     /**
-     * 导入原始数据
+     * 导入中间数据
      *
      * @param multipartFile
      * @param year
      * @throws IOException
      */
-    @PostMapping("/import")
-    public Result importExcel(@RequestParam("file") MultipartFile multipartFile, String year) throws IOException {
+    @PostMapping("/oederImport")
+    public Result orderImportExcel(@RequestParam("file") MultipartFile multipartFile, String year) throws IOException {
         if (multipartFile != null) {
             String string = multipartFile.getOriginalFilename();
             if (!string.contains("5.用人单位满意度指数样表.xlsx")) {
@@ -58,7 +59,6 @@ public class EmployerSatisfactionController {
             if (list != null && list.size() > 0) {
                 return new Result(0, "导入数据重复");
             }
-
         }
         List<EmployerSatisfaction> list = empService.importExcel(multipartFile, year);
         boolean isTrue = empService.add(list);
@@ -112,6 +112,28 @@ public class EmployerSatisfactionController {
             return new Result(1, "删除成功");
         } else {
             return new Result(-1, "没有该年份数据");
+        }
+    }
+    /**
+     * 导入原始数据
+     */
+    @PostMapping("/import")
+    public Result importExcel(@RequestParam("file") MultipartFile multipartFile, String year) throws IOException {
+        QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<EmployerSatisfaction>();
+        if (year != null && !year.equals("")) {
+            queryWrapper.eq("year", Integer.parseInt(year));
+            queryWrapper.last("limit 2");
+            List<EmployerSatisfaction> list = empService.list(queryWrapper);
+            if (list != null && list.size() > 0) {
+                return new Result(0, "导入数据重复");
+            }
+        }
+        boolean isTrue = empService.NewImportExcel(multipartFile,year);
+        if (isTrue){
+            return new Result(ResultCodeEnum.SUCCESS,"导入成功");
+        }
+        else {
+            return new Result(ResultCodeEnum.FAIL,"导入失败");
         }
     }
 }
