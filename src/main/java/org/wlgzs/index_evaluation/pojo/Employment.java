@@ -59,7 +59,7 @@ public class Employment {
     private Integer MB1135;
 
     /**
-     * 社会兼职经历：1周，半月，1个月，2个月，3个月以上
+     * 社会兼职经历：3个月以上，2个月，1个月,半月，1周
      */
     private Integer MB1211;
     private Integer MB1212;
@@ -221,4 +221,13 @@ public class Employment {
      * 就业状态指数25.3
      */
     private double employmentStatus;
+
+    //学院，年份，就业起薪
+    public Employment(String college, Integer year, double b21) {
+        this.college = college;
+        this.year = year;
+        B21 = b21;
+    }
+
+    public Employment() {}
 }

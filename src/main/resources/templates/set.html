@@ -94,7 +94,8 @@
                 <option value="" selected>请选择年份</option>
                 <option class="selects" th:each="year1:${allYear}" th:value="${year1.getYearName()}" th:text="${year1.getYearName()}"></option>
             </select>
-            <input type="button" id="daoru" value="导入" class="result" />
+            <input type="button" id="daoru" value="导入就业起薪" class="result" />
+            <input type="button" id="daoru2" value="导入问卷数据" class="result" />
             <!--用于导出数据-->
             <a id="export" th:if="${query.getYear()!=null}" th:href="@{/em/export(year=${query.getYear()})}"><input type="button" id="export-bot" value="导出" class="result" /></a>
             <a id="export" th:if="${query.getYear()==null}" href="#"><input type="button" id="export-bot" value="导出" class="result" /></a>
@@ -115,30 +116,60 @@
                         alert('请选择年份!');
                     }else{
                         document.getElementById("file").click();
+                        $('#file').change(function () {
+                            $('#window-black').css('display','block');
+                            var file =document.getElementById('file').files[0];
+                            var formData = new FormData();
+                            formData.append('year',select);
+                            formData.append('file',file);
+                            $.ajax({
+                                type: "post",
+                                url: "/em/import1",
+                                processData:false,
+                                data:formData,
+                                contentType:false,
+                                mimeType:"multipart/form-data",
+                                dataType: "json",
+                                success: function (data) {
+                                    $('#window-Tips').text(data.msg);
+                                    setTimeout(function () {
+                                        $('#window-black').css('display','none');
+                                        window.location.href='/em/search';
+                                    },1000);
+                                }
+                            })
+                        });
                     }
                 });
-                $('#file').change(function () {
-                    $('#window-black').css('display','block');
-                    var file =document.getElementById('file').files[0];
-                    var formData = new FormData();
-                    formData.append('year',select);
-                    formData.append('file',file);
-                    $.ajax({
-                        type: "post",
-                        url: "/em/import",
-                        processData:false,
-                        data:formData,
-                        contentType:false,
-                        mimeType:"multipart/form-data",
-                        dataType: "json",
-                        success: function (data) {
-                            $('#window-Tips').text(data.msg);
-                            setTimeout(function () {
-                                $('#window-black').css('display','none');
-                                window.location.href='/em/search';
-                            },1000);
-                        }
-                    })
+                $("#daoru2").click(function () {
+                    if ( select == ''){
+                        alert('请选择年份!');
+                    }else{
+                        document.getElementById("file").click();
+                        $('#file').change(function () {
+                            $('#window-black').css('display','block');
+                            var file =document.getElementById('file').files[0];
+                            var formData = new FormData();
+                            formData.append('year',select);
+                            formData.append('file',file);
+                            $.ajax({
+                                type: "post",
+                                url: "/em/import",
+                                processData:false,
+                                data:formData,
+                                contentType:false,
+                                mimeType:"multipart/form-data",
+                                dataType: "json",
+                                success: function (data) {
+                                    $('#window-Tips').text(data.msg);
+                                    setTimeout(function () {
+                                        $('#window-black').css('display','none');
+                                        window.location.href='/em/search';
+                                    },1000);
+                                }
+                            })
+                        });
+                    }
                 });
                 // 删除
                 $('#delete').click(function () {

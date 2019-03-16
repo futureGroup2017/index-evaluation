@@ -19,7 +19,10 @@ public interface EmploymentService extends IService<Employment>{
 
     //批量导入
     @Transactional
-    List<Employment> importExcelInfo(InputStream in, MultipartFile file);
+    List<Employment> importExcelInfo(InputStream in, MultipartFile file,Integer year);
+    //导入就业起薪值
+    @Transactional
+    List<Employment> importExcelInfo1(InputStream in, MultipartFile file);
 
     //添加
     @Transactional
@@ -36,4 +39,11 @@ public interface EmploymentService extends IService<Employment>{
     //通过年份查询
     @Transactional
     List<Employment> findByYear(Integer year);
+
+    //通过年份和学院查询
+    @Transactional
+    Employment findByCollegeAndYear(String college,Integer year);
+
+    //更新
+    Integer update(Employment employment);
 }

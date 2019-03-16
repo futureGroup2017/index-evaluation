@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -100,9 +101,8 @@ public class ExcelUtil {
             case Cell.CELL_TYPE_NUMERIC:
                 if("General".equals(cell.getCellStyle().getDataFormatString())){
                     value = df.format(cell.getNumericCellValue());
-                    if (String.valueOf(cell.getNumericCellValue()).contains(".5")){
-                        DecimalFormat df1 = new DecimalFormat("0.0");  //格式化数字
-                        value = df1.format(cell.getNumericCellValue());
+                    if (String.valueOf(cell.getNumericCellValue()).contains(".")){
+                        value = df2.format(cell.getNumericCellValue());
                     }
                 }else if("m/d/yy".equals(cell.getCellStyle().getDataFormatString())){
                     value = sdf.format(cell.getDateCellValue());
