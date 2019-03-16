@@ -7,17 +7,14 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.Employment;
 import org.wlgzs.index_evaluation.pojo.Query;
-import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.EmploymentService;
 import org.wlgzs.index_evaluation.service.YearService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -76,12 +73,12 @@ public class EmploymentController {
         if (!file.getOriginalFilename().equals("3.就业状态指数样表.xlsx")){
             return new Result(0,"上传文件错误，请确认是<3.就业状态指数样表.xlsx>");
         }
+        if (employmentService.findByYear(year).size() == 0){
+            return new Result(0,"上传文件错误，请先导入<3.就业状态指数就业起薪样表.xlsx>");
+        }
         DecimalFormat df3 = new DecimalFormat("#.000");
-        List<Employment> employments = employmentService.importExcelInfo(in, file);
+        List<Employment> employments = employmentService.importExcelInfo(in, file,year);
         for (Employment e : employments) {
-            //年份
-            e.setYear(year);
-
             //知识能力结构40.75
             //计算公式：
             //((专业知识能力非常强*1+很强*0.8+一般*0.6+不强*0.4+很不强*0.2)*100/参与调查人数*0.3695+
@@ -99,7 +96,7 @@ public class EmploymentController {
             //(“非学历、费荣誉”证书3个以上*1+3个*0.8+2个*0.6+1个*0.4+0个*0.2)*100/参与调查人数*0.3145+
             //(社会职务有*1+无*0)*100/参与调查人数*0.324)*0.3135
             e.setB12(Double.parseDouble(df3.format(
-                    ((e.getMB1211() * 0.2 + e.getMB1212() * 0.4 + e.getMB1213() * 0.6 + e.getMB1214() * 0.8 + e.getMB1215() * 1) * 100 / e.getParNum() * 0.3615 +
+                    ((e.getMB1211() * 1 + e.getMB1212() * 0.8 + e.getMB1213() * 0.6 + e.getMB1214() * 0.4 + e.getMB1215() * 0.2) * 100 / e.getParNum() * 0.3615 +
                             (e.getMB1221() * 1 + e.getMB1222() * 0.8 + e.getMB1223() * 0.6 + e.getMB1224() * 0.4 + e.getMB1225() * 0.2) * 100 / e.getParNum() * 0.3145 +
                             (e.getMB1231() * 1 + e.getMB1232() * 0) * 100.0 / e.getParNum() * 0.324) * 0.3135
             )));
@@ -113,9 +110,9 @@ public class EmploymentController {
                             (e.getMB1321() * 1 + e.getMB1322() * 0.8 + e.getMB1323() * 0.6 + e.getMB1324() * 0.4 + e.getMB1325() * 0.2) * 100 / (e.getMB1321() + e.getMB1322() + e.getMB1323() + e.getMB1324() + e.getMB1325()) * 0.504) * 0.279
             )));
 
+
             //就业起薪28.55
-            //因为原始数据无法计算，直接取0填充
-            e.setB21(0);
+            e.setB21(e.getB21());
 
             //岗位胜任度24.2
             //计算公式：
@@ -154,7 +151,7 @@ public class EmploymentController {
                     (((e.getMB1111() * 1 + e.getMB1112() * 0.8 + e.getMB1113() * 0.6 + e.getMB1114() * 0.4 + e.getMB1115() * 0.2) * 100 / e.getParNum() * 0.3695 +
                             (e.getMB1121() * 1 + e.getMB1122() * 0.8 + e.getMB1123() * 0.6 + e.getMB1124() * 0.4 + e.getMB1125() * 0.2) * 100 / e.getParNum() * 0.3715 +
                             (e.getMB1131() * 1 + e.getMB1132() * 0.8 + e.getMB1133() * 0.6 + e.getMB1134() * 0.4 + e.getMB1135() * 0.2) * 100 / e.getParNum() * 0.259) * 0.4075 +
-                            ((e.getMB1211() * 0.2 + e.getMB1212() * 0.4 + e.getMB1213() * 0.6 + e.getMB1214() * 0.8 + e.getMB1215() * 1) * 100 / e.getParNum() * 0.3615 +
+                            ((e.getMB1211() * 1 + e.getMB1212() * 0.8 + e.getMB1213() * 0.6 + e.getMB1214() * 0.4 + e.getMB1215() * 0.2) * 100 / e.getParNum() * 0.3615 +
                                     (e.getMB1221() * 1 + e.getMB1222() * 0.8 + e.getMB1223() * 0.6 + e.getMB1224() * 0.4 + e.getMB1225() * 0.2) * 100 / e.getParNum() * 0.3145 +
                                     (e.getMB1231() * 1 + e.getMB1232() * 0) * 100.0 / e.getParNum() * 0.324) * 0.3135 +
                             ((e.getMB1311() * 1 + e.getMB1312() * 0.8 + e.getMB1313() * 0.6 + e.getMB1314() * 0.4 + e.getMB1315() * 0.2) * 100 / (e.getMB1311() + e.getMB1312() + e.getMB1313() + e.getMB1314() + e.getMB1315()) * 0.496 +
@@ -166,7 +163,8 @@ public class EmploymentController {
             //计算公式：
             //(就业起薪28.55+岗位胜任度24.2+就业现状满意度28)*0.552
             e.setA2(Double.parseDouble(df3.format(
-                    (((e.getMB2211() * 1 + e.getMB2212() * 0.8 + e.getMB2213() * 0.6 + e.getMB2214() * 0.4 + e.getMB2215() * 0.2) * 100 / (e.getMB2211() + e.getMB2212() + e.getMB2213() + e.getMB2214() + e.getMB2215()) * 0.4745 +
+                    (e.getB21()*0.2855+
+                            ((e.getMB2211() * 1 + e.getMB2212() * 0.8 + e.getMB2213() * 0.6 + e.getMB2214() * 0.4 + e.getMB2215() * 0.2) * 100 / (e.getMB2211() + e.getMB2212() + e.getMB2213() + e.getMB2214() + e.getMB2215()) * 0.4745 +
                             (e.getMB2221() * 1 + e.getMB2222() * 0.8 + e.getMB2223() * 0.6 + e.getMB2224() * 0.4 + e.getMB2225() * 0.2) * 100 / (e.getMB2221() + e.getMB2222() + e.getMB2223() + e.getMB2224() + e.getMB2225()) * 0.5255) * 0.242 +
                             ((e.getMB2311() * 1 + e.getMB2312() * 0) * 100.0 / (e.getMB2311() + e.getMB2312()) * 0.274 +
                                     (e.getMB2321() * 1 + e.getMB2322() * 0) * 100.0 / (e.getMB2321() + e.getMB2322()) * 0.2095 +
@@ -184,13 +182,13 @@ public class EmploymentController {
                     ((((e.getMB1111() * 1 + e.getMB1112() * 0.8 + e.getMB1113() * 0.6 + e.getMB1114() * 0.4 + e.getMB1115() * 0.2) * 100 / e.getParNum() * 0.3695 +
                             (e.getMB1121() * 1 + e.getMB1122() * 0.8 + e.getMB1123() * 0.6 + e.getMB1124() * 0.4 + e.getMB1125() * 0.2) * 100 / e.getParNum() * 0.3715 +
                             (e.getMB1131() * 1 + e.getMB1132() * 0.8 + e.getMB1133() * 0.6 + e.getMB1134() * 0.4 + e.getMB1135() * 0.2) * 100 / e.getParNum() * 0.259) * 0.4075 +
-                            ((e.getMB1211() * 0.2 + e.getMB1212() * 0.4 + e.getMB1213() * 0.6 + e.getMB1214() * 0.8 + e.getMB1215() * 1) * 100 / e.getParNum() * 0.3615 +
+                            ((e.getMB1211() * 1 + e.getMB1212() * 0.8 + e.getMB1213() * 0.6 + e.getMB1214() * 0.4 + e.getMB1215() * 0.2) * 100 / e.getParNum() * 0.3615 +
                                     (e.getMB1221() * 1 + e.getMB1222() * 0.8 + e.getMB1223() * 0.6 + e.getMB1224() * 0.4 + e.getMB1225() * 0.2) * 100 / e.getParNum() * 0.3145 +
                                     (e.getMB1231() * 1 + e.getMB1232() * 0) * 100.0 / e.getParNum() * 0.324) * 0.3135 +
                             ((e.getMB1311() * 1 + e.getMB1312() * 0.8 + e.getMB1313() * 0.6 + e.getMB1314() * 0.4 + e.getMB1315() * 0.2) * 100 / (e.getMB1311() + e.getMB1312() + e.getMB1313() + e.getMB1314() + e.getMB1315()) * 0.496 +
                                     (e.getMB1321() * 1 + e.getMB1322() * 0.8 + e.getMB1323() * 0.6 + e.getMB1324() * 0.4 + e.getMB1325() * 0.2) * 100 / (e.getMB1321() + e.getMB1322() + e.getMB1323() + e.getMB1324() + e.getMB1325()) * 0.504) * 0.279
                     ) * 0.448 +
-                            (((e.getMB2211() * 1 + e.getMB2212() * 0.8 + e.getMB2213() * 0.6 + e.getMB2214() * 0.4 + e.getMB2215() * 0.2) * 100 / (e.getMB2211() + e.getMB2212() + e.getMB2213() + e.getMB2214() + e.getMB2215()) * 0.4745 +
+                            (e.getB21()*0.2855+((e.getMB2211() * 1 + e.getMB2212() * 0.8 + e.getMB2213() * 0.6 + e.getMB2214() * 0.4 + e.getMB2215() * 0.2) * 100 / (e.getMB2211() + e.getMB2212() + e.getMB2213() + e.getMB2214() + e.getMB2215()) * 0.4745 +
                                     (e.getMB2221() * 1 + e.getMB2222() * 0.8 + e.getMB2223() * 0.6 + e.getMB2224() * 0.4 + e.getMB2225() * 0.2) * 100 / (e.getMB2221() + e.getMB2222() + e.getMB2223() + e.getMB2224() + e.getMB2225()) * 0.5255) * 0.242 +
                                     ((e.getMB2311() * 1 + e.getMB2312() * 0) * 100.0 / (e.getMB2311() + e.getMB2312()) * 0.274 +
                                             (e.getMB2321() * 1 + e.getMB2322() * 0) * 100.0 / (e.getMB2321() + e.getMB2322()) * 0.2095 +
@@ -200,10 +198,32 @@ public class EmploymentController {
                             ) * 0.552
                     ) * 0.253
             )));
-            employmentService.add(e);
+            employmentService.update(e);
         }
         return new Result(1,"上传文件成功！");
     }
+
+    //导入就业起薪
+    @RequestMapping("/import1")
+    @ResponseBody
+    public Result impor1(@RequestParam(value = "file", required = false) MultipartFile file,Integer year) throws IOException {
+        if (year == null) {
+            return new Result(0,"请选择年份");
+        }
+        //获取上传的文件
+        InputStream in = file.getInputStream();
+        if (!file.getOriginalFilename().equals("3.就业状态指数就业起薪样表.xlsx")){
+            return new Result(0,"上传文件错误，请确认是<3.就业状态指数就业起薪样表.xlsx>");
+        }
+        List<Employment> employments = employmentService.importExcelInfo1(in, file);
+        for (Employment e :employments){
+            //年份
+            e.setYear(year);
+            employmentService.add(e);
+        }
+        return new Result(1,"就业起薪导入成功！");
+    }
+
 
     @RequestMapping("/export")
     public void export(Integer year, HttpServletResponse response){

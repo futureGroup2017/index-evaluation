@@ -53,6 +53,13 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
             result.setMsg("上传文件错误，请确认是<6.就业创业实践指数样表.xlsx>");
             return result;
         }
+        QueryWrapper<EmploymentPractice> queryWrappers = new QueryWrapper<>();
+        queryWrappers.eq("year", year);
+        queryWrappers.last("limit 2");
+        List<EmploymentPractice> list = employmentPracticeMapper.selectList(queryWrappers);
+        if (list != null && list.size() > 0) {
+            return new Result(0, "导入数据重复");
+        }
         List<List<Object>> listob;
         List<EmploymentPractice> employmentPractices = new ArrayList<>();
         try {
@@ -74,19 +81,19 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 if(objects1.get(1)==null || objects1.get(1).equals("")) objects1.set(1,0);
                 if(objects1.get(2)==null || objects1.get(2).equals("")) objects1.set(2,0);
                 if(objects1.get(3)==null || objects1.get(3).equals("")) objects1.set(3,0);
+                if(objects1.get(4)==null || objects1.get(4).equals("")) objects1.set(4,0);
                 if(objects1.get(5)==null || objects1.get(5).equals("")) objects1.set(5,0);
                 if(objects1.get(6)==null || objects1.get(6).equals("")) objects1.set(6,0);
-                if(objects1.get(8)==null || objects1.get(8).equals("")) objects1.set(8,0);
-                if(objects1.get(10)==null || objects1.get(10).equals("")) objects1.set(10,0);
+                if(objects1.get(7)==null || objects1.get(7).equals("")) objects1.set(7,0);
                 totalOne += Double.parseDouble(String.valueOf(objects1.get(2)));
                 totalTwo += Double.parseDouble(String.valueOf(objects1.get(3)));
-                double v = Double.parseDouble(String.valueOf(objects1.get(5)));
+                double v = Double.parseDouble(String.valueOf(objects1.get(4)));
                 if (v > quality1) quality1 = v;
-                double v1 = Double.parseDouble(String.valueOf(objects1.get(6)));
+                double v1 = Double.parseDouble(String.valueOf(objects1.get(5)));
                 if (v1 > quality2) quality2 = v1;
-                double v2 = Double.parseDouble(String.valueOf(objects1.get(8)));
+                double v2 = Double.parseDouble(String.valueOf(objects1.get(6)));
                 if (v2 > number) number = v2;
-                double v3 = Double.parseDouble(String.valueOf(objects1.get(10)));
+                double v3 = Double.parseDouble(String.valueOf(objects1.get(7)));
                 if (v3 > quality) quality = v3;
             }
             //遍历listob数据，把数据放到List中
@@ -104,9 +111,9 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 employmentPractice.setPeopleNumber(Double.parseDouble(decimalFormat.format((employmentPractice.getM11() +
                         employmentPractice.getM12()/totalOne + employmentPractice.getM13()/totalTwo)*0.475)));
                 //"获奖质量积分-1(生涯规划大赛"
-                employmentPractice.setM21(Double.parseDouble(String.valueOf(objects.get(5))));
+                employmentPractice.setM21(Double.parseDouble(String.valueOf(objects.get(4))));
                 //"获奖质量积分-1(创业大赛）"
-                employmentPractice.setM22(Double.parseDouble(String.valueOf(objects.get(6))));
+                employmentPractice.setM22(Double.parseDouble(String.valueOf(objects.get(5))));
                 //处理数据——M2: 获奖质量比52.5
                 employmentPractice.setQuality(Double.parseDouble(decimalFormat.format((employmentPractice.getM21()/quality1 +
                         employmentPractice.getM22()/quality2)*0.525)));
@@ -117,11 +124,11 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                         employmentPractice.getM12()/totalOne + employmentPractice.getM13()/totalTwo)*0.475 +
                         (employmentPractice.getM21()/quality1 + employmentPractice.getM22()/quality2)*0.525)*39)));
                 //项目数量
-                employmentPractice.setM31(Double.parseDouble(String.valueOf(objects.get(8))));
+                employmentPractice.setM31(Double.parseDouble(String.valueOf(objects.get(6))));
                 //处理数据——M3: 项目数量比47
                 employmentPractice.setProjectNumber(Double.parseDouble(decimalFormat.format((employmentPractice.getM31()/number)*0.47)));
                 //项目质量
-                employmentPractice.setM41(Double.parseDouble(String.valueOf(Double.parseDouble(String.valueOf(objects.get(10))))));
+                employmentPractice.setM41(Double.parseDouble(String.valueOf(Double.parseDouble(String.valueOf(objects.get(7))))));
                 //处理数据——M4: 项目质量比53
                 employmentPractice.setProjectQuality(Double.parseDouble(decimalFormat.format(((employmentPractice.getM41()/quality)*0.53))));
                 /*

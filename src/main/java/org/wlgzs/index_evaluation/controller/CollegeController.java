@@ -1,8 +1,6 @@
 package org.wlgzs.index_evaluation.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -49,6 +47,14 @@ public class CollegeController {
         if(college == null) {
             return new Result(ResultCodeEnum.UNSAVE);
         }
+        QueryWrapper<College> wrapper = new QueryWrapper<>();
+        wrapper.eq("college_name",college.getCollegeName());
+        System.out.println(collegeService.list(wrapper).size());
+        if(collegeService.list(wrapper).size()!=0) {
+            Result result = new Result(ResultCodeEnum.UNSAVE);
+            result.setMsg("该学院已存在");
+            return result;
+        }
         collegeService.save(college);
         return new Result(ResultCodeEnum.SAVE);
     }
@@ -72,7 +78,6 @@ public class CollegeController {
      */
     @PutMapping
     public Result updateById(College college){
-        System.out.println(college+"---");
         if(college == null) {
             return new Result(ResultCodeEnum.UNUPDATE);
         }

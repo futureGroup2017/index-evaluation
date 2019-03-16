@@ -122,8 +122,8 @@
                                     'collegeName': vall
                                 },
                                 dataType: "json",
-                                success: function () {
-                                    alert('添加成功');
+                                success: function (data) {
+                                    alert(data.msg);
                                     window.location.reload();
                                 }
                             })
@@ -176,8 +176,8 @@
                                     'collegeName': year
                                 },
                                 dataType: "json",
-                                success: function () {
-                                    alert("修改成功！");
+                                success: function (data) {
+                                    alert(data.msg);
                                     window.location.reload();
                                 }
                             })
@@ -194,8 +194,8 @@
                                 'collegeId': year
                             },*/
                             dataType: "json",
-                            success: function () {
-                                alert("删除成功！");
+                            success: function (data) {
+                                alert(data.msg);
                                 window.location.reload();
                             }
                         })

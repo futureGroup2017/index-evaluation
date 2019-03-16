@@ -7,7 +7,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.Query;
@@ -16,7 +15,6 @@ import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.TeachersStructureService;
 import org.wlgzs.index_evaluation.service.YearService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,6 +62,13 @@ public class TeachersStructureController {
         InputStream in = file.getInputStream();
         if (!file.getOriginalFilename().equals("2.师资结构指数样表.xlsx")){
             return new Result(0,"上传文件错误，请确认是<2.师资结构指数样表.xlsx>");
+        }
+        QueryWrapper<TeachersStructure> queryWrappers = new QueryWrapper<>();
+        queryWrappers.eq("year", year);
+        queryWrappers.last("limit 2");
+        List<TeachersStructure> list = teachersStructureService.list(queryWrappers);
+        if (list != null && list.size() > 0) {
+            return new Result(0, "导入数据重复");
         }
         List<TeachersStructure> teachersStructures = teachersStructureService.importExcelInfo(in, file);
         DecimalFormat df2 = new DecimalFormat("#.00");
