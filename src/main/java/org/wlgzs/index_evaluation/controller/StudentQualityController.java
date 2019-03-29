@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 import org.wlgzs.index_evaluation.enums.Result;
+import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.Major;
 import org.wlgzs.index_evaluation.pojo.Query;
 import org.wlgzs.index_evaluation.pojo.StudentQuality;
@@ -16,7 +17,6 @@ import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.MajorService;
 import org.wlgzs.index_evaluation.service.StudentQualityService;
 import org.wlgzs.index_evaluation.service.YearService;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,7 +37,7 @@ public class StudentQualityController {
     @Resource
     YearService yearService;
 
-    //导入生源质量原始数据表
+    /*//导入生源质量原始数据表
     @PostMapping("import")
     public Result importExcel(@RequestParam(value = "file", required = false) MultipartFile file, String year) {
         String fileName = file.getOriginalFilename();
@@ -66,7 +66,7 @@ public class StudentQualityController {
         }
         return new Result(1, "导入成功");
     }
-
+*/
     //按照专业和年份来查询结果数据
     @GetMapping("/search")
     public ModelAndView search(Model model, Query query,
@@ -149,5 +149,26 @@ public class StudentQualityController {
         studentQualityService.download(response);
     }
 
-
+    @PostMapping("/import")
+    public Result upload (@RequestParam(value = "file", required = false) MultipartFile file, String year) throws IOException {
+        String fileName = file.getOriginalFilename();
+        boolean isContion = fileName.equals("生源质量原始数据.zip");
+        if (!isContion) {
+            return new Result(-1, "请确认文件名是否为--<生源质量原始数据.zip>");
+        }
+        QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<>();
+        if (year != null && !year.equals("")) {
+            queryWrapper.eq("year", Integer.parseInt(year));
+            queryWrapper.last("limit 2");
+            List<StudentQuality> list = studentQualityService.list(queryWrapper);
+            if (list != null && list.size() > 0) {
+                return new Result(0, "导入数据重复");
+            }
+        }
+        if (studentQualityService.upload(file, year)) {
+            return new Result(1, "导入成功");
+        } else {
+            return new Result(-1, "导入失败");
+        }
+    }
 }

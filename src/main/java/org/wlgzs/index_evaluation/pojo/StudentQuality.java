@@ -90,6 +90,11 @@ public class StudentQuality {
 
      @TableField(value = "colleage_name")
      private String colleageName;
+    /**
+     * 文理科标识
+     */
+    @TableField(value = "mark")
+     private int mark;
 
     public StudentQuality(String majorName, Integer fistVolunteerNum, Integer studentsNum, Integer afterVolunteerNum, Double averageScore, Double majorRecognition, Double collegeEntrance, Double majorAdvantage,Integer year) {
         this.majorName = majorName;
@@ -102,7 +107,6 @@ public class StudentQuality {
         this.majorAdvantage = majorAdvantage;
         this.year = year;
     }
-
     public StudentQuality(String majorName, Double averageScore, Double majorRecognition, Double collegeEntrance, Double majorAdvantage, Integer year) {
         this.majorName = majorName;
         this.averageScore = averageScore;
@@ -111,7 +115,6 @@ public class StudentQuality {
         this.majorAdvantage = majorAdvantage;
         this.year = year;
     }
-
     @Override
     public String toString() {
         return "StudentQuality{" +

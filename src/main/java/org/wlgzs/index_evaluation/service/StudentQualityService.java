@@ -31,5 +31,10 @@ public interface StudentQualityService extends IService<StudentQuality> {
      List<StudentQuality> getQualityIndex(int year);
     void download(HttpServletResponse response);
 
+    //文件写入
+     boolean saveFile(MultipartFile file,String filePath);
+     //文件上传 和解析(zip) 和解析录入数据
+     boolean upload(MultipartFile file,String year) throws IOException;
+
 
 }

@@ -43,7 +43,7 @@ public class EmployerSatisfactionController {
      * @param year
      * @throws IOException
      */
-    @PostMapping("/oederImport")
+    /*@PostMapping("/oederImport")
     public Result orderImportExcel(@RequestParam("file") MultipartFile multipartFile, String year) throws IOException {
         if (multipartFile != null) {
             String string = multipartFile.getOriginalFilename();
@@ -77,7 +77,7 @@ public class EmployerSatisfactionController {
             return new Result(-1, "导入失败");
         }
 
-    }
+    }*/
 
     /**
      * 导出数据
@@ -128,6 +128,12 @@ public class EmployerSatisfactionController {
      */
     @PostMapping("/import")
     public Result importExcel(@RequestParam("file") MultipartFile multipartFile, String year) throws IOException {
+        if (multipartFile != null) {
+            String string = multipartFile.getOriginalFilename();
+            if (!string.contains("5.用人单位满意度指数样表")) {
+                return new Result(-1, "请确认文件名是否为--<5.用人单位满意度样表>");
+            }
+        }
         QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<EmployerSatisfaction>();
         if (year != null && !year.equals("")) {
             queryWrapper.eq("year", Integer.parseInt(year));

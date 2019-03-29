@@ -123,5 +123,4 @@ public class CollegeController {
     public Result saveCollege(HttpServletRequest request) throws Exception{
         return collegeService.saveCollege(request);
     }
-
 }
