@@ -100,14 +100,14 @@ public class ExcelUtil {
                 break;
             case Cell.CELL_TYPE_NUMERIC:
                 if("General".equals(cell.getCellStyle().getDataFormatString())){
-                    value = df.format(cell.getNumericCellValue());
-                    if (String.valueOf(cell.getNumericCellValue()).contains(".")){
-                        value = df2.format(cell.getNumericCellValue());
+                    value = df2.format(cell.getNumericCellValue());
+                    if (String.valueOf(value).substring(((String) value).length()-4,((String) value).length()).equals("0000")){
+                        value = df.format(cell.getNumericCellValue());
                     }
                 }else if("m/d/yy".equals(cell.getCellStyle().getDataFormatString())){
                     value = sdf.format(cell.getDateCellValue());
                 }else{
-                    value = df2.format(cell.getNumericCellValue());
+                    value = df.format(cell.getNumericCellValue());
                 }
                 break;
             case Cell.CELL_TYPE_BOOLEAN:

@@ -13,6 +13,7 @@ import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.EmploymentRate;
 import org.wlgzs.index_evaluation.service.EmploymentRateService;
 import org.wlgzs.index_evaluation.util.ExcelUtil;
+import org.wlgzs.index_evaluation.util.ExcelUtilTwo;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -63,8 +64,8 @@ public class EmploymentRateServiceImpl extends ServiceImpl<EmploymentRateMapper,
         List<EmploymentRate> employmentRateList = new ArrayList<>();
         try {
             InputStream in = file.getInputStream();
-            DecimalFormat decimalFormat = new DecimalFormat("###0.000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
-            listob = ExcelUtil.getBankListByExcel(in,file.getOriginalFilename());
+            DecimalFormat decimalFormat = new DecimalFormat("###0.0000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
+            listob = ExcelUtilTwo.getBankListByExcel(in,file.getOriginalFilename());
             //遍历listob数据，把数据放到List中
             for (List<Object> objects : listob) {
                 EmploymentRate employmentRate = new EmploymentRate();
