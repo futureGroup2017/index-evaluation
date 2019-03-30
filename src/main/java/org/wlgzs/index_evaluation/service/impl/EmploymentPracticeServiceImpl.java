@@ -64,7 +64,7 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
         List<EmploymentPractice> employmentPractices = new ArrayList<>();
         try {
             InputStream in = file.getInputStream();
-            DecimalFormat decimalFormat = new DecimalFormat("###0.000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
+            DecimalFormat decimalFormat = new DecimalFormat("###0.0000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
             listob = ExcelUtilTwo.getBankListByExcel(in,file.getOriginalFilename());
             //decimalFormat.setRoundingMode(RoundingMode.HALF_UP);//四舍五入
             //参赛总人数
