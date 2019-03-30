@@ -76,7 +76,7 @@ public class EmploymentController {
         if (employmentService.findByYear(year).size() == 0){
             return new Result(0,"上传文件错误，请先导入<3.就业状态指数就业起薪样表.xlsx>");
         }
-        DecimalFormat df3 = new DecimalFormat("#.000");
+        DecimalFormat df3 = new DecimalFormat("#.0000");
         List<Employment> employments = employmentService.importExcelInfo(in, file,year);
         for (Employment e : employments) {
             //知识能力结构40.75
