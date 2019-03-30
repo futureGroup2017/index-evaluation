@@ -1,4 +1,3 @@
-/*
 package org.wlgzs.index_evaluation.config;
 
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -6,13 +5,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.wlgzs.index_evaluation.filter.LoginFilter;
 
-*/
+
 /**
  * @author zsh
  * @company wlgzs
  * @create 2019-01-20 8:35
  * @Describe 过滤器配置
- *//*
+ */
 
 @Configuration
 public class FilterConfig {
@@ -28,4 +27,3 @@ public class FilterConfig {
         return registration;
     }
 }
-*/

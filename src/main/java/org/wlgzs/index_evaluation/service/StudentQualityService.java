@@ -27,13 +27,16 @@ public interface StudentQualityService extends IService<StudentQuality> {
      //导出一个年份结果数据
      @Transactional
      void exportData(int year,HttpServletResponse response)throws IOException;
+    @Transactional
      //获取所有学院生源质量指数
      List<StudentQuality> getQualityIndex(int year);
+    @Transactional
     void download(HttpServletResponse response);
-
+    @Transactional
     //文件写入
      boolean saveFile(MultipartFile file,String filePath);
      //文件上传 和解析(zip) 和解析录入数据
+     @Transactional
      boolean upload(MultipartFile file,String year) throws IOException;
 
 

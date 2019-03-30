@@ -1,4 +1,3 @@
-/*
 package org.wlgzs.index_evaluation.filter;
 
 import lombok.extern.log4j.Log4j2;
@@ -9,13 +8,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-*/
+
 /**
  * @author zsh
  * @company wlgzs
  * @create 2019-01-20 8:37
  * @Describe
- *//*
+ */
 
 @Log4j2
 public class LoginFilter implements Filter {
@@ -54,10 +53,10 @@ public class LoginFilter implements Filter {
         }
     }
 
-    */
-/**
- * @Description: 是否需要过滤
- *//*
+
+    /*
+     * @Description: 是否需要过滤
+     */
 
     public boolean isNeedFilter(String uri) {
         for (String includeUrl : includeUrls) {
@@ -73,4 +72,3 @@ public class LoginFilter implements Filter {
         log.info("过滤器销毁");
     }
 }
-*/
