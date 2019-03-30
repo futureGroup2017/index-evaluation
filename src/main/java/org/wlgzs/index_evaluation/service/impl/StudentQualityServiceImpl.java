@@ -520,31 +520,33 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             QueryWrapper<StudentQuality> stuQueryWrapper = new QueryWrapper<>();
             //System.out.println("fhjksdhfklasdjgkn."+college.getCollegeName());
             stuQueryWrapper.eq("colleage_name", college.getCollegeName());
-            stuQueryWrapper.eq("year",year);
+            stuQueryWrapper.eq("year", year);
             List<StudentQuality> studentQualitys = baseMapper.selectList(stuQueryWrapper.last("limit 1"));
-            StudentQuality studentQuality = studentQualitys.get(0);
-            if (studentQualitys == null) {
+            if (studentQualitys == null || studentQualitys.size()==0) {
                 continue;
             }
-            cell1 = row1.createCell(0);
-            cell1.setCellValue(college.getCollegeName());
-            cell1.setCellStyle(style);
-            cell = row1.createCell(1);
-            cell.setCellValue(studentQuality.getColleageAdvantage());
-            cell.setCellStyle(style);
-            cell = row1.createCell(2);
-            cell.setCellValue(studentQuality.getYieldRate());
-            cell.setCellStyle(style);
-            cell = row1.createCell(3);
-            cell.setCellValue(studentQuality.getColleageQuality());
-            cell.setCellStyle(style);
-            rowNum1++;
-        }
-        response.setContentType("application/octet-stream");
-        response.setHeader("Content-disposition", "attachment;filename=" + fileName);
-        response.flushBuffer();
-        workbook.write(response.getOutputStream());
+                StudentQuality studentQuality = studentQualitys.get(0);
+
+                cell1 = row1.createCell(0);
+                cell1.setCellValue(college.getCollegeName());
+                cell1.setCellStyle(style);
+                cell = row1.createCell(1);
+                cell.setCellValue(studentQuality.getColleageAdvantage());
+                cell.setCellStyle(style);
+                cell = row1.createCell(2);
+                cell.setCellValue(studentQuality.getYieldRate());
+                cell.setCellStyle(style);
+                cell = row1.createCell(3);
+                cell.setCellValue(studentQuality.getColleageQuality());
+                cell.setCellStyle(style);
+                rowNum1++;
+            }
+            response.setContentType("application/octet-stream");
+            response.setHeader("Content-disposition", "attachment;filename=" + fileName);
+            response.flushBuffer();
+            workbook.write(response.getOutputStream());
     }
+
 
     public List<StudentQuality> getQualityIndex(int year) {
         QueryWrapper<College> query = new QueryWrapper<College>();
