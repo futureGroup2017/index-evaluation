@@ -145,6 +145,7 @@ public class StudentQualityController {
         }
     */
     @GetMapping("/download")
+    @ResponseBody
     public void download(HttpServletResponse response) {
         studentQualityService.download(response);
     }

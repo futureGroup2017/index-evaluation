@@ -40,7 +40,7 @@
 					<i class="fa fa-file-excel-o" style="font-size: 22px"></i><br/>
 					<span style="font-size: 12px">导出数据总表</span>
 				</li>
-                <li id="Template" style="color: white;cursor: pointer;">
+                <li class="Template AddClass" style="color: white;cursor: pointer;">
                     <i class="fa fa-download" style="font-size: 22px"></i><br/>
                     <span style="font-size: 12px">模板文档下载</span>
                 </li>
@@ -139,8 +139,17 @@
         </div>
         <script>
             window.onload=function () {
-                $('#Template').click(function () {
-                   window.location.href='/sq/download';
+				var unDownloadFlag = false;
+                $('.Template').click(function (event) {
+                	console.log('===')
+                	if(unDownloadFlag){
+						return false;
+					}
+						window.location.href='/sq/download';
+						unDownloadFlag = true;
+						setTimeout(function () {
+							unDownloadFlag = false;
+						},2000);
                 });
                 var bool=true;
                 $('#export').click(function () {
