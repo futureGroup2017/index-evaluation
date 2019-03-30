@@ -71,8 +71,8 @@ public class TeachersStructureController {
             return new Result(0, "导入数据重复");
         }
         List<TeachersStructure> teachersStructures = teachersStructureService.importExcelInfo(in, file);
-        DecimalFormat df2 = new DecimalFormat("#.00");
-        DecimalFormat df3 = new DecimalFormat("#.000");
+        DecimalFormat df2 = new DecimalFormat("#.0000");
+        DecimalFormat df3 = new DecimalFormat("#.0000");
         for (TeachersStructure t:teachersStructures){
             //设置年份
             t.setYear(year);
