@@ -1,5 +1,5 @@
 server:
-  port: 80
+  port: 12345
   connection-timeout: 60000
 
 spring:
@@ -26,7 +26,7 @@ spring:
       #基本属性
       url: jdbc:mysql://127.0.0.1:3306/index_evaluation?useUnicode=true&serverTimezone=Asia/Shanghai&characterEncoding=utf-8
       username: root
-      password: root
+      password: Zshqq1234
       #配置初始化大小/最小/最大
       initial-size: 1
       min-idle: 1
