@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.log4j.Log4j2;
 import org.apache.poi.hssf.usermodel.*;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -33,6 +34,7 @@ import java.util.List;
  * @date 2019/1/14 8:10
  * @Description:
  */
+@Log4j2
 @SuppressWarnings( "all")
 @Service
 public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfactionMapper, EmployerSatisfaction> implements EmployerSatisfactionService {
@@ -79,7 +81,9 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             int level4 = Integer.parseInt(row.getCell(4).getStringCellValue());
             int level5 = Integer.parseInt(row.getCell(5).getStringCellValue());
             int num = level1 + level2 + level3 + level4 + level5;
-            double level = (double) Math.round((level1 + level2 * 0.8d + level3 * 0.6d + level4 * 0.4d + level5 * 0.2d) * 100d / num * 0.1895d * 1000d) / 1000d;
+            double level = (level1 + level2 * 0.8d + level3 * 0.6d + level4 * 0.4d + level5 * 0.2d) * 100d / num * 0.1895d ;
+            level = reserveDecimal(level,4);
+
             //毕业生的综合素质能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.242
             int ability1 = Integer.parseInt(row.getCell(6).getStringCellValue());
             int ability2 = Integer.parseInt(row.getCell(7).getStringCellValue());
@@ -87,7 +91,8 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             int ability4 = Integer.parseInt(row.getCell(9).getStringCellValue());
             int ability5 = Integer.parseInt(row.getCell(10).getStringCellValue());
             int num1 = ability1 + ability2 + ability3 + ability4 + ability5;
-            double ability = (double) Math.round((ability1 + ability2 * 0.8d + ability3 * 0.6d + ability4 * 0.4d + ability5 * 0.2d) * 100d / num1 * 0.242d * 1000d) / 1000;
+            double ability = (ability1 + ability2 * 0.8d + ability3 * 0.6d + ability4 * 0.4d + ability5 * 0.2d) * 100d / num1 * 0.242d;
+            ability = reserveDecimal(ability,4);
             //毕业生的“能力-岗位”匹配度能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.2225
             int match1 = Integer.parseInt(row.getCell(11).getStringCellValue());
             int match2 = Integer.parseInt(row.getCell(12).getStringCellValue());
@@ -95,7 +100,8 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             int match4 = Integer.parseInt(row.getCell(14).getStringCellValue());
             int match5 = Integer.parseInt(row.getCell(15).getStringCellValue());
             int num2 = match1 + match2 + match3 + match4 + match5;
-            double match = (double) Math.round((match1 + match2 * 0.8d + match3 * 0.6d + match4 * 0.4d + match5 * 0.2d) * 100d / num2 * 0.2225d * 1000d) / 1000d;
+            double match = (match1 + match2 * 0.8d + match3 * 0.6d + match4 * 0.4d + match5 * 0.2d) * 100d / num2 * 0.2225d;
+            match = reserveDecimal(match,4);
             //对毕业生的工作满意度能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.2
             int satisfaction1 = Integer.parseInt(row.getCell(16).getStringCellValue());
             int satisfaction2 = Integer.parseInt(row.getCell(17).getStringCellValue());
@@ -112,7 +118,8 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             double num4 =  sustain1+sustain2+sustain3+sustain4+sustain5;
             double sustain  =(double) Math.round((sustain1+sustain2*0.8d+sustain3*0.6d+sustain4*0.4d+sustain5*0.2d)*100d/num4*0.1895*1000)/1000;*/
             //用人单位满意度指数 =( 精神状态与工作水平指数 +综合素质能力指数+“能力-岗位”匹配度能力指数+工作满意度能力指数)*0.1325;
-            double satisfactionIndex = (double) Math.round((level + ability + match + satisfaction) * 132.5) / 1000;
+            double satisfactionIndex =(level + ability + match + satisfaction) * 132.5;
+            satisfactionIndex = reserveDecimal(satisfactionIndex,4);
             EmployerSatisfaction em = new EmployerSatisfaction(college, level, level1, level2, level3, level4, level5,
                     ability, ability1, ability2, ability3, ability4, ability5, match, match1, match2, match3, match4, match5,
                     satisfaction, satisfaction1, satisfaction2, satisfaction3, satisfaction4, satisfaction5, satisfactionIndex, time);
@@ -388,19 +395,19 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         num3 = satisfaction1 + satisfaction2 + satisfaction3 + satisfaction4 + satisfaction5;
         //处理 毕业生的精神状态与工作水平的数据
         //毕业生的精神状态与工作水平指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.1895
-        level = (double) Math.round((level1 + level2 * 0.8d + level3 * 0.6d + level4 * 0.4d + level5 * 0.2d) * 100d / num * 0.1895d * 1000d) / 1000d;
+         level = (level1 + level2 * 0.8d + level3 * 0.6d + level4 * 0.4d + level5 * 0.2d) * 100d / num * 0.1895d ;
+        level = reserveDecimal(level,4);
         //毕业生的综合素质能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.242
-        ablity = (double) Math.round((ablity1 + ablity2 * 0.8d + ablity3 * 0.6d + ablity4 * 0.4d + ablity5 * 0.2d) * 100d / num1 * 0.242d * 1000d) / 1000;
+        ablity = (ablity1 + ablity2 * 0.8d + ablity3 * 0.6d + ablity4 * 0.4d + ablity5 * 0.2d) * 100d / num1 * 0.242d;
+        ablity = reserveDecimal(ablity,4);
         //毕业生的“能力-岗位”匹配度能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.2225
-        match = (double) Math.round((match1 + match2 * 0.8d + match3 * 0.6d + match4 * 0.4d + match5 * 0.2d) * 100d / num2 * 0.2225d * 1000d) / 1000d;
+        match = (match1 + match2 * 0.8d + match3 * 0.6d + match4 * 0.4d + match5 * 0.2d) * 100d / num2 * 0.2225d;
+        match = reserveDecimal(match,4);
         //用人单位满意度指数 =( 精神状态与工作水平指数 +综合素质能力指数+“能力-岗位”匹配度能力指数+工作满意度能力指数)*0.1325;
-        statisfaction = (double) Math.round((satisfaction1 + satisfaction2 * 0.8d + satisfaction3 * 0.6d + satisfaction4 * 0.4d + satisfaction5 * 0.2d) * 100d / num3 * 0.1945 * 1000d) / 1000d;
-        double satisfactionIndex = (double) Math.round((level + ablity + match + statisfaction) * 132.5) / 1000;
-        System.out.println(level1 +" "+ level2 +" "+ level3+" "+ level4+" "+ level5);
-        System.out.println(ablity1+" "+ablity2+"  "+ablity3 +"  "+ablity4+"  "+  ablity5);
-        System.out.println(match1 +" "+ match2 +" "+ match3 +" "+ match4 +" "+ match5);
-        System.out.println(satisfaction1 +" "+ satisfaction2 +" "+ satisfaction3 +" "+ satisfaction4 +" "+ satisfaction5);
-        System.out.println(statisfaction+"*********");
+        statisfaction = (satisfaction1 + satisfaction2 * 0.8d + satisfaction3 * 0.6d + satisfaction4 * 0.4d + satisfaction5 * 0.2d) * 100d / num * 0.1895d ;
+        statisfaction  = reserveDecimal( statisfaction,4);
+        double satisfactionIndex = (level + ablity + match + statisfaction) * 132.5/1000;
+        satisfactionIndex = reserveDecimal(satisfactionIndex,4);
         EmployerSatisfaction em = new EmployerSatisfaction("", level, level1, level2, level3, level4, level5,
                 ablity, ablity1, ablity2, ablity3, ablity4, ablity5, match, match1, match2, match3, match4, match5,
                 statisfaction, satisfaction1, satisfaction2, satisfaction3, satisfaction4, satisfaction5, satisfactionIndex, time);
@@ -414,5 +421,10 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         }
 
         return true;
+    }
+    public double reserveDecimal(double num, int n) {
+        double divid = Math.pow(10, n);
+        return (double) Math.round(num * divid) / divid;
+
     }
 }

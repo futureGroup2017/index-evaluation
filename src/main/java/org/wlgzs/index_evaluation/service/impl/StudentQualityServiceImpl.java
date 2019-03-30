@@ -1092,7 +1092,6 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         if (dir.isDirectory()) {
             String[] childens = dir.list();
             for (int i = 0; i < childens.length; i++) {
-                log.info("ashffghghjkdhgjkdfhgdfdjghh");
                 boolean isTrue = deleteDir(new File(dir, childens[i]));
                 if (!isTrue) {
                     return false;
