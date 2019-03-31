@@ -2,7 +2,9 @@ package org.wlgzs.index_evaluation.controller;
 
 import com.sun.org.apache.xpath.internal.operations.Mod;
 import lombok.extern.log4j.Log4j2;
+import org.apache.poi.util.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,7 +15,9 @@ import org.wlgzs.index_evaluation.pojo.Year;
 import org.wlgzs.index_evaluation.service.UserService;
 import org.wlgzs.index_evaluation.service.YearService;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.*;
 import java.util.List;
 
 /**
@@ -46,6 +50,33 @@ public class UserController {
         modelAndView.addObject("allYear",allYear);
         modelAndView.setViewName("index");
         return modelAndView;
+    }
+
+    @GetMapping("/doc")
+    public String getPDF(HttpServletResponse response) throws IOException {
+        String filename = "就业工作考核数据分析系统使用说明书.pdf";
+        String path = "./template/" + filename;
+        File file = ResourceUtils.getFile(path);
+        response.reset();
+        response.setContentType("application/pdf");
+        FileInputStream fileInputStream = null;
+        OutputStream outputStream = null;
+        try {
+            fileInputStream = new FileInputStream(file);
+            outputStream = response.getOutputStream();
+            outputStream.write(IOUtils.toByteArray(fileInputStream));
+            response.setHeader("Content-Disposition",
+                    "inline; filename= file");
+            outputStream.flush();
+        }catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }finally {
+            IOUtils.closeQuietly(fileInputStream);
+            IOUtils.closeQuietly(outputStream);
+        }
+        return null;
     }
 
     @PostMapping("/login")
