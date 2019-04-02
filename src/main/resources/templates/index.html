@@ -170,6 +170,10 @@
 					}else{
 						theref+=valu;
 						window.location.href=theref;
+						bool=!bool;
+						$('#exportyear').css('display','none');
+						$("#selectyear").val('');
+						window.open ("e?year="+valu, "newwindow", "height=400, width=800, toolbar =no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
 					}
                 });
                 document.getElementById("change").onclick=function () {
