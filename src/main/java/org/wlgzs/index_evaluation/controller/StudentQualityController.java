@@ -136,7 +136,6 @@ public class StudentQualityController {
     public void exportExcell(@RequestParam("year") String year, HttpServletResponse response) throws IOException {
         studentQualityService.exportData(Integer.parseInt(year), response);
     }
-
     /*
 
         @GetMapping("test")
@@ -145,6 +144,7 @@ public class StudentQualityController {
         }
     */
     @GetMapping("/download")
+    @ResponseBody
     public void download(HttpServletResponse response) {
         studentQualityService.download(response);
     }
