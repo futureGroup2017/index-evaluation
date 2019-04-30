@@ -1,5 +1,5 @@
 server:
-  port: 12345
+  port: 10014
   connection-timeout: 60000
 
 spring:

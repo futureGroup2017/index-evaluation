@@ -12,7 +12,7 @@ import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.enums.ResultCodeEnum;
 import org.wlgzs.index_evaluation.pojo.EmploymentPractice;
 import org.wlgzs.index_evaluation.service.EmploymentPracticeService;
-import org.wlgzs.index_evaluation.util.ExcelUtilTwo;
+import org.wlgzs.index_evaluation.util.ExcelUtilPratice;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -65,84 +65,94 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
         try {
             InputStream in = file.getInputStream();
             DecimalFormat decimalFormat = new DecimalFormat("###0.0000");//构造方法的字符格式这里如果小数不足3位,会以0补足.
-            listob = ExcelUtilTwo.getBankListByExcel(in,file.getOriginalFilename());
+            listob = ExcelUtilPratice.getBankListByExcel(in,file.getOriginalFilename());
             //decimalFormat.setRoundingMode(RoundingMode.HALF_UP);//四舍五入
             //参赛总人数
-            double totalOne = 0;
-            double totalTwo = 0;
+            double total = 0;
             //最高获奖质量积分
             double quality1 = 0;
             double quality2 = 0;
+            double quality3 = 0;
+            double quality4 = 0;
             //项目数量最高值
             double number = 0;
             //项目质量最高值
             double quality = 0;
             for (List<Object> objects1 : listob) {
-                if(objects1.get(1)==null || objects1.get(1).equals("")) objects1.set(1,0);
-                if(objects1.get(2)==null || objects1.get(2).equals("")) objects1.set(2,0);
-                if(objects1.get(3)==null || objects1.get(3).equals("")) objects1.set(3,0);
-                if(objects1.get(4)==null || objects1.get(4).equals("")) objects1.set(4,0);
-                if(objects1.get(5)==null || objects1.get(5).equals("")) objects1.set(5,0);
-                if(objects1.get(6)==null || objects1.get(6).equals("")) objects1.set(6,0);
-                if(objects1.get(7)==null || objects1.get(7).equals("")) objects1.set(7,0);
-                totalOne += Double.parseDouble(String.valueOf(objects1.get(2)));
-                totalTwo += Double.parseDouble(String.valueOf(objects1.get(3)));
-                double v = Double.parseDouble(String.valueOf(objects1.get(4)));
-                if (v > quality1) quality1 = v;
+                if(objects1.get(1)==null || objects1.get(1).equals("") || objects1.get(1).equals("0.0")) objects1.set(1,0);
+                if(objects1.get(2)==null || objects1.get(2).equals("") || objects1.get(2).equals("0.0")) objects1.set(2,0);
+                if(objects1.get(3)==null || objects1.get(3).equals("") || objects1.get(3).equals("0.0")) objects1.set(3,0);
+                if(objects1.get(4)==null || objects1.get(4).equals("") || objects1.get(4).equals("0.0")) objects1.set(4,0);
+                if(objects1.get(5)==null || objects1.get(5).equals("") || objects1.get(5).equals("0.0")) objects1.set(5,0);
+                if(objects1.get(6)==null || objects1.get(6).equals("") || objects1.get(6).equals("0.0")) objects1.set(6,0);
+                if(objects1.get(7)==null || objects1.get(7).equals("") || objects1.get(7).equals("0.0")) objects1.set(7,0);
+                if(objects1.get(8)==null || objects1.get(8).equals("") || objects1.get(8).equals("0.0")) objects1.set(8,0);
+                if(objects1.get(9)==null || objects1.get(9).equals("") || objects1.get(9).equals("0.0")) objects1.set(9,0);
+                if(objects1.get(10)==null || objects1.get(10).equals("") || objects1.get(10).equals("0.0")) objects1.set(10,0);
+                if(objects1.get(11)==null || objects1.get(11).equals("") || objects1.get(11).equals("0.0")) objects1.set(11,10.25);
+                total += Double.parseDouble(String.valueOf(objects1.get(4)));
                 double v1 = Double.parseDouble(String.valueOf(objects1.get(5)));
-                if (v1 > quality2) quality2 = v1;
+                if (v1 > quality1) quality1 = v1;
                 double v2 = Double.parseDouble(String.valueOf(objects1.get(6)));
-                if (v2 > number) number = v2;
+                if (v2 > quality2) quality2 = v2;
                 double v3 = Double.parseDouble(String.valueOf(objects1.get(7)));
-                if (v3 > quality) quality = v3;
+                if (v3 > quality3) quality3 = v3;
+                double v4 = Double.parseDouble(String.valueOf(objects1.get(8)));
+                if (v4 > quality4) quality4 = v4;
+                double v5 = Double.parseDouble(String.valueOf(objects1.get(9)));
+                if (v5 > number) number = v5;
+                double v6 = Double.parseDouble(String.valueOf(objects1.get(10)));
+                if (v6 > quality) quality = v6;
             }
             //遍历listob数据，把数据放到List中
             for (List<Object> objects : listob) {
                 EmploymentPractice employmentPractice = new EmploymentPractice();
                 //通过遍历实现把每一列封装成一个model中，再把所有的model用List集合装载
                 employmentPractice.setCollege(String.valueOf(objects.get(0)));
-                //"参赛人数比-1(职业生涯规划大赛"
+                //参赛人数比-1(职业生涯规划大赛)
                 employmentPractice.setM11(Double.parseDouble(String.valueOf(objects.get(1))));
-                //"参赛人数比-1(创业大赛）"
+                //参赛人数比-1(简历大赛)
                 employmentPractice.setM12(Double.parseDouble(String.valueOf(objects.get(2))));
-                //"参赛人数比2-省创业大赛总人数34人"
+                //参赛人数比-1(创业大赛)
                 employmentPractice.setM13(Double.parseDouble(String.valueOf(objects.get(3))));
+                //参赛人数2-省创业大赛
+                employmentPractice.setM14(Double.parseDouble(String.valueOf(objects.get(4))));
                 //处理数据——M1: 参赛人数比47.5
-                employmentPractice.setPeopleNumber(Double.parseDouble(decimalFormat.format((employmentPractice.getM11() +
-                        employmentPractice.getM12()/totalOne + employmentPractice.getM13()/totalTwo)*0.475)));
-                //"获奖质量积分-1(生涯规划大赛"
-                employmentPractice.setM21(Double.parseDouble(String.valueOf(objects.get(4))));
-                //"获奖质量积分-1(创业大赛）"
-                employmentPractice.setM22(Double.parseDouble(String.valueOf(objects.get(5))));
+                employmentPractice.setPeopleNumber(Double.parseDouble(decimalFormat.format(((employmentPractice.getM11() +
+                        employmentPractice.getM12() + employmentPractice.getM13())*0.7 + (employmentPractice.getM14()/total)*0.3)*0.475)));
+                //获奖质量积分-1(生涯规划大赛)
+                employmentPractice.setM21(Double.parseDouble(String.valueOf(objects.get(5))));
+                //获奖质量积分-1(简历大赛)
+                employmentPractice.setM22(Double.parseDouble(String.valueOf(objects.get(6))));
+                //获奖质量积分-1(创业大赛)
+                employmentPractice.setM23(Double.parseDouble(String.valueOf(objects.get(7))));
+                //获奖质量积分-2-省创业大赛
+                employmentPractice.setM24(Double.parseDouble(String.valueOf(objects.get(8))));
                 //处理数据——M2: 获奖质量比52.5
                 employmentPractice.setQuality(Double.parseDouble(decimalFormat.format((employmentPractice.getM21()/quality1 +
-                        employmentPractice.getM22()/quality2)*0.525)));
-                /*
-                处理数据——参赛状态39
-                 */
-                employmentPractice.setParticipationStatus(Double.parseDouble(decimalFormat.format(((employmentPractice.getM11() +
-                        employmentPractice.getM12()/totalOne + employmentPractice.getM13()/totalTwo)*0.475 +
-                        (employmentPractice.getM21()/quality1 + employmentPractice.getM22()/quality2)*0.525)*39)));
-                //项目数量
-                employmentPractice.setM31(Double.parseDouble(String.valueOf(objects.get(6))));
+                        employmentPractice.getM22()/quality2 + employmentPractice.getM23()/quality3 + employmentPractice.getM24()/quality4)*0.525)));
+
+                //项目数量积分
+                employmentPractice.setM31(Double.parseDouble(String.valueOf(objects.get(9))));
                 //处理数据——M3: 项目数量比47
                 employmentPractice.setProjectNumber(Double.parseDouble(decimalFormat.format((employmentPractice.getM31()/number)*0.47)));
-                //项目质量
-                employmentPractice.setM41(Double.parseDouble(String.valueOf(Double.parseDouble(String.valueOf(objects.get(7))))));
+                //项目质量积分
+                employmentPractice.setM41(Double.parseDouble(String.valueOf(objects.get(10))));
                 //处理数据——M4: 项目质量比53
                 employmentPractice.setProjectQuality(Double.parseDouble(decimalFormat.format(((employmentPractice.getM41()/quality)*0.53))));
+
                 /*
-                处理数据——创业项目28.5
+                特色项目
                  */
-                employmentPractice.setVentureProject(Double.parseDouble(decimalFormat.format((((employmentPractice.getM31()/number)*0.47 +
-                        (employmentPractice.getM41()/quality)*0.53)*28.5))));
+                employmentPractice.setFeaturedWork(Double.parseDouble(String.valueOf(objects.get(11))));
+
                 /*
                 处理数据——就业创业实践指数
                  */
-                employmentPractice.setPractice(Double.parseDouble(decimalFormat.format((((employmentPractice.getM11() +
-                        employmentPractice.getM12()/totalOne + employmentPractice.getM13()/totalTwo)*0.475 +
-                        (employmentPractice.getM21()/quality1 + employmentPractice.getM22()/quality2)*0.525)*39 +
-                        ((employmentPractice.getM31()/number)*0.47 + (employmentPractice.getM41()/quality)*0.53)*28.5)*0.1535)));
+                employmentPractice.setPractice(Double.parseDouble(decimalFormat.format(
+                        (employmentPractice.getPeopleNumber() + employmentPractice.getQuality())*0.39 +
+                                (employmentPractice.getProjectNumber() + employmentPractice.getProjectQuality())*0.285 +
+                                employmentPractice.getFeaturedWork()*0.325)));
                 employmentPractice.setYear(year);
                 employmentPractices.add(employmentPractice);
                 employmentPracticeMapper.insert(employmentPractice);
@@ -169,8 +179,8 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
         fileName = URLEncoder.encode(fileName, "UTF-8");
         //新增数据行，并且设置单元格数据
         int rowNum = 1;
-        String[] headers = {"学院", "参赛人数比47.5", "获奖质量比52.5", "参赛状态39",
-                "项目数量比47", "项目质量比53", "创业项目28.5", "特色工作32.5", "就业创业实践指数"};
+        String[] headers = {"学院", "参赛人数比", "获奖质量比",
+                "项目数量比47", "项目质量比53", "特色工作32.5", "就业创业实践指数"};
         //headers表示excel表中第一行的表头
         HSSFRow row = sheet.createRow(0);
         //设置行高
@@ -183,8 +193,6 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
         sheet.setColumnWidth(4, 19 * 256);
         sheet.setColumnWidth(5, 19 * 256);
         sheet.setColumnWidth(6, 19 * 256);
-        sheet.setColumnWidth(7, 19 * 256);
-        sheet.setColumnWidth(8, 19 * 256);
         //其他表样式
         HSSFCellStyle style = workbook.createCellStyle();
         style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
@@ -236,22 +244,18 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
             cell = row1.createCell(2);
             cell.setCellValue(employmentPractice.getQuality());
             cell.setCellStyle(style);
-            cell = row1.createCell(3);
-            cell.setCellValue(employmentPractice.getParticipationStatus());
             cell.setCellStyle(style2);
-            cell = row1.createCell(4);
+            cell = row1.createCell(3);
             cell.setCellValue(employmentPractice.getProjectNumber());
             cell.setCellStyle(style);
-            cell = row1.createCell(5);
+            cell = row1.createCell(4);
             cell.setCellValue(employmentPractice.getProjectQuality());
             cell.setCellStyle(style);
-            cell = row1.createCell(6);
-            cell.setCellValue(employmentPractice.getVentureProject());
             cell.setCellStyle(style2);
-            cell = row1.createCell(7);
+            cell = row1.createCell(5);
             cell.setCellValue(employmentPractice.getFeaturedWork());
             cell.setCellStyle(style);
-            cell = row1.createCell(8);
+            cell = row1.createCell(6);
             cell.setCellValue(employmentPractice.getPractice());
             cell.setCellStyle(style);
             rowNum++;

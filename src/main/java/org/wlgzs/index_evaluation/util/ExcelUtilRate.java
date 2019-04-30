@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Log4j2
-public class ExcelUtilTwo {
+public class ExcelUtilRate {
     private final static String excel2003L = ".xls";    //2003- 版本的excel
     private final static String excel2007U = ".xlsx";   //2007+ 版本的excel
 
