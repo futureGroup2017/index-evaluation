@@ -244,14 +244,12 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
             cell = row1.createCell(2);
             cell.setCellValue(employmentPractice.getQuality());
             cell.setCellStyle(style);
-            cell.setCellStyle(style2);
             cell = row1.createCell(3);
             cell.setCellValue(employmentPractice.getProjectNumber());
             cell.setCellStyle(style);
             cell = row1.createCell(4);
             cell.setCellValue(employmentPractice.getProjectQuality());
             cell.setCellStyle(style);
-            cell.setCellStyle(style2);
             cell = row1.createCell(5);
             cell.setCellValue(employmentPractice.getFeaturedWork());
             cell.setCellStyle(style);
