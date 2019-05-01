@@ -79,9 +79,9 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
             //项目质量最高值
             double quality = 0;
             for (List<Object> objects1 : listob) {
-                if(objects1.get(1)==null || objects1.get(1).equals("") || objects1.get(1).equals("0.0")) objects1.set(1,0);
-                if(objects1.get(2)==null || objects1.get(2).equals("") || objects1.get(2).equals("0.0")) objects1.set(2,0);
-                if(objects1.get(3)==null || objects1.get(3).equals("") || objects1.get(3).equals("0.0")) objects1.set(3,0);
+                if(objects1.get(1)==null || objects1.get(1).equals("") || objects1.get(1).equals("0.0")) objects1.set(1,1);
+                if(objects1.get(2)==null || objects1.get(2).equals("") || objects1.get(2).equals("0.0")) objects1.set(2,1);
+                if(objects1.get(3)==null || objects1.get(3).equals("") || objects1.get(3).equals("0.0")) objects1.set(3,1);
                 if(objects1.get(4)==null || objects1.get(4).equals("") || objects1.get(4).equals("0.0")) objects1.set(4,0);
                 if(objects1.get(5)==null || objects1.get(5).equals("") || objects1.get(5).equals("0.0")) objects1.set(5,0);
                 if(objects1.get(6)==null || objects1.get(6).equals("") || objects1.get(6).equals("0.0")) objects1.set(6,0);
@@ -89,7 +89,7 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 if(objects1.get(8)==null || objects1.get(8).equals("") || objects1.get(8).equals("0.0")) objects1.set(8,0);
                 if(objects1.get(9)==null || objects1.get(9).equals("") || objects1.get(9).equals("0.0")) objects1.set(9,0);
                 if(objects1.get(10)==null || objects1.get(10).equals("") || objects1.get(10).equals("0.0")) objects1.set(10,0);
-                if(objects1.get(11)==null || objects1.get(11).equals("") || objects1.get(11).equals("0.0")) objects1.set(11,10.25);
+                if(objects1.get(11)==null || objects1.get(11).equals("") || objects1.get(11).equals("0.0")) objects1.set(11,0);
                 total += Double.parseDouble(String.valueOf(objects1.get(4)));
                 double v1 = Double.parseDouble(String.valueOf(objects1.get(5)));
                 if (v1 > quality1) quality1 = v1;
@@ -118,8 +118,13 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 //参赛人数2-省创业大赛
                 employmentPractice.setM14(Double.parseDouble(String.valueOf(objects.get(4))));
                 //处理数据——M1: 参赛人数比47.5
-                employmentPractice.setPeopleNumber(Double.parseDouble(decimalFormat.format(((employmentPractice.getM11() +
-                        employmentPractice.getM12() + employmentPractice.getM13())*0.7 + (employmentPractice.getM14()/total)*0.3)*0.475)));
+                if(total == 0) {
+                    employmentPractice.setPeopleNumber(Double.parseDouble(decimalFormat.format(((employmentPractice.getM11() +
+                            employmentPractice.getM12() + employmentPractice.getM13())*0.7)*0.475)));
+                } else {
+                    employmentPractice.setPeopleNumber(Double.parseDouble(decimalFormat.format(((employmentPractice.getM11() +
+                            employmentPractice.getM12() + employmentPractice.getM13())*0.7 + (employmentPractice.getM14()/total)*0.3)*0.475)));
+                }
                 //获奖质量积分-1(生涯规划大赛)
                 employmentPractice.setM21(Double.parseDouble(String.valueOf(objects.get(5))));
                 //获奖质量积分-1(简历大赛)
@@ -129,18 +134,34 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 //获奖质量积分-2-省创业大赛
                 employmentPractice.setM24(Double.parseDouble(String.valueOf(objects.get(8))));
                 //处理数据——M2: 获奖质量比52.5
-                employmentPractice.setQuality(Double.parseDouble(decimalFormat.format((employmentPractice.getM21()/quality1 +
-                        employmentPractice.getM22()/quality2 + employmentPractice.getM23()/quality3 + employmentPractice.getM24()/quality4)*0.525)));
+                double dou = 0;
+                if(quality1!=0) {
+                    dou += employmentPractice.getM21()/quality1;
+                } else if(quality2!=0) {
+                    dou += employmentPractice.getM22()/quality2;
+                } else if(quality3!=0) {
+                    dou += employmentPractice.getM23()/quality3;
+                } else if(quality4!=0) {
+                    dou += employmentPractice.getM24()/quality4;
+                }
+                employmentPractice.setQuality(Double.parseDouble(decimalFormat.format((dou)*0.525)));
 
                 //项目数量积分
                 employmentPractice.setM31(Double.parseDouble(String.valueOf(objects.get(9))));
                 //处理数据——M3: 项目数量比47
-                employmentPractice.setProjectNumber(Double.parseDouble(decimalFormat.format((employmentPractice.getM31()/number)*0.47)));
+                if(number==0) {
+                    employmentPractice.setProjectNumber(Double.parseDouble(decimalFormat.format(0)));
+                } else {
+                    employmentPractice.setProjectNumber(Double.parseDouble(decimalFormat.format((employmentPractice.getM31()/number)*0.47)));
+                }
                 //项目质量积分
                 employmentPractice.setM41(Double.parseDouble(String.valueOf(objects.get(10))));
                 //处理数据——M4: 项目质量比53
-                employmentPractice.setProjectQuality(Double.parseDouble(decimalFormat.format(((employmentPractice.getM41()/quality)*0.53))));
-
+                if(quality==0) {
+                    employmentPractice.setProjectQuality(Double.parseDouble(decimalFormat.format(0)));
+                } else {
+                    employmentPractice.setProjectQuality(Double.parseDouble(decimalFormat.format(((employmentPractice.getM41() / quality) * 0.53))));
+                }
                 /*
                 特色项目
                  */
