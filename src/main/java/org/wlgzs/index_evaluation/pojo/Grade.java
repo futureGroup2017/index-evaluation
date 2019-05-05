@@ -21,13 +21,15 @@ public class Grade {
     private Integer gradeId;
     @TableField(value = "college_name")
     private String collegeName;
+
+
     /**
      * 高考成绩
      */
     @TableField(value = "college_grade")
     private Double collegeGrade;
     @TableField(value = "major_name")
-    private String major_name;
+    private String majorName;
     /**
      * 年份
      */

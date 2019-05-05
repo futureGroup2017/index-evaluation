@@ -151,33 +151,33 @@ public class EmployerSatisfaction {
     /**
      * 招聘毕业生的持续度
      */
-   /* @TableField(value = "sustain")
+    @TableField(value = "sustain")
     private Double sustain;
-    *//**
+    /**
      * 招聘毕业生的持续度非常满意人数
-     *//*
+     */
     @TableField(value = "sustain1")
     private int sustain1;
-    *//**
+    /**
      * 招聘毕业生的持续度满意人数
-     *//*
+     */
     @TableField(value = "sustain2")
     private int sustain2;
-    *//**
+    /**
      * 招聘毕业生的持续度一般人数
-     *//*
+     */
     @TableField(value = "sustain3")
     private int sustain3;
-    *//**
+    /**
      * 招聘毕业生的持续度不满意人数
-     *//*
+     */
     @TableField(value = "sustain4")
     private int sustain4;
-    *//**
+    /**
      * 招聘毕业生的持续度非常不满意人数
-     *//*
+     */
     @TableField(value = "sustain5")
-    private int sustain5;*/
+    private int sustain5;
 
     /**
      * 用人单位满意度指数
@@ -224,6 +224,42 @@ public class EmployerSatisfaction {
                 '}';
     }
 
+    public EmployerSatisfaction(String college, Double level, int level1, int level2, int level3, int level4, int level5, Double ability, int ability1, int ability2, int ability3, int ability4, int ability5, Double matched, int match1, int match2, int match3, int match4, int match5, Double satisfaction, int satisfaction1, int satisfaction2, int satisfaction3, int satisfaction4, int satisfaction5, Double sustain, int sustain1, int sustain2, int sustain3, int sustain4, int sustain5, Double satisfactionIndex, int year) {
+        this.college = college;
+        this.level = level;
+        this.level1 = level1;
+        this.level2 = level2;
+        this.level3 = level3;
+        this.level4 = level4;
+        this.level5 = level5;
+        this.ability = ability;
+        this.ability1 = ability1;
+        this.ability2 = ability2;
+        this.ability3 = ability3;
+        this.ability4 = ability4;
+        this.ability5 = ability5;
+        this.matched = matched;
+        this.match1 = match1;
+        this.match2 = match2;
+        this.match3 = match3;
+        this.match4 = match4;
+        this.match5 = match5;
+        this.satisfaction = satisfaction;
+        this.satisfaction1 = satisfaction1;
+        this.satisfaction2 = satisfaction2;
+        this.satisfaction3 = satisfaction3;
+        this.satisfaction4 = satisfaction4;
+        this.satisfaction5 = satisfaction5;
+        this.sustain = sustain;
+        this.sustain1 = sustain1;
+        this.sustain2 = sustain2;
+        this.sustain3 = sustain3;
+        this.sustain4 = sustain4;
+        this.sustain5 = sustain5;
+        this.satisfactionIndex = satisfactionIndex;
+        this.year = year;
+    }
+
     public EmployerSatisfaction(String college, Double level, int level1, int level2, int level3, int level4, int level5, Double ability, int ability1, int ability2, int ability3, int ability4, int ability5, Double match, int match1, int match2, int match3, int match4, int match5, Double satisfaction, int satisfaction1, int satisfaction2, int satisfaction3, int satisfaction4, int satisfaction5, Double satisfactionIndex, int year) {
         this.college = college;
         this.level = level;
@@ -234,6 +270,7 @@ public class EmployerSatisfaction {
         this.level5 = level5;
         this.ability = ability;
         this.ability1 = ability1;
+
         this.ability2 = ability2;
         this.ability3 = ability3;
         this.ability4 = ability4;

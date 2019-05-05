@@ -17,26 +17,27 @@ import java.util.List;
  */
 public interface StudentQualityService extends IService<StudentQuality> {
      //导入excel数据
-     @Transactional
+  //   @Transactional
      boolean importExcel(MultipartFile file, String year) throws IOException;
-     @Transactional
+  //   @Transactional
      void add(List<StudentQuality> studentQualityList);
      //删除一个年份的数据
-     @Transactional
+
+    //@Transactional
      boolean delete( Integer year);
      //导出一个年份结果数据
-     @Transactional
+   //  @Transactional
      void exportData(int year,HttpServletResponse response)throws IOException;
-    @Transactional
+  //  @Transactional
      //获取所有学院生源质量指数
      List<StudentQuality> getQualityIndex(int year);
-    @Transactional
+    //@Transactional
     void download(HttpServletResponse response);
-    @Transactional
+ //   @Transactional
     //文件写入
      boolean saveFile(MultipartFile file,String filePath);
      //文件上传 和解析(zip) 和解析录入数据
-     @Transactional
+  //   @Transactional
      boolean upload(MultipartFile file,String year) throws IOException;
 
 
