@@ -134,22 +134,17 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 //获奖质量积分-2-省创业大赛
                 employmentPractice.setM24(Double.parseDouble(String.valueOf(objects.get(8))));
                 //处理数据——M2: 获奖质量比52.5
-                System.out.println("------"+quality1+"**"+quality2+"**"+quality3+"**"+quality4);
                 double dou = 0;
                 if(quality1!=0) {
-                    System.out.println(quality1+".............");
                     dou += employmentPractice.getM21()/quality1;
                 }
                 if(quality2!=0) {
-                    System.out.println(quality2+".............");
                     dou += employmentPractice.getM22()/quality2;
                 }
                 if(quality3!=0) {
-                    System.out.println(quality3+".............");
                     dou += employmentPractice.getM23()/quality3;
                 }
                 if(quality4!=0) {
-                    System.out.println(quality4+".............");
                     dou += employmentPractice.getM24()/quality4;
                 }
                 employmentPractice.setQuality(Double.parseDouble(decimalFormat.format((dou)*0.525)));
