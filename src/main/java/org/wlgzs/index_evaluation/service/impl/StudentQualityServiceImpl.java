@@ -49,7 +49,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
 
     @Override
     public boolean importExcel(MultipartFile file, String year) throws IOException {
-        List<StudentQuality> studentQualityList = new ArrayList<>();
+        /*List<StudentQuality> studentQualityList = new ArrayList<>();
         String fileName = file.getOriginalFilename();
         if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
             return false;
@@ -74,9 +74,12 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         //找出文科的三個最高值
         double[] wMax = findMax(3, mark, sheet);
-        double wmaxFistVolunteerNum = wMax[0]; // 文科专业1志愿报考人数最高值
-        double wmaxAfterVolunteerNum = wMax[1]; //文科专业2-5志愿报考人数最高值
-        double maxAverage = wMax[2];           //文科录取平均分最高值
+        // 文科专业1志愿报考人数最高值
+        double wmaxFistVolunteerNum = wMax[0];
+        //文科专业2-5志愿报考人数最高值
+        double wmaxAfterVolunteerNum = wMax[1];
+        //文科录取平均分最高值
+        double maxAverage = wMax[2];
 
 
         //找出理科的三個最高值
@@ -298,11 +301,11 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 System.out.println(studentQuality.toString());
                 baseMapper.updateById(studentQuality);
             }
-        }
+        }*/
         return true;
     }
 
-    public double[] findMax(int index, int end, Sheet sheet) {
+   /* public double[] findMax(int index, int end, Sheet sheet) {
         double wmaxFistVolunteerNum = 0; // 文科专业1志愿报考人数最高值
         double wmaxAfterVolunteerNum = 0; //文科专业2-5志愿报考人数最高值
         double maxAverage = 0;           //文科录取平均分最高值
@@ -351,8 +354,9 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             }
         }
         return maxValue;
-    }
+    }*/
 
+    @Override
     public void add(List<StudentQuality> studentQualityList) {
         for (StudentQuality student : studentQualityList
                 ) {
@@ -366,7 +370,12 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
 
     }
 
-    //删除数据
+    /**
+     * 删除数据
+     * @param year
+     * @return
+     */
+    @Override
     public boolean delete(Integer year) {
         QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<>();
         QueryWrapper<Grade> wrapper = new QueryWrapper<>();
@@ -389,7 +398,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         return true;
     }
-
+    @Override
     public void exportData(int year, HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("信息表1");
@@ -473,14 +482,14 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 cell.setCellStyle(style);
                 cell = row1.createCell(3);
                 if (studentQuality.getMajorRecognition() != null) {
-                    cell.setCellValue(reserveDecimal(studentQuality.getMajorRecognition() * 0.557, 3));
+                    cell.setCellValue(reserveDecimal(studentQuality.getMajorRecognition() * 0.557, 4));
                 }
                 cell.setCellStyle(style);
                 cell = row1.createCell(4);
                 cell.setCellValue(reserveDecimal(studentQuality.getCollegeEntrance(), 3));
                 cell.setCellStyle(style);
                 cell = row1.createCell(5);
-                cell.setCellValue(reserveDecimal(studentQuality.getCollegeEntrance() * 0.443, 3));
+                cell.setCellValue(reserveDecimal(studentQuality.getCollegeEntrance() * 0.443, 4));
                 cell.setCellStyle(style);
                 cell = row1.createCell(6);
                 cell.setCellValue(studentQuality.getMajorAdvantage());
@@ -548,6 +557,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
     }
 
 
+    @Override
     public List<StudentQuality> getQualityIndex(int year) {
         QueryWrapper<College> query = new QueryWrapper<College>();
         List<College> colleges = collegeMapper.selectList(query);
@@ -567,7 +577,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         return array;
     }
-
+    @Override
     public void download(HttpServletResponse res) {
         try {
             String fileName = "就业工作考核数据分析系统模板.zip";
@@ -638,6 +648,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
     }
 
     //上传并保存和解压zip文件
+    @Override
     public boolean upload(MultipartFile file, String string) throws IOException {
         int year = Integer.parseInt(string);
         if (saveFile(file, "./upload")) {
@@ -655,8 +666,10 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             zipFile.close();
             for (int j = 0; j < names.length; j++) {
                 String str = names[j];
-                if (str.contains("文") || str.contains("理"))
-                    analysisExcel(str, year);  //解析文件
+                if (str.contains("文") || str.contains("理")) {
+                    //解析文件
+                    analysisExcel(str, year);
+                }
             }
             int k = 0;
             for (int j = 0; j < names.length; j++) {
@@ -665,8 +678,10 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     k = j;
                     continue;
                 }
-                if (!(str.contains("文") || str.contains("理")))
-                    analysisExcel(str, year);  //解析文件
+                if (!(str.contains("文") || str.contains("理"))) {
+                    //解析文件
+                    analysisExcel(str, year);
+                }
 
             }
             QueryWrapper<StudentQuality> wenWrapper = new QueryWrapper<>();
@@ -692,13 +707,13 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                      majorRecognition = ( (su.getFistVolunteerNum() / (double)studentsNum) / (findListMax(wenlist, "firstNum") / studentsNum) * 100 * 0.7 + ((double)su.getAfterVolunteerNum() / studentsNum * 4) / (findListMax(wenlist, "afterNum") / studentsNum*4) * 100 * 0.3);
                      collegeEntrance = (su.getAverageScore() / wenMax)*100;
                     //专业优势 = （专业认可度原始*0.557 + 高考成绩与最高值之比*0.433）*0.445
-                     majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.445;
+                     majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.545;
                 } else if (su.getMark() == 1) {
-                    //专业认可度 = (专业1志愿报考人数/总数)/(文科专业志愿报考人数最高值/总数)*100*0.7 + (2-5理科志愿报考人数/总数*4)/(文科志愿报考人数最高值/学生总数)*100*0.3
+                    //专业认可度 = (专业1志 愿报考人数/总数)/(文科专业志愿报考人数最高值/总数)*100*0.7 + (2-5理科志愿报考人数/总数*4)/(文科志愿报考人数最高值/学生总数)*100*0.3
                      majorRecognition = ((su.getFistVolunteerNum() / (double)studentsNum) / (findListMax(liList, "firstNum") / studentsNum) * 100 * 0.7 + ((double)su.getAfterVolunteerNum() / studentsNum * 4) / (findListMax(liList, "afterNum") / studentsNum*4) * 100 * 0.3);
                      collegeEntrance = (su.getAverageScore() / liMax)*100;
                     //专业优势 = （专业认可度原始*0.557 + 高考成绩与最高值之比*0.433）*0.445
-                     majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.445;
+                     majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.545;
                 }
                 su.setCollegeEntrance(reserveDecimal(collegeEntrance,4));
                 su.setMajorRecognition(reserveDecimal(majorRecognition,4));
@@ -790,7 +805,8 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             int sums = Integer.parseInt(number);
             try {
                 FileInputStream is = new FileInputStream(new File("./upload/" + fileName));
-                System.out.println("./upload/" + fileName);
+
+                // System.out.println("./upload/" + fileName);
                 if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
                     return false;
                 }
@@ -801,7 +817,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     wb = new HSSFWorkbook(is);
                 }
                 Sheet sheet = wb.getSheetAt(0);
-                for (int i = 1; i < sheet.getLastRowNum(); i++) {   // 遍历excel每行的数据
+                for (int i = 1; i < sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
                     Cell cell;
                     if (isTrue) {
@@ -824,7 +840,8 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                             else
                                 majorName = str.substring(1, index1);
                         }
-                        if (ch == '1') {   //该专业为第一志愿
+                        //该专业为第一志愿
+                        if (ch == '1') {
                             if (isTrue)
                                 findMajor(majorName, year, 1, 1, sums);
                             else
@@ -872,7 +889,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     String majorName = majorNameCell.getStringCellValue();
                     majorName = jundgeMajorname(majorName);
                     if (check(province, admission, lengthOfSchool, admissions)) {
-                        Cell gradeCell = row.getCell(26);    //
+                        Cell gradeCell = row.getCell(26);
                         gradeCell.setCellType(Cell.CELL_TYPE_NUMERIC);
                         double grade = gradeCell.getNumericCellValue();
                         Grade grades = new Grade();
