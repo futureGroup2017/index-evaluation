@@ -137,11 +137,14 @@ public class EmploymentPracticeServiceImpl extends ServiceImpl<EmploymentPractic
                 double dou = 0;
                 if(quality1!=0) {
                     dou += employmentPractice.getM21()/quality1;
-                } else if(quality2!=0) {
+                }
+                if(quality2!=0) {
                     dou += employmentPractice.getM22()/quality2;
-                } else if(quality3!=0) {
+                }
+                if(quality3!=0) {
                     dou += employmentPractice.getM23()/quality3;
-                } else if(quality4!=0) {
+                }
+                if(quality4!=0) {
                     dou += employmentPractice.getM24()/quality4;
                 }
                 employmentPractice.setQuality(Double.parseDouble(decimalFormat.format((dou)*0.525)));
