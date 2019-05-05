@@ -1,8 +1,6 @@
 package org.wlgzs.index_evaluation.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.hssf.usermodel.*;
@@ -149,7 +147,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         String fileName = year + "年用人单位满意度指数.xls";
         fileName = URLEncoder.encode(fileName, "UTF-8");
         int rowNum = 1;
-        String[] headers = {"学院", "毕业生的精神状态与工作态度", "毕业生的综合素质能力", "毕业生的“能力-岗位”匹配度", "对毕业生的工作满意度", "用人单位满意度指数", "平均值"};
+        String[] headers = {"学院", "毕业生的精神状态与工作态度", "毕业生的综合素质能力", "毕业生的“能力-岗位”匹配度", "对毕业生的工作满意度","招聘毕业生的持续度", "用人单位满意度指数", "平均值"};
         HSSFRow row = sheet.createRow(0);
         //设置行高
         row.setHeightInPoints(42);
@@ -161,6 +159,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         sheet.setColumnWidth(4, 22 * 256);
         sheet.setColumnWidth(5, 22 * 256);
         sheet.setColumnWidth(6, 22 * 256);
+        sheet.setColumnWidth(7, 22 * 256);
         //其他表样式
         HSSFCellStyle style = workbook.createCellStyle();
         style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
@@ -224,16 +223,19 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
                 cell.setCellValue(employerSatisfaction.getSatisfaction());
                 cell.setCellStyle(style);
                 cell = row1.createCell(5);
-                cell.setCellValue(employerSatisfaction.getSatisfactionIndex());
+                cell.setCellValue(employerSatisfaction.getSustain());
                 cell.setCellStyle(style);
                 cell = row1.createCell(6);
+                cell.setCellValue(employerSatisfaction.getSatisfactionIndex());
+                cell.setCellStyle(style);
+                cell = row1.createCell(7);
                 cell.setCellStyle(style);
                 rowNum++;
             }
             //创建合并单元格  ---begin
-            CellRangeAddress region = new CellRangeAddress(1, employerSatisfactionList.size(), 6, 6);// 下标从0开始 起始行号，终止行号， 起始列号，终止列号
+            CellRangeAddress region = new CellRangeAddress(1, employerSatisfactionList.size(), 7, 7);// 下标从0开始 起始行号，终止行号， 起始列号，终止列号
             sheet.addMergedRegion(region);  //添加
-            cell = sheet.getRow(1).getCell(6);
+            cell = sheet.getRow(1).getCell(7);
             double arrage = num / employerSatisfactionList.size();
             DecimalFormat df = new DecimalFormat("#.000");
             cell.setCellValue(df.format(arrage));   //向合并的单元格设置值
