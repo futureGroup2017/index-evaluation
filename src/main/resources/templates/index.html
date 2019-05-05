@@ -26,8 +26,8 @@
 	<body>
 		<header>
 			<h1>
-        <img th:src="@{/images/top1.png}"/>
-        <span class="txtwav bounce">河南科技学院</span>
+       <!-- <img th:src="@{/images/top1.png}"/>-->
+        <span class="txtwav bounce">就业工作考核数据分析系统</span>
     </h1>
 			<ul class="rt_nav">
                 <li id="exportyear" style="display: none;">
@@ -170,6 +170,10 @@
 					}else{
 						theref+=valu;
 						window.location.href=theref;
+						bool=!bool;
+						$('#exportyear').css('display','none');
+						$("#selectyear").val('');
+						window.open ("e?year="+valu, "newwindow", "height=400, width=800, toolbar =no, menubar=no, scrollbars=no, resizable=no, location=no, status=no")
 					}
                 });
                 document.getElementById("change").onclick=function () {

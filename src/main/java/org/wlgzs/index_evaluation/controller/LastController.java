@@ -3,8 +3,12 @@ package org.wlgzs.index_evaluation.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.hssf.usermodel.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.ModelAndView;
+import org.wlgzs.index_evaluation.enums.Result;
 import org.wlgzs.index_evaluation.pojo.*;
 import org.wlgzs.index_evaluation.service.*;
 
@@ -41,8 +45,7 @@ public class LastController {
     @Resource
     private EmploymentPracticeService practiceService;
 
-    @RequestMapping("/lastExport")
-    public void lastExport(int year, HttpServletResponse response) throws IOException {
+    public List<Last> finalData(int year){
         List<Last> lastList = new ArrayList<>();
         List<College> list = collegeService.list(null);
         for (College college : list) {
@@ -50,7 +53,6 @@ public class LastController {
         }
         //生源质量指数10.08   colleageQuality
         List<StudentQuality> list1 = studentQualityService.getQualityIndex(year);
-        log.info("list1: " + list1);
         for (StudentQuality studentQuality : list1) {
             if (studentQuality != null) {
                 for (Last last : lastList) {
@@ -64,7 +66,6 @@ public class LastController {
         QueryWrapper<TeachersStructure> queryWrapper2 = new QueryWrapper<>();
         queryWrapper2.eq("year", year);
         List<TeachersStructure> list2 = structureService.list(queryWrapper2);
-        log.info("list2: " + list2.size());
 
         for (TeachersStructure teachersStructure : list2) {
             if (teachersStructure != null) {
@@ -79,7 +80,6 @@ public class LastController {
         QueryWrapper<Employment> queryWrapper3 = new QueryWrapper<>();
         queryWrapper3.eq("year", year);
         List<Employment> list3 = employmentService.list(queryWrapper3);
-        log.info("list3: " + list3.size());
         for (Employment employment : list3) {
             if (employment != null) {
                 for (Last last : lastList) {
@@ -93,7 +93,6 @@ public class LastController {
         QueryWrapper<EmploymentRate> queryWrapper4 = new QueryWrapper<>();
         queryWrapper4.eq("year", year);
         List<EmploymentRate> list4 = rateService.list(queryWrapper4);
-        log.info("就业率指数24.95  list4: " + list4.size());
         for (EmploymentRate rate : list4) {
             if (rate != null) {
                 for (Last last : lastList) {
@@ -107,7 +106,6 @@ public class LastController {
         QueryWrapper<EmployerSatisfaction> queryWrapper5 = new QueryWrapper<>();
         queryWrapper5.eq("year", year);
         List<EmployerSatisfaction> list5 = satisfactionService.list(queryWrapper5);
-        log.info("用人满意度指数13.25  list5: " + list5.size());
         for (EmployerSatisfaction satisfaction : list5) {
             if (satisfaction != null) {
                 for (Last last : lastList) {
@@ -121,7 +119,6 @@ public class LastController {
         QueryWrapper<EmploymentPractice> queryWrapper6 = new QueryWrapper<>();
         queryWrapper6.eq("year", year);
         List<EmploymentPractice> list6 = practiceService.list(queryWrapper6);
-        log.info("就业创业实践指数15.35  list6: " + list6.size());
         for (EmploymentPractice practice : list6) {
             if (practice != null) {
                 for (Last last : lastList) {
@@ -144,7 +141,37 @@ public class LastController {
                 last.setLastEmployment(decimalFormat.format(new BigDecimal(String.valueOf(index))));
             }
         }
-        log.info("最终指数:" + lastList);
+        return lastList;
+    }
+
+    @PostMapping(value = "/es")
+    public Result allEchars(Integer year){
+        List<Last> lastList = finalData(year);
+        List<Echars> all = new ArrayList<>();
+        for (int i = 0; i < lastList.size(); i++) {
+            Echars e = new Echars();
+            e.setName(lastList.get(i).getCollege());
+            try {
+                e.setNum(Double.parseDouble(lastList.get(i).getLastEmployment()));
+            }catch (NullPointerException e1){
+                return new Result(0,"该年度数据不全，无法进行分析");
+            }
+            all.add(e);
+        }
+        return new Result(1,"图表加载成功",all);
+    }
+
+    @GetMapping(value = "/e")
+    public ModelAndView echarts4(Integer year){
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("Echars");
+        modelAndView.addObject("year",year);
+        return modelAndView;
+    }
+
+    @RequestMapping("/lastExport")
+    public void lastExport(int year, HttpServletResponse response) throws IOException {
+        List<Last> lastList = finalData(year);
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet();
         sheet.setDefaultRowHeightInPoints(20);

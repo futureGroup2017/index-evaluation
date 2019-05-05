@@ -39,12 +39,12 @@ public class TeachersStructure {
     /**
      * 研究生学位教师数
      */
-    private Integer graNum;
+    private double graNum;
 
     /**
      * 高级职务教师总数
      */
-    private Integer senNum;
+    private double senNum;
 
     /**
      * 生师比

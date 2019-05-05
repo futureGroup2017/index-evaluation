@@ -26,8 +26,8 @@
 <body>
 <header>
     <h1>
-        <img th:src="@{/images/top1.png}"/>
-        <span class="txtwav bounce">河南科技学院</span>
+        <!--<img th:src="@{/images/top1.png}"/>-->
+        <span class="txtwav bounce">就业工作考核数据分析系统</span>
     </h1>
     <ul class="rt_nav">
         <li>
@@ -203,20 +203,11 @@
                 <thead>
                 <tr>
                     <th style="font-weight: 500;">学院</th>
-                    <th style="font-weight: 500;">参赛人数比-1(职业生涯规划大赛)</th>
-                    <th style="font-weight: 500;">参赛人数比-1(创业大赛）</th>
-                    <th style="font-weight: 500;">参赛人数比2-省创业大赛总人数</th>
-                    <th>参赛人数比47.5</th>
-                    <th style="font-weight: 500;">获奖质量积分-1(生涯规划大赛)</th>
-                    <th style="font-weight: 500;">获奖质量积分-1(创业大赛）</th>
-                    <th>获奖质量比52.5</th>
-                    <th style="font-weight: 500;">参赛状态39</th>
-                    <th style="font-weight: 500;">项目数量</th>
-                    <th>项目数量比47</th>
-                    <th style="font-weight: 500;">项目质量</th>
-                    <th>项目质量比53</th>
-                    <th>创业项目28.5</th>
-                    <th>特色工作32.5</th>
+                    <th>参赛人数比</th>
+                    <th>获奖质量比</th>
+                    <th>项目数量比</th>
+                    <th>项目质量比</th>
+                    <th>特色工作</th>
                     <th>就业创业实践指数</th>
                     <th>年份</th>
                 </tr>
@@ -224,19 +215,10 @@
                 <tbody>
                 <tr th:each="employ: ${lists}">
                     <td th:text="${employ.getCollege()}"></td>
-                    <td th:text="${employ.getM11()}"></td>
-                    <td th:text="${employ.getM12()}"></td>
-                    <td th:text="${employ.getM13()}"></td>
                     <td th:text="${employ.getPeopleNumber()}"></td>
-                    <td th:text="${employ.getM21()}"></td>
-                    <td th:text="${employ.getM22()}"></td>
                     <td th:text="${employ.getQuality()}"></td>
-                    <td th:text="${employ.getParticipationStatus()}"></td>
-                    <td th:text="${employ.getM31()}"></td>
                     <td th:text="${employ.getProjectNumber()}"></td>
-                    <td th:text="${employ.getM41()}"></td>
                     <td th:text="${employ.getProjectQuality()}"></td>
-                    <td th:text="${employ.getVentureProject()}"></td>
                     <td th:text="${employ.getFeaturedWork()}"></td>
                     <td th:text="${employ.getPractice()}"></td>
                     <td th:text="${employ.getYear()}"></td>

@@ -32,53 +32,53 @@ public class EmploymentPractice extends Model<EmploymentPractice> {
      */
     private String college;
     /**
-     * "参赛人数比-1(职业生
-     * 涯规划大赛"
+     * 参赛人数比-1(职业生涯规划大赛)
      */
     private double m11;
     /**
-     * "参赛人数比-1
-     * (创业大赛）"
+     * 参赛人数比-1(简历大赛)
      */
     private double m12;
     /**
-     * "参赛人数比2
-     * -省创业大赛总人数"
+     * 参赛人数比-1(创业大赛)
      */
     private double m13;
     /**
+     * 参赛人数2-省创业大赛
+     */
+    private double m14;
+    /**
      * 处理数据
-     * M1: 参赛人数比47.5
+     * M1: 总参赛人数比47.5
      */
     @TableField("people_number")
     private double peopleNumber;
 
     /**
-     * "获奖质量积分-1(生
-     * 涯规划大赛"
+     * 获奖质量积分-1(生涯规划大赛)
      */
     private double m21;
     /**
-     * "获奖质量积分-1
-     * (创业大赛）"
+     * 获奖质量积分-1(简历大赛)
      */
     private double m22;
     /**
+     * 获奖质量积分-1(创业大赛)
+     */
+    private double m23;
+    /**
+     * 获奖质量积分-2-省创业大赛
+     */
+    private double m24;
+    /**
      * 处理数据
-     * M2: 获奖质量比52.5
+     * M2: 总获奖质量比52.5
      */
     private double quality;
 
-    /**
-     *
-     * 处理数据
-     * 参赛状态39
-     */
-    @TableField("participation_status")
-    private double participationStatus;
 
     /**
-     * 项目数量
+     * 项目数量积分
      */
     private double m31;
     /**
@@ -89,7 +89,7 @@ public class EmploymentPractice extends Model<EmploymentPractice> {
     private double projectNumber;
 
     /**
-     * 项目质量
+     * 项目质量积分
      */
     private double m41;
     /**
@@ -99,18 +99,11 @@ public class EmploymentPractice extends Model<EmploymentPractice> {
     @TableField("project_quality")
     private double projectQuality;
 
-    /**
-     *
-     * 处理数据
-     * 创业项目28.5
-     */
-    @TableField("venture_project")
-    private double ventureProject;
 
     /**
      *
      * 处理数据
-     * 特色工作32.5
+     * M5: 特色工作32.5
      */
     @TableField("featured_work")
     private double featuredWork;
