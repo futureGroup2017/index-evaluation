@@ -1,6 +1,5 @@
 package org.wlgzs.index_evaluation.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.log4j.Log4j2;
@@ -8,7 +7,6 @@ import org.apache.poi.hssf.usermodel.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.dao.TeachersStructureMapper;
-import org.wlgzs.index_evaluation.pojo.EmploymentRate;
 import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.service.TeachersStructureService;
 import org.wlgzs.index_evaluation.util.ExcelUtil;
@@ -47,8 +45,8 @@ public class TeachersStructureServiceImpl extends ServiceImpl<TeachersStructureM
                 t.setCollegeName(String.valueOf(ob.get(0)));
                 t.setStuNum(Integer.parseInt(String.valueOf(ob.get(1))));
                 t.setTeaNum(Double.parseDouble(String.valueOf(ob.get(2))));
-                t.setGraNum(Integer.parseInt(String.valueOf(ob.get(3))));
-                t.setSenNum(Integer.parseInt(String.valueOf(ob.get(4))));
+                t.setGraNum(Double.parseDouble(String.valueOf(ob.get(3))));
+                t.setSenNum(Double.parseDouble(String.valueOf(ob.get(4))));
                 teachersStructuresList.add(t);
             }
         } catch (Exception e) {
