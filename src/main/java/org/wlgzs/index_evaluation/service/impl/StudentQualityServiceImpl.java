@@ -691,13 +691,25 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             QueryWrapper<StudentQuality> liWrapper = new QueryWrapper<>();
             liWrapper.eq("mark", 1);
             liWrapper.eq("year", year);
+            QueryWrapper<StudentQuality> yiWrapper = new QueryWrapper<>();
+            yiWrapper.eq("mark", 3);
+            yiWrapper.eq("year", year);
+            QueryWrapper<StudentQuality> tiWrapper = new QueryWrapper<>();
+            tiWrapper.eq("mark", 4);
+            tiWrapper.eq("year", year);
             List<StudentQuality> wenlist = baseMapper.selectList(wenWrapper);
             List<StudentQuality> liList = baseMapper.selectList(liWrapper);
+            List<StudentQuality> yiList = baseMapper.selectList(yiWrapper);
+            List<StudentQuality> tiList = baseMapper.selectList(tiWrapper);
             double wenMax = findListMax(wenlist, "score");
             double liMax = findListMax(liList, "score");
+            double yiMax = findListMax(yiList, "score");
+            double tiMax = findListMax(tiList, "score");
             List<StudentQuality> studentQualities = new ArrayList<>();
             studentQualities.addAll(liList);
             studentQualities.addAll(wenlist);
+            studentQualities.addAll(yiList);
+            studentQualities.addAll(tiList);
             for (StudentQuality su :  studentQualities) {
                 if (!su.getColleageName().equals("艺术学院") && !su.getColleageName().equals("体育学院")) {
                     int studentsNum = su.getStudentsNum();
@@ -722,10 +734,26 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     su.setMajorAdvantage(reserveDecimal(majorAdvantage, 4));
                     baseMapper.updateById(su);
                 }
-                else{
+                else {
                     //todo 艺术学院处理
-
+                    double max = 0;
+                    if (su.getColleageName().equals("体育学院")){
+                        max = tiMax;
+                    }
+                    else {
+                        max = yiMax;
+                    }
+                    double collegeEntrance = 0;
+                    double majorAdvantage = 0;
+                    collegeEntrance =(su.getAverageScore() / max) * 100;
+                    majorAdvantage = (su.getMajorRecognition()*0.557 +collegeEntrance * 0.443) * 0.545;
+                    su.setCollegeEntrance(reserveDecimal(collegeEntrance, 4));
+                    su.setMajorAdvantage(reserveDecimal(majorAdvantage, 4));
+                    baseMapper.updateById(su);
                 }
+
+
+
             }
             analysisExcel(names[k],year);
             deleteFile("./upload");
@@ -929,6 +957,23 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     stu.setYear(year);
                     baseMapper.insert(stu);
                 }
+                gradeQueryWrapper.eq("college_name","体育学院");
+                gradeList = gradeService.list(gradeQueryWrapper);
+                for (Grade grade : gradeList) {
+                    majors.add(grade.getMajorName());
+                    log.info(grade.toString());
+                }
+                for (String str: majors
+                        ) {
+                    StudentQuality stu   =  new StudentQuality();
+                    stu.setMajorRecognition(reserveDecimal(100,4));
+                    stu.setColleageName("体育学院");
+                    stu.setMajorName(str);
+                    stu.setMark(4);
+                    stu.setYear(year);
+                    baseMapper.insert(stu);
+                }
+
                 QueryWrapper<StudentQuality> wrapper = new QueryWrapper<>();
                 wrapper.eq("year", year);
                 List<StudentQuality> list = baseMapper.selectList(wrapper);
@@ -945,7 +990,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                             res += grade.getCollegeGrade();
                         }
                         double average = res / grades.size();
-                        stu.setAverageScore(average);
+                        stu.setAverageScore(reserveDecimal(average,6));
                         if (stu.getColleageName() == null || stu.getColleageName().equals("")) {
                             stu.setColleageName(grades.get(0).getCollegeName());
                             log.info(grades.get(0).getCollegeName());
