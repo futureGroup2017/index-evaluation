@@ -81,9 +81,9 @@ public class EmploymentController {
         for (Employment e : employments) {
             //知识能力结构40.75
             //计算公式：
-            //((专业知识能力非常强*1+很强*0.8+一般*0.6+不强*0.4+很不强*0.2)*100/参与调查人数*0.3695+
-            //(通用知识能力非常强*1+很强*0.8+一般*0.6+不强*0.4+很不强*0.2)*100/参与调查人数*0.3715+
-            //(求职应聘能力非常强*1+很强*0.8+一般*0.6+不强*0.4+很不强*0.2)*100/参与调查人数*0.259)*0.4075
+            //((专业知识能力非常强*1+很强*0.8+一般*0.6+不强*0.4+很不强*0.2)*100/(专业知识能力人数)*0.3695+
+            //(通用知识能力非常强*1+很强*0.8+一般*0.6+不强*0.4+很不强*0.2)*100/(通用知识能力人数)*0.3715+
+            //(求职应聘能力非常强*1+很强*0.8+一般*0.6+不强*0.4+很不强*0.2)*100/(求职应聘能力人数)*0.259)*0.4075
             e.setB11(Double.parseDouble(df3.format(
                     ((e.getMB1111() * 1 + e.getMB1112() * 0.8 + e.getMB1113() * 0.6 + e.getMB1114() * 0.4 + e.getMB1115() * 0.2) * 100 / e.getParNum() * 0.3695 +
                             (e.getMB1121() * 1 + e.getMB1122() * 0.8 + e.getMB1123() * 0.6 + e.getMB1124() * 0.4 + e.getMB1125() * 0.2) * 100 / e.getParNum() * 0.3715 +
@@ -92,13 +92,13 @@ public class EmploymentController {
 
             //标识性优势31.35
             //计算公式：
-            //((社会兼职经历1周*0.2+半月*0.4+1个月*0.6+2个月*0.8+3个月以上*1)*100/参与调查人数*0.3615+
-            //(“非学历、费荣誉”证书3个以上*1+3个*0.8+2个*0.6+1个*0.4+0个*0.2)*100/参与调查人数*0.3145+
-            //(社会职务有*1+无*0)*100/参与调查人数*0.324)*0.3135
+            //((社会兼职经历1周*0.2+半月*0.4+1个月*0.6+2个月*0.8+3个月以上*1)*100/(社会兼职经历人数)*0.3615+
+            //(“非学历、费荣誉”证书3个以上*1+3个*0.8+2个*0.6+1个*0.4+0个*0.2)*100/(“非学历、费荣誉”证书人数)*0.3145+
+            //(社会职务有*1+无*0)*100/(社会职务人数)*0.324)*0.3135
             e.setB12(Double.parseDouble(df3.format(
-                    ((e.getMB1211() * 1 + e.getMB1212() * 0.8 + e.getMB1213() * 0.6 + e.getMB1214() * 0.4 + e.getMB1215() * 0.2) * 100 / e.getParNum() * 0.3615 +
-                            (e.getMB1221() * 1 + e.getMB1222() * 0.8 + e.getMB1223() * 0.6 + e.getMB1224() * 0.4 + e.getMB1225() * 0.2) * 100 / e.getParNum() * 0.3145 +
-                            (e.getMB1231() * 1 + e.getMB1232() * 0) * 100.0 / e.getParNum() * 0.324) * 0.3135
+                    ((e.getMB1211() * 1 + e.getMB1212() * 0.8 + e.getMB1213() * 0.6 + e.getMB1214() * 0.4 + e.getMB1215() * 0.2) * 100 / (e.getMB1211()+e.getMB1212()+e.getMB1213()+e.getMB1214()+e.getMB1215()) * 0.3615 +
+                            (e.getMB1221() * 1 + e.getMB1222() * 0.8 + e.getMB1223() * 0.6 + e.getMB1224() * 0.4 + e.getMB1225() * 0.2) * 100 / (e.getMB1221()+e.getMB1222()+e.getMB1223()+e.getMB1224()+e.getMB1225()) * 0.3145 +
+                            (e.getMB1231() * 1 + e.getMB1232() * 0) * 100.0 / (e.getMB1231()+e.getMB1232()) * 0.324) * 0.3135
             )));
 
             //择业精神27.9
@@ -148,12 +148,12 @@ public class EmploymentController {
             //(知识能力结构40.75+标识性优势31.35+择业精神27.9)*0.448
             //
             e.setA1(Double.parseDouble(df3.format(
-                    (((e.getMB1111() * 1 + e.getMB1112() * 0.8 + e.getMB1113() * 0.6 + e.getMB1114() * 0.4 + e.getMB1115() * 0.2) * 100 / e.getParNum() * 0.3695 +
-                            (e.getMB1121() * 1 + e.getMB1122() * 0.8 + e.getMB1123() * 0.6 + e.getMB1124() * 0.4 + e.getMB1125() * 0.2) * 100 / e.getParNum() * 0.3715 +
-                            (e.getMB1131() * 1 + e.getMB1132() * 0.8 + e.getMB1133() * 0.6 + e.getMB1134() * 0.4 + e.getMB1135() * 0.2) * 100 / e.getParNum() * 0.259) * 0.4075 +
-                            ((e.getMB1211() * 1 + e.getMB1212() * 0.8 + e.getMB1213() * 0.6 + e.getMB1214() * 0.4 + e.getMB1215() * 0.2) * 100 / e.getParNum() * 0.3615 +
-                                    (e.getMB1221() * 1 + e.getMB1222() * 0.8 + e.getMB1223() * 0.6 + e.getMB1224() * 0.4 + e.getMB1225() * 0.2) * 100 / e.getParNum() * 0.3145 +
-                                    (e.getMB1231() * 1 + e.getMB1232() * 0) * 100.0 / e.getParNum() * 0.324) * 0.3135 +
+                    (((e.getMB1111() * 1 + e.getMB1112() * 0.8 + e.getMB1113() * 0.6 + e.getMB1114() * 0.4 + e.getMB1115() * 0.2) * 100 / (e.getMB1111()+e.getMB1112()+e.getMB1113()+e.getMB1114()+e.getMB1115()) * 0.3695 +
+                            (e.getMB1121() * 1 + e.getMB1122() * 0.8 + e.getMB1123() * 0.6 + e.getMB1124() * 0.4 + e.getMB1125() * 0.2) * 100 / (e.getMB1121()+e.getMB1122()+e.getMB1123()+e.getMB1124()+e.getMB1125()) * 0.3715 +
+                            (e.getMB1131() * 1 + e.getMB1132() * 0.8 + e.getMB1133() * 0.6 + e.getMB1134() * 0.4 + e.getMB1135() * 0.2) * 100 / (e.getMB1131()+e.getMB1132()+e.getMB1133()+e.getMB1134()+e.getMB1135()) * 0.259) * 0.4075 +
+                            ((e.getMB1211() * 1 + e.getMB1212() * 0.8 + e.getMB1213() * 0.6 + e.getMB1214() * 0.4 + e.getMB1215() * 0.2) * 100 / (e.getMB1211()+e.getMB1212()+e.getMB1213()+e.getMB1214()+e.getMB1215()) * 0.3615 +
+                                    (e.getMB1221() * 1 + e.getMB1222() * 0.8 + e.getMB1223() * 0.6 + e.getMB1224() * 0.4 + e.getMB1225() * 0.2) * 100 / (e.getMB1221()+e.getMB1222()+e.getMB1223()+e.getMB1224()+e.getMB1225()) * 0.3145 +
+                                    (e.getMB1231() * 1 + e.getMB1232() * 0) * 100.0 / (e.getMB1231()+e.getMB1232()) * 0.324) * 0.3135 +
                             ((e.getMB1311() * 1 + e.getMB1312() * 0.8 + e.getMB1313() * 0.6 + e.getMB1314() * 0.4 + e.getMB1315() * 0.2) * 100 / (e.getMB1311() + e.getMB1312() + e.getMB1313() + e.getMB1314() + e.getMB1315()) * 0.496 +
                                     (e.getMB1321() * 1 + e.getMB1322() * 0.8 + e.getMB1323() * 0.6 + e.getMB1324() * 0.4 + e.getMB1325() * 0.2) * 100 / (e.getMB1321() + e.getMB1322() + e.getMB1323() + e.getMB1324() + e.getMB1325()) * 0.504) * 0.279
                     ) * 0.448
@@ -163,7 +163,7 @@ public class EmploymentController {
             //计算公式：
             //(就业起薪28.55+岗位胜任度24.2+就业现状满意度28)*0.552
             e.setA2(Double.parseDouble(df3.format(
-                    (e.getB21()*0.2855+
+                    (e.getB21()+
                             ((e.getMB2211() * 1 + e.getMB2212() * 0.8 + e.getMB2213() * 0.6 + e.getMB2214() * 0.4 + e.getMB2215() * 0.2) * 100 / (e.getMB2211() + e.getMB2212() + e.getMB2213() + e.getMB2214() + e.getMB2215()) * 0.4745 +
                             (e.getMB2221() * 1 + e.getMB2222() * 0.8 + e.getMB2223() * 0.6 + e.getMB2224() * 0.4 + e.getMB2225() * 0.2) * 100 / (e.getMB2221() + e.getMB2222() + e.getMB2223() + e.getMB2224() + e.getMB2225()) * 0.5255) * 0.242 +
                             ((e.getMB2311() * 1 + e.getMB2312() * 0) * 100.0 / (e.getMB2311() + e.getMB2312()) * 0.274 +
@@ -179,16 +179,16 @@ public class EmploymentController {
             //计算公式：
             //(个体就业潜力44.8+个体就业表现55.2)*0.253
             e.setEmploymentStatus(Double.parseDouble(df3.format(
-                    ((((e.getMB1111() * 1 + e.getMB1112() * 0.8 + e.getMB1113() * 0.6 + e.getMB1114() * 0.4 + e.getMB1115() * 0.2) * 100 / e.getParNum() * 0.3695 +
-                            (e.getMB1121() * 1 + e.getMB1122() * 0.8 + e.getMB1123() * 0.6 + e.getMB1124() * 0.4 + e.getMB1125() * 0.2) * 100 / e.getParNum() * 0.3715 +
-                            (e.getMB1131() * 1 + e.getMB1132() * 0.8 + e.getMB1133() * 0.6 + e.getMB1134() * 0.4 + e.getMB1135() * 0.2) * 100 / e.getParNum() * 0.259) * 0.4075 +
-                            ((e.getMB1211() * 1 + e.getMB1212() * 0.8 + e.getMB1213() * 0.6 + e.getMB1214() * 0.4 + e.getMB1215() * 0.2) * 100 / e.getParNum() * 0.3615 +
-                                    (e.getMB1221() * 1 + e.getMB1222() * 0.8 + e.getMB1223() * 0.6 + e.getMB1224() * 0.4 + e.getMB1225() * 0.2) * 100 / e.getParNum() * 0.3145 +
-                                    (e.getMB1231() * 1 + e.getMB1232() * 0) * 100.0 / e.getParNum() * 0.324) * 0.3135 +
+                    ((((e.getMB1111() * 1 + e.getMB1112() * 0.8 + e.getMB1113() * 0.6 + e.getMB1114() * 0.4 + e.getMB1115() * 0.2) * 100 / (e.getMB1111()+e.getMB1112()+e.getMB1113()+e.getMB1114()+e.getMB1115()) * 0.3695 +
+                            (e.getMB1121() * 1 + e.getMB1122() * 0.8 + e.getMB1123() * 0.6 + e.getMB1124() * 0.4 + e.getMB1125() * 0.2) * 100 / (e.getMB1121()+e.getMB1122()+e.getMB1123()+e.getMB1124()+e.getMB1125()) * 0.3715 +
+                            (e.getMB1131() * 1 + e.getMB1132() * 0.8 + e.getMB1133() * 0.6 + e.getMB1134() * 0.4 + e.getMB1135() * 0.2) * 100 / (e.getMB1131()+e.getMB1132()+e.getMB1133()+e.getMB1134()+e.getMB1135()) * 0.259) * 0.4075 +
+                            ((e.getMB1211() * 1 + e.getMB1212() * 0.8 + e.getMB1213() * 0.6 + e.getMB1214() * 0.4 + e.getMB1215() * 0.2) * 100 / (e.getMB1211()+e.getMB1212()+e.getMB1213()+e.getMB1214()+e.getMB1215()) * 0.3615 +
+                                    (e.getMB1221() * 1 + e.getMB1222() * 0.8 + e.getMB1223() * 0.6 + e.getMB1224() * 0.4 + e.getMB1225() * 0.2) * 100 / (e.getMB1221()+e.getMB1222()+e.getMB1223()+e.getMB1224()+e.getMB1225()) * 0.3145 +
+                                    (e.getMB1231() * 1 + e.getMB1232() * 0) * 100.0 / (e.getMB1231()+e.getMB1232()) * 0.324) * 0.3135 +
                             ((e.getMB1311() * 1 + e.getMB1312() * 0.8 + e.getMB1313() * 0.6 + e.getMB1314() * 0.4 + e.getMB1315() * 0.2) * 100 / (e.getMB1311() + e.getMB1312() + e.getMB1313() + e.getMB1314() + e.getMB1315()) * 0.496 +
                                     (e.getMB1321() * 1 + e.getMB1322() * 0.8 + e.getMB1323() * 0.6 + e.getMB1324() * 0.4 + e.getMB1325() * 0.2) * 100 / (e.getMB1321() + e.getMB1322() + e.getMB1323() + e.getMB1324() + e.getMB1325()) * 0.504) * 0.279
                     ) * 0.448 +
-                            (e.getB21()*0.2855+((e.getMB2211() * 1 + e.getMB2212() * 0.8 + e.getMB2213() * 0.6 + e.getMB2214() * 0.4 + e.getMB2215() * 0.2) * 100 / (e.getMB2211() + e.getMB2212() + e.getMB2213() + e.getMB2214() + e.getMB2215()) * 0.4745 +
+                            (e.getB21()+((e.getMB2211() * 1 + e.getMB2212() * 0.8 + e.getMB2213() * 0.6 + e.getMB2214() * 0.4 + e.getMB2215() * 0.2) * 100 / (e.getMB2211() + e.getMB2212() + e.getMB2213() + e.getMB2214() + e.getMB2215()) * 0.4745 +
                                     (e.getMB2221() * 1 + e.getMB2222() * 0.8 + e.getMB2223() * 0.6 + e.getMB2224() * 0.4 + e.getMB2225() * 0.2) * 100 / (e.getMB2221() + e.getMB2222() + e.getMB2223() + e.getMB2224() + e.getMB2225()) * 0.5255) * 0.242 +
                                     ((e.getMB2311() * 1 + e.getMB2312() * 0) * 100.0 / (e.getMB2311() + e.getMB2312()) * 0.274 +
                                             (e.getMB2321() * 1 + e.getMB2322() * 0) * 100.0 / (e.getMB2321() + e.getMB2322()) * 0.2095 +
