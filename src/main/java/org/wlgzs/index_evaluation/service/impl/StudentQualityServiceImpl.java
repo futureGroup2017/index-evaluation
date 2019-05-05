@@ -957,12 +957,16 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     stu.setYear(year);
                     baseMapper.insert(stu);
                 }
-                gradeQueryWrapper.eq("college_name","体育学院");
-                gradeList = gradeService.list(gradeQueryWrapper);
+                majors.clear();
+                QueryWrapper<Grade> wrapper = new QueryWrapper<>();
+                wrapper.eq("college_name","体育学院");
+                wrapper.eq("year",year);
+                gradeList = gradeService.list(wrapper);
                 for (Grade grade : gradeList) {
                     majors.add(grade.getMajorName());
                     log.info(grade.toString());
                 }
+
                 for (String str: majors
                         ) {
                     StudentQuality stu   =  new StudentQuality();
@@ -974,9 +978,9 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     baseMapper.insert(stu);
                 }
 
-                QueryWrapper<StudentQuality> wrapper = new QueryWrapper<>();
+                QueryWrapper<StudentQuality> wrapperYear = new QueryWrapper<>();
                 wrapper.eq("year", year);
-                List<StudentQuality> list = baseMapper.selectList(wrapper);
+                List<StudentQuality> list = baseMapper.selectList(wrapperYear);
                 for (StudentQuality stu : list) {
                     String majorName = stu.getMajorName();
                     QueryWrapper<Grade> wrap = new QueryWrapper<>();
