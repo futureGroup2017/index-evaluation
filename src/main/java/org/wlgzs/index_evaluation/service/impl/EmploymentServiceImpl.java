@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.wlgzs.index_evaluation.dao.EmploymentMapper;
 import org.wlgzs.index_evaluation.pojo.Employment;
-import org.wlgzs.index_evaluation.pojo.TeachersStructure;
 import org.wlgzs.index_evaluation.service.EmploymentService;
 import org.wlgzs.index_evaluation.util.ExcelUtil;
 
@@ -38,7 +37,7 @@ public class EmploymentServiceImpl extends ServiceImpl<EmploymentMapper, Employm
         try {
             listob = ExcelUtil.getBankListByExcel(in,file.getOriginalFilename());
             //遍历listob数据，把数据放到List中
-            for (int i = 1; i < listob.size(); i++) {
+            for (int i = 0; i < listob.size(); i++) {
                 List<Object> ob = listob.get(i);
                 //通过遍历实现把每一列封装成一个model中，再把所有的model用List集合装载
                 Employment employment = findByCollegeAndYear(String.valueOf(ob.get(0)),year);
@@ -63,7 +62,7 @@ public class EmploymentServiceImpl extends ServiceImpl<EmploymentMapper, Employm
                 if ("非常强".equals(String.valueOf(ob.get(11)))){
                     employment.setMB1121(employment.getMB1121()+1);
                 }else if ("很强".equals(String.valueOf(ob.get(11)))){
-                    employment.setMB1122(employment.getMB1121()+1);
+                    employment.setMB1122(employment.getMB1122()+1);
                 }else if ("一般".equals(String.valueOf(ob.get(11)))){
                     employment.setMB1123(employment.getMB1123()+1);
                 }else if ("不强".equals(String.valueOf(ob.get(11)))){
@@ -133,9 +132,9 @@ public class EmploymentServiceImpl extends ServiceImpl<EmploymentMapper, Employm
                 }else if ("一般".equals(String.valueOf(ob.get(22)))){
                     employment.setMB1323(employment.getMB1323()+1);
                 }else if ("不自信".equals(String.valueOf(ob.get(22)))){
-                    employment.setMB1324(employment.getMB1124()+1);
+                    employment.setMB1324(employment.getMB1324()+1);
                 }else if ("很不自信".equals(String.valueOf(ob.get(22)))){
-                    employment.setMB1325(employment.getMB1125()+1);
+                    employment.setMB1325(employment.getMB1325()+1);
                 }
                 //专业对口状态
                 if ("很对口".equals(String.valueOf(ob.get(35)))){
@@ -197,7 +196,7 @@ public class EmploymentServiceImpl extends ServiceImpl<EmploymentMapper, Employm
                 }else if ("很不满意".equals(String.valueOf(ob.get(39)))){
                     employment.setMB2345(employment.getMB2345()+1);
                 }
-                //预期就业年限    □    □    □    □
+                //预期就业年限
                 if ("10年以上".equals(String.valueOf(ob.get(40)))){
                     employment.setMB241(employment.getMB241()+1);
                 }else if ("8-10年".equals(String.valueOf(ob.get(40)))){

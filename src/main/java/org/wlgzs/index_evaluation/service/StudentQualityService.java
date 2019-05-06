@@ -22,7 +22,8 @@ public interface StudentQualityService extends IService<StudentQuality> {
      @Transactional
      void add(List<StudentQuality> studentQualityList);
      //删除一个年份的数据
-     @Transactional
+
+    @Transactional
      boolean delete( Integer year);
      //导出一个年份结果数据
      @Transactional
@@ -32,7 +33,7 @@ public interface StudentQualityService extends IService<StudentQuality> {
      List<StudentQuality> getQualityIndex(int year);
     @Transactional
     void download(HttpServletResponse response);
-    @Transactional
+   @Transactional
     //文件写入
      boolean saveFile(MultipartFile file,String filePath);
      //文件上传 和解析(zip) 和解析录入数据

@@ -28,6 +28,7 @@ import java.util.List;
 @Service
 @Log4j2
 public class MajorServiceImpl extends ServiceImpl<MajorDao,Major> implements MajorService {
+    @Override
     public boolean importExcel(@RequestParam("file") MultipartFile file) throws IOException {
         String fileName = file.getOriginalFilename();
         if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {

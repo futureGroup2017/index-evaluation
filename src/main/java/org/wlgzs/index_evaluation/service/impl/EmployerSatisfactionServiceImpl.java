@@ -1,8 +1,6 @@
 package org.wlgzs.index_evaluation.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.extern.log4j.Log4j2;
 import org.apache.poi.hssf.usermodel.*;
@@ -141,6 +139,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         return true;
     }
 
+    @Override
     public void exportData(int year, HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("信息表");
@@ -148,7 +147,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         String fileName = year + "年用人单位满意度指数.xls";
         fileName = URLEncoder.encode(fileName, "UTF-8");
         int rowNum = 1;
-        String[] headers = {"学院", "毕业生的精神状态与工作态度", "毕业生的综合素质能力", "毕业生的“能力-岗位”匹配度", "对毕业生的工作满意度", "用人单位满意度指数", "平均值"};
+        String[] headers = {"学院", "毕业生的精神状态与工作态度", "毕业生的综合素质能力", "毕业生的“能力-岗位”匹配度", "对毕业生的工作满意度","招聘毕业生的持续度", "用人单位满意度指数", "平均值"};
         HSSFRow row = sheet.createRow(0);
         //设置行高
         row.setHeightInPoints(42);
@@ -160,6 +159,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         sheet.setColumnWidth(4, 22 * 256);
         sheet.setColumnWidth(5, 22 * 256);
         sheet.setColumnWidth(6, 22 * 256);
+        sheet.setColumnWidth(7, 22 * 256);
         //其他表样式
         HSSFCellStyle style = workbook.createCellStyle();
         style.setBorderBottom(HSSFCellStyle.BORDER_THIN); //下边框
@@ -223,16 +223,19 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
                 cell.setCellValue(employerSatisfaction.getSatisfaction());
                 cell.setCellStyle(style);
                 cell = row1.createCell(5);
-                cell.setCellValue(employerSatisfaction.getSatisfactionIndex());
+                cell.setCellValue(employerSatisfaction.getSustain());
                 cell.setCellStyle(style);
                 cell = row1.createCell(6);
+                cell.setCellValue(employerSatisfaction.getSatisfactionIndex());
+                cell.setCellStyle(style);
+                cell = row1.createCell(7);
                 cell.setCellStyle(style);
                 rowNum++;
             }
             //创建合并单元格  ---begin
-            CellRangeAddress region = new CellRangeAddress(1, employerSatisfactionList.size(), 6, 6);// 下标从0开始 起始行号，终止行号， 起始列号，终止列号
+            CellRangeAddress region = new CellRangeAddress(1, employerSatisfactionList.size(), 7, 7);// 下标从0开始 起始行号，终止行号， 起始列号，终止列号
             sheet.addMergedRegion(region);  //添加
-            cell = sheet.getRow(1).getCell(6);
+            cell = sheet.getRow(1).getCell(7);
             double arrage = num / employerSatisfactionList.size();
             DecimalFormat df = new DecimalFormat("#.000");
             cell.setCellValue(df.format(arrage));   //向合并的单元格设置值
@@ -243,6 +246,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         workbook.write(response.getOutputStream());
     }
 
+    @Override
     public boolean delete(String year) {
         QueryWrapper<EmployerSatisfaction> queryWrapper = new QueryWrapper<>();
         if (year != null && !year.equals("")) {
@@ -261,6 +265,7 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         }
     }
 
+    @Override
     public boolean NewImportExcel(MultipartFile file, String year) throws IOException {
        //统计总数
         int level1 = 0;
@@ -291,6 +296,14 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         int satisfaction4 = 0;
         int satisfaction5 = 0;
         int num3 = 0;
+
+        double sustain = 0; //招聘毕业生的持续度
+        int sustain1 = 0;
+        int sustain2 = 0;
+        int sustain3 = 0;
+        int sustain4 = 0;
+        int sustain5 = 0;
+        int num4 = 0;
         int time = Integer.parseInt(year);
         List<EmployerSatisfaction> employerSatisfactionList = new ArrayList<>();
         String fileName = file.getOriginalFilename();
@@ -323,10 +336,12 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             row.getCell(mark+1).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
             row.getCell(mark+2).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
             row.getCell(mark+3).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
+            row.getCell(mark+4).setCellType(Cell.CELL_TYPE_STRING);//设置读取转String类型
             String tempLevel = row.getCell(mark).getStringCellValue();
             String tempAblity = row.getCell(mark+1).getStringCellValue();
             String tempMatch = row.getCell(mark+2).getStringCellValue();
             String tempStatisfaction = row.getCell(mark+3).getStringCellValue();
+            String tempSustain = row.getCell(mark+4).getStringCellValue();
             if (tempLevel.equals("非常满意")){
                 level1++;
             }
@@ -387,12 +402,28 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
             else if (tempStatisfaction.equals("非常不满意")){
                 satisfaction5++;
             }
+            if (tempSustain.equals("非常满意")){
+                sustain1++;
+            }
+            else if (tempSustain.equals("满意")){
+                sustain2++;
+            }
+            else if (tempSustain.equals("一般")){
+                sustain3++;
+            }
+            else if (tempSustain.equals("不满意")){
+                sustain4++;
+            }
+            else if (tempSustain.equals("非常不满意")){
+                sustain5++;
+            }
         }
 
         num = level1 + level2 + level3 + level4 + level5;
         num1 = ablity1 + ablity2 + ablity3 + ablity4 + ablity5;
         num2 = match1 + match2 + match3 + match4 + match5;
         num3 = satisfaction1 + satisfaction2 + satisfaction3 + satisfaction4 + satisfaction5;
+        num4 = sustain1 + sustain2 + sustain3 + sustain4 + sustain5;
         //处理 毕业生的精神状态与工作水平的数据
         //毕业生的精神状态与工作水平指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.1895
          level = (level1 + level2 * 0.8d + level3 * 0.6d + level4 * 0.4d + level5 * 0.2d) * 100d / num * 0.1895d ;
@@ -403,14 +434,18 @@ public class EmployerSatisfactionServiceImpl extends ServiceImpl<EmployerSatisfa
         //毕业生的“能力-岗位”匹配度能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.2225
         match = (match1 + match2 * 0.8d + match3 * 0.6d + match4 * 0.4d + match5 * 0.2d) * 100d / num2 * 0.2225d;
         match = reserveDecimal(match,4);
-        //用人单位满意度指数 =( 精神状态与工作水平指数 +综合素质能力指数+“能力-岗位”匹配度能力指数+工作满意度能力指数)*0.1325;
-        statisfaction = (satisfaction1 + satisfaction2 * 0.8d + satisfaction3 * 0.6d + satisfaction4 * 0.4d + satisfaction5 * 0.2d) * 100d / num * 0.1895d ;
+        //对毕业生的工作满意度能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.2
+        statisfaction = (satisfaction1 + satisfaction2 * 0.8d + satisfaction3 * 0.6d + satisfaction4 * 0.4d + satisfaction5 * 0.2d) * 100d / num3 * 0.1945d ;
         statisfaction  = reserveDecimal( statisfaction,4);
-        double satisfactionIndex = (level + ablity + match + statisfaction) * 132.5/1000;
+        //招聘毕业生的持续度能力指数 =  （（非常满意人数*1+满意人数*0.8+一般人数*0.6+不满意人数*0.4+非常不满意人数*0.2）*100/人数总和）*0.2
+        sustain = (sustain1 + sustain2 * 0.8d + sustain3 * 0.6d + sustain4 * 0.4d + sustain5 * 0.2d) * 100d / num3 * 0.1465d ;
+        sustain  = reserveDecimal( sustain,4);
+        //用人单位满意度指数 =( 精神状态与工作水平指数 +综合素质能力指数+“能力-岗位”匹配度能力指数+工作满意度能力指数)*0.1325;
+        double satisfactionIndex = (level + ablity + match + statisfaction+sustain) * 132.5/1000;
         satisfactionIndex = reserveDecimal(satisfactionIndex,4);
         EmployerSatisfaction em = new EmployerSatisfaction("", level, level1, level2, level3, level4, level5,
                 ablity, ablity1, ablity2, ablity3, ablity4, ablity5, match, match1, match2, match3, match4, match5,
-                statisfaction, satisfaction1, satisfaction2, satisfaction3, satisfaction4, satisfaction5, satisfactionIndex, time);
+                statisfaction, satisfaction1, satisfaction2, satisfaction3, satisfaction4, satisfaction5,sustain,sustain1,sustain2,sustain3,sustain4,sustain5, satisfactionIndex, time);
         QueryWrapper<College> query = new QueryWrapper<College>();
         List<College> colleges = collegeMapper.selectList(query);
 

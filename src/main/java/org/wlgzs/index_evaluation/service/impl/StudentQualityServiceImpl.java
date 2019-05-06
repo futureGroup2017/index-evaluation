@@ -49,7 +49,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
 
     @Override
     public boolean importExcel(MultipartFile file, String year) throws IOException {
-        List<StudentQuality> studentQualityList = new ArrayList<>();
+        /*List<StudentQuality> studentQualityList = new ArrayList<>();
         String fileName = file.getOriginalFilename();
         if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
             return false;
@@ -74,9 +74,12 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         //找出文科的三個最高值
         double[] wMax = findMax(3, mark, sheet);
-        double wmaxFistVolunteerNum = wMax[0]; // 文科专业1志愿报考人数最高值
-        double wmaxAfterVolunteerNum = wMax[1]; //文科专业2-5志愿报考人数最高值
-        double maxAverage = wMax[2];           //文科录取平均分最高值
+        // 文科专业1志愿报考人数最高值
+        double wmaxFistVolunteerNum = wMax[0];
+        //文科专业2-5志愿报考人数最高值
+        double wmaxAfterVolunteerNum = wMax[1];
+        //文科录取平均分最高值
+        double maxAverage = wMax[2];
 
 
         //找出理科的三個最高值
@@ -298,11 +301,11 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 System.out.println(studentQuality.toString());
                 baseMapper.updateById(studentQuality);
             }
-        }
+        }*/
         return true;
     }
 
-    public double[] findMax(int index, int end, Sheet sheet) {
+   /* public double[] findMax(int index, int end, Sheet sheet) {
         double wmaxFistVolunteerNum = 0; // 文科专业1志愿报考人数最高值
         double wmaxAfterVolunteerNum = 0; //文科专业2-5志愿报考人数最高值
         double maxAverage = 0;           //文科录取平均分最高值
@@ -351,8 +354,9 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             }
         }
         return maxValue;
-    }
+    }*/
 
+    @Override
     public void add(List<StudentQuality> studentQualityList) {
         for (StudentQuality student : studentQualityList
                 ) {
@@ -366,7 +370,12 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
 
     }
 
-    //删除数据
+    /**
+     * 删除数据
+     * @param year
+     * @return
+     */
+    @Override
     public boolean delete(Integer year) {
         QueryWrapper<StudentQuality> queryWrapper = new QueryWrapper<>();
         QueryWrapper<Grade> wrapper = new QueryWrapper<>();
@@ -389,7 +398,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         return true;
     }
-
+    @Override
     public void exportData(int year, HttpServletResponse response) throws IOException {
         HSSFWorkbook workbook = new HSSFWorkbook();
         HSSFSheet sheet = workbook.createSheet("信息表1");
@@ -473,14 +482,14 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                 cell.setCellStyle(style);
                 cell = row1.createCell(3);
                 if (studentQuality.getMajorRecognition() != null) {
-                    cell.setCellValue(reserveDecimal(studentQuality.getMajorRecognition() * 0.557, 3));
+                    cell.setCellValue(reserveDecimal(studentQuality.getMajorRecognition() * 0.557, 4));
                 }
                 cell.setCellStyle(style);
                 cell = row1.createCell(4);
                 cell.setCellValue(reserveDecimal(studentQuality.getCollegeEntrance(), 3));
                 cell.setCellStyle(style);
                 cell = row1.createCell(5);
-                cell.setCellValue(reserveDecimal(studentQuality.getCollegeEntrance() * 0.443, 3));
+                cell.setCellValue(reserveDecimal(studentQuality.getCollegeEntrance() * 0.443, 4));
                 cell.setCellStyle(style);
                 cell = row1.createCell(6);
                 cell.setCellValue(studentQuality.getMajorAdvantage());
@@ -548,6 +557,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
     }
 
 
+    @Override
     public List<StudentQuality> getQualityIndex(int year) {
         QueryWrapper<College> query = new QueryWrapper<College>();
         List<College> colleges = collegeMapper.selectList(query);
@@ -567,7 +577,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
         return array;
     }
-
+    @Override
     public void download(HttpServletResponse res) {
         try {
             String fileName = "就业工作考核数据分析系统模板.zip";
@@ -614,6 +624,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
         }
     }
 
+    @Override
     public boolean saveFile(MultipartFile file, String filePath) {
         if (!file.isEmpty()) {
             File saveFile = new File(filePath + "/" + file.getOriginalFilename());
@@ -638,6 +649,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
     }
 
     //上传并保存和解压zip文件
+    @Override
     public boolean upload(MultipartFile file, String string) throws IOException {
         int year = Integer.parseInt(string);
         if (saveFile(file, "./upload")) {
@@ -655,8 +667,10 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             zipFile.close();
             for (int j = 0; j < names.length; j++) {
                 String str = names[j];
-                if (str.contains("文") || str.contains("理"))
-                    analysisExcel(str, year);  //解析文件
+                if (str.contains("文") || str.contains("理")) {
+                    //解析文件
+                    analysisExcel(str, year);
+                }
             }
             int k = 0;
             for (int j = 0; j < names.length; j++) {
@@ -665,8 +679,10 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     k = j;
                     continue;
                 }
-                if (!(str.contains("文") || str.contains("理")))
-                    analysisExcel(str, year);  //解析文件
+                if (!(str.contains("文") || str.contains("理"))) {
+                    //解析文件
+                    analysisExcel(str, year);
+                }
 
             }
             QueryWrapper<StudentQuality> wenWrapper = new QueryWrapper<>();
@@ -675,35 +691,69 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             QueryWrapper<StudentQuality> liWrapper = new QueryWrapper<>();
             liWrapper.eq("mark", 1);
             liWrapper.eq("year", year);
+            QueryWrapper<StudentQuality> yiWrapper = new QueryWrapper<>();
+            yiWrapper.eq("mark", 3);
+            yiWrapper.eq("year", year);
+            QueryWrapper<StudentQuality> tiWrapper = new QueryWrapper<>();
+            tiWrapper.eq("mark", 4);
+            tiWrapper.eq("year", year);
             List<StudentQuality> wenlist = baseMapper.selectList(wenWrapper);
             List<StudentQuality> liList = baseMapper.selectList(liWrapper);
+            List<StudentQuality> yiList = baseMapper.selectList(yiWrapper);
+            List<StudentQuality> tiList = baseMapper.selectList(tiWrapper);
             double wenMax = findListMax(wenlist, "score");
             double liMax = findListMax(liList, "score");
+            double yiMax = findListMax(yiList, "score");
+            double tiMax = findListMax(tiList, "score");
             List<StudentQuality> studentQualities = new ArrayList<>();
             studentQualities.addAll(liList);
             studentQualities.addAll(wenlist);
+            studentQualities.addAll(yiList);
+            studentQualities.addAll(tiList);
             for (StudentQuality su :  studentQualities) {
-                int studentsNum = su.getStudentsNum();
-                double majorRecognition = 0;
-                double majorAdvantage =  0;
-                double collegeEntrance = 0;
-                if (su.getMark() == 2) {
-                    //专业认可度 = (专业1志愿报考人数/总数)/(文科专业志愿报考人数最高值/总数)*100*0.7 + (2-5理科志愿报考人数/总数*4)/(文科志愿报考人数最高值/学生总数)*100*0.3
-                     majorRecognition = ( (su.getFistVolunteerNum() / (double)studentsNum) / (findListMax(wenlist, "firstNum") / studentsNum) * 100 * 0.7 + ((double)su.getAfterVolunteerNum() / studentsNum * 4) / (findListMax(wenlist, "afterNum") / studentsNum*4) * 100 * 0.3);
-                     collegeEntrance = (su.getAverageScore() / wenMax)*100;
-                    //专业优势 = （专业认可度原始*0.557 + 高考成绩与最高值之比*0.433）*0.445
-                     majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.445;
-                } else if (su.getMark() == 1) {
-                    //专业认可度 = (专业1志愿报考人数/总数)/(文科专业志愿报考人数最高值/总数)*100*0.7 + (2-5理科志愿报考人数/总数*4)/(文科志愿报考人数最高值/学生总数)*100*0.3
-                     majorRecognition = ((su.getFistVolunteerNum() / (double)studentsNum) / (findListMax(liList, "firstNum") / studentsNum) * 100 * 0.7 + ((double)su.getAfterVolunteerNum() / studentsNum * 4) / (findListMax(liList, "afterNum") / studentsNum*4) * 100 * 0.3);
-                     collegeEntrance = (su.getAverageScore() / liMax)*100;
-                    //专业优势 = （专业认可度原始*0.557 + 高考成绩与最高值之比*0.433）*0.445
-                     majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.445;
+                if (!su.getColleageName().equals("艺术学院") && !su.getColleageName().equals("体育学院")) {
+                    int studentsNum = su.getStudentsNum();
+                    double majorRecognition = 0;
+                    double majorAdvantage = 0;
+                    double collegeEntrance = 0;
+                    if (su.getMark() == 2) {
+                        //专业认可度 = (专业1志愿报考人数/总数)/(文科专业志愿报考人数最高值/总数)*100*0.7 + (2-5理科志愿报考人数/总数*4)/(文科志愿报考人数最高值/学生总数)*100*0.3
+                        majorRecognition = ((su.getFistVolunteerNum() / (double) studentsNum) / (findListMax(wenlist, "firstNum") / studentsNum) * 100 * 0.7 + ((double) su.getAfterVolunteerNum() / studentsNum * 4) / (findListMax(wenlist, "afterNum") / studentsNum * 4) * 100 * 0.3);
+                        collegeEntrance = (su.getAverageScore() / wenMax) * 100;
+                        //专业优势 = （专业认可度原始*0.557 + 高考成绩与最高值之比*0.433）*0.445
+                        majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.545;
+                    } else if (su.getMark() == 1) {
+                        //专业认可度 = (专业1志 愿报考人数/总数)/(文科专业志愿报考人数最高值/总数)*100*0.7 + (2-5理科志愿报考人数/总数*4)/(文科志愿报考人数最高值/学生总数)*100*0.3
+                        majorRecognition = ((su.getFistVolunteerNum() / (double) studentsNum) / (findListMax(liList, "firstNum") / studentsNum) * 100 * 0.7 + ((double) su.getAfterVolunteerNum() / studentsNum * 4) / (findListMax(liList, "afterNum") / studentsNum * 4) * 100 * 0.3);
+                        collegeEntrance = (su.getAverageScore() / liMax) * 100;
+                        //专业优势 = （专业认可度原始*0.557 + 高考成绩与最高值之比*0.433）*0.445
+                        majorAdvantage = (majorRecognition * 0.557 + collegeEntrance * 0.443) * 0.545;
+                    }
+                    su.setCollegeEntrance(reserveDecimal(collegeEntrance, 4));
+                    su.setMajorRecognition(reserveDecimal(majorRecognition, 4));
+                    su.setMajorAdvantage(reserveDecimal(majorAdvantage, 4));
+                    baseMapper.updateById(su);
                 }
-                su.setCollegeEntrance(reserveDecimal(collegeEntrance,4));
-                su.setMajorRecognition(reserveDecimal(majorRecognition,4));
-                su.setMajorAdvantage(reserveDecimal(majorAdvantage,4));
-                baseMapper.updateById(su);
+                else {
+                    //todo 艺术学院处理
+                    double max = 0;
+                    if (su.getColleageName().equals("体育学院")){
+                        max = tiMax;
+                    }
+                    else {
+                        max = yiMax;
+                    }
+                    double collegeEntrance = 0;
+                    double majorAdvantage = 0;
+                    collegeEntrance =(su.getAverageScore() / max) * 100;
+                    majorAdvantage = (su.getMajorRecognition()*0.557 +collegeEntrance * 0.443) * 0.545;
+                    su.setCollegeEntrance(reserveDecimal(collegeEntrance, 4));
+                    su.setMajorAdvantage(reserveDecimal(majorAdvantage, 4));
+                    baseMapper.updateById(su);
+                }
+
+
+
             }
             analysisExcel(names[k],year);
             deleteFile("./upload");
@@ -790,7 +840,8 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
             int sums = Integer.parseInt(number);
             try {
                 FileInputStream is = new FileInputStream(new File("./upload/" + fileName));
-                System.out.println("./upload/" + fileName);
+
+                // System.out.println("./upload/" + fileName);
                 if (!fileName.matches("^.+\\.(?i)(xls)$") && !fileName.matches("^.+\\.(?i)(xlsx)$")) {
                     return false;
                 }
@@ -801,7 +852,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     wb = new HSSFWorkbook(is);
                 }
                 Sheet sheet = wb.getSheetAt(0);
-                for (int i = 1; i < sheet.getLastRowNum(); i++) {   // 遍历excel每行的数据
+                for (int i = 1; i < sheet.getLastRowNum(); i++) {
                     Row row = sheet.getRow(i);
                     Cell cell;
                     if (isTrue) {
@@ -814,26 +865,30 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     if (!str.equals("")) {
                         char ch = str.charAt(0);
                         String majorName;
-                        if (!(str.contains("（") || str.contains("(")))
+                        if (!(str.contains("（") || str.contains("("))) {
                             majorName = str.substring(1, str.length());
-                        else {
+                        } else {
                             int index = str.indexOf("（");
                             int index1 = str.indexOf("(");
-                            if (index != -1)
+                            if (index != -1) {
                                 majorName = str.substring(1, index);
-                            else
+                            } else {
                                 majorName = str.substring(1, index1);
+                            }
                         }
-                        if (ch == '1') {   //该专业为第一志愿
-                            if (isTrue)
+                        //该专业为第一志愿
+                        if (ch == '1') {
+                            if (isTrue) {
                                 findMajor(majorName, year, 1, 1, sums);
-                            else
+                            } else {
                                 findMajor(majorName, year, 1, 2, sums);
+                            }
                         } else if (ch == '2' || ch == '3' || ch == '4' || ch == '5') {
-                            if (isTrue)
+                            if (isTrue) {
                                 findMajor(majorName, year, 2, 1, sums);
-                            else
+                            } else {
                                 findMajor(majorName, year, 2, 2, sums);
+                            }
                         }
                         is.close();
                     }
@@ -872,20 +927,60 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     String majorName = majorNameCell.getStringCellValue();
                     majorName = jundgeMajorname(majorName);
                     if (check(province, admission, lengthOfSchool, admissions)) {
-                        Cell gradeCell = row.getCell(26);    //
+                        Cell gradeCell = row.getCell(26);
                         gradeCell.setCellType(Cell.CELL_TYPE_NUMERIC);
                         double grade = gradeCell.getNumericCellValue();
                         Grade grades = new Grade();
                         grades.setCollegeName(schoolName);
-                        grades.setMajor_name(majorName);
+                        grades.setMajorName(majorName);
                         grades.setCollegeGrade(grade);
                         grades.setYear(year);
                         gradeService.save(grades);
                     }
                 }
-                QueryWrapper<StudentQuality> wrapper = new QueryWrapper<>();
+                QueryWrapper<Grade> gradeQueryWrapper = new QueryWrapper<>();
+                gradeQueryWrapper.eq("college_name","艺术学院");
+                gradeQueryWrapper.eq("year",year);
+                List<Grade> gradeList = gradeService.list(gradeQueryWrapper);
+                Set<String> majors = new HashSet<>();
+                for (Grade grade : gradeList) {
+                    majors.add(grade.getMajorName());
+                    log.info(grade.toString());
+                }
+                for (String str: majors
+                     ) {
+                    StudentQuality stu   =  new StudentQuality();
+                    stu.setMajorRecognition(reserveDecimal(100,4));
+                    stu.setColleageName("艺术学院");
+                    stu.setMajorName(str);
+                    stu.setMark(3);
+                    stu.setYear(year);
+                    baseMapper.insert(stu);
+                }
+                majors.clear();
+                QueryWrapper<Grade> wrapper = new QueryWrapper<>();
+                wrapper.eq("college_name","体育学院");
+                wrapper.eq("year",year);
+                gradeList = gradeService.list(wrapper);
+                for (Grade grade : gradeList) {
+                    majors.add(grade.getMajorName());
+                    log.info(grade.toString());
+                }
+
+                for (String str: majors
+                        ) {
+                    StudentQuality stu   =  new StudentQuality();
+                    stu.setMajorRecognition(reserveDecimal(100,4));
+                    stu.setColleageName("体育学院");
+                    stu.setMajorName(str);
+                    stu.setMark(4);
+                    stu.setYear(year);
+                    baseMapper.insert(stu);
+                }
+
+                QueryWrapper<StudentQuality> wrapperYear = new QueryWrapper<>();
                 wrapper.eq("year", year);
-                List<StudentQuality> list = baseMapper.selectList(wrapper);
+                List<StudentQuality> list = baseMapper.selectList(wrapperYear);
                 for (StudentQuality stu : list) {
                     String majorName = stu.getMajorName();
                     QueryWrapper<Grade> wrap = new QueryWrapper<>();
@@ -899,7 +994,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                             res += grade.getCollegeGrade();
                         }
                         double average = res / grades.size();
-                        stu.setAverageScore(average);
+                        stu.setAverageScore(reserveDecimal(average,6));
                         if (stu.getColleageName() == null || stu.getColleageName().equals("")) {
                             stu.setColleageName(grades.get(0).getCollegeName());
                             log.info(grades.get(0).getCollegeName());
@@ -945,10 +1040,10 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                     if (studentQualitys==null || studentQualitys.size()<=0){
                         StudentQuality stu = new StudentQuality();
                         stu.setMajorRecognition((double)100);
-                        stu.setMajorAdvantage((double)100);
+                        stu.setMajorAdvantage((double)100*0.545);
                         stu.setColleageAdvantage((double)100);
                         stu.setYear(year);
-                        if (colleage .equals("体育学院")){
+                        /*if (colleage .equals("体育学院")){
                             stu.setColleageName("体育学院");
                             stu.setYieldRate(yieldRate);
                            Double avrageMajorAdvantage = (100*0.545 + yieldRate * 0.455) * 0.1008;
@@ -961,7 +1056,7 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
                             double avrageMajorAdvantage = (100*0.545 + yieldRate * 0.455) * 0.1008;
                             stu.setColleageQuality(reserveDecimal(avrageMajorAdvantage,4));
                             baseMapper.insert(stu);
-                        }
+                        }*/
 
                         continue;
                     }
@@ -1005,9 +1100,6 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
      */
     public static boolean check(String province, String admission, String lengthOfSchool, String admissions) {
         if (!province.contains("河南")) {
-            return false;
-        }
-        if (admission.contains("艺术") || admission.contains("体育")) {
             return false;
         }
         if (lengthOfSchool.equals("2")) {
@@ -1064,15 +1156,16 @@ public class StudentQualityServiceImpl extends ServiceImpl<StudentQualityMapper,
     // 判断专业名字是否符合规范
     public String jundgeMajorname(String str) {
         String majorName = str;
-        if (!(str.contains("（") || str.contains("(")))
+        if (!(str.contains("（") || str.contains("("))) {
             return majorName;
-        else {
+        } else {
             int index = str.indexOf("（");
             int index1 = str.indexOf("(");
-            if (index != -1)
+            if (index != -1) {
                 majorName = str.substring(0, index);
-            else
+            } else   {
                 majorName = str.substring(0, index1);
+            }
         }
         return majorName;
     }
