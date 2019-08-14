@@ -1,5 +1,5 @@
 server:
-  port: 12345
+  port: 8080
 
 spring:
   thymeleaf:
