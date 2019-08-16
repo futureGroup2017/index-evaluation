@@ -19,7 +19,7 @@ import java.io.IOException;
 @Log4j2
 public class LoginFilter implements Filter {
 
-    String[] includeUrls = new String[]{"/login","/css","/js","/images","/out",".ico","/doc"};
+    String[] includeUrls = new String[]{"/login","/","/css","/js","/images","/out",".ico","/doc"};
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
